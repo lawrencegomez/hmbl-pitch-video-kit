@@ -9,6 +9,11 @@ import {FPS, H, W, fonts} from './theme';
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 const ctx = (require as any).context('./companies', false, /^\.\/[^_][\w-]*\.ts$/);
 const companies: Company[] = ctx.keys().map((k: string) => ctx(k).default).filter(Boolean);
+// Extra local compositions (style tests, cut-downs): src/companies/*.tsx exporting {id, component, durationInFrames, width, height}.
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+const extraCtx = (require as any).context('./companies', false, /\.tsx$/);
+type Extra = {id: string; component: React.FC; durationInFrames: number; width: number; height: number};
+const extras: Extra[] = extraCtx.keys().map((k: string) => extraCtx(k).default).filter(Boolean);
 
 // Setup check: renders one frame with the real fonts and no assets (`npm run smoke`).
 const Smoke: React.FC = () => (
@@ -32,6 +37,9 @@ export const RemotionRoot: React.FC = () => (
         height={H}
         defaultProps={{c, useClip: true}}
       />
+    ))}
+    {extras.map((e) => (
+      <Composition key={e.id} id={e.id} component={e.component} durationInFrames={e.durationInFrames} fps={FPS} width={e.width} height={e.height} />
     ))}
   </>
 );
