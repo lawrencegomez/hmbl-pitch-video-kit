@@ -1,0 +1,12 @@
+# Company data NEVER goes to GitHub: research, briefs, phone scripts, photos, audio, renders.
+companies/*
+!companies/.gitkeep
+src/companies/*
+!src/companies/_example.ts
+STYLE-REGISTRY.md
+out/
+review/
+node_modules/
+.DS_Store
+*.log
+.env*

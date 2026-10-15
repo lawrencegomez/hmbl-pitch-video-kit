@@ -1,0 +1,106 @@
+---
+name: hmbl-company-pitch-video
+description: Make a 30-40 second vertical (TikTok / Reels shaped) pitch video about a client company to send to candidates before the first recruiter call. Researches the company's facts AND its vibe (own words, founders' public posts, brand colours and type), pitches three distinct creative concepts, builds the chosen one in Remotion with Higgsfield voice, music and a hero clip, then runs a multi-reviewer audit loop. Trigger on "pitch video", "candidate video", "company video", "explainer video for <company>", or a brief + phone script handed over with a request for a video.
+---
+
+# HMBL company pitch video
+
+HMBL Talent recruiters send each candidate a short video about the company before the first call, so the call
+starts from understanding instead of a cold pitch. One video per client company. Role-agnostic: it sells the
+company, never a specific role.
+
+## Where things are
+
+- **Kit folder** (code, playbook, setup): the repo this skill lives in. Find it with
+  `KIT="$(cd -P ~/.claude/skills/hmbl-company-pitch-video/../.. && pwd)"`.
+- **Mechanics** (exact commands, Higgsfield flags, costs, gotchas): `$KIT/PLAYBOOK.md`. Read it before starting.
+- **Past looks on this machine:** `$KIT/STYLE-REGISTRY.md` (local only, never committed).
+- **Before running node / npx / higgsfield / codex:** `source "$KIT/bin/env.sh"` (pins Node 24.15.0).
+- **If anything is missing:** `"$KIT/setup.sh" --check`, then `"$KIT/setup.sh"` to fix.
+
+## The one idea that matters
+
+Every video shares a **skeleton** (fixed, so candidates always get the same five takeaways) and has its own
+**skin** (free, so no two videos look or sound alike). The skeleton is the house rules below. Everything else is
+decided fresh from research about that company. The code in `src/scenes/` is a working starting kit (a "tab chaos"
+hook, hand-drawn strokes, a cream palette, an Instrument Serif headline): treat it as an example of the craft bar,
+not the look. Reusing any of it needs a reason rooted in the new company.
+
+## House rules (fixed; settled by HMBL, do not re-litigate)
+
+- **Order:** hook -> what they build -> founders -> why it's different -> traction -> close. 30-40 s total.
+- **Five takeaways** a candidate must get with sound off: what it does, who founded it and why they matter, what
+  makes it different, traction (customers / revenue speed / funding / team size), where they are.
+- **Hook:** motion graphics, never a stock photo. A different hook type and visual idea per company.
+- **Close:** "That's <Company>." + logo + the hero clip. **No call to action, no URL.**
+- **Captions:** small (46 px) and low (top y 1470), word highlight, hand-set phrase lines.
+- **Voice:** Emily (Higgsfield `elevenlabs_v4`, id in PLAYBOOK), sped up 1.1x. No sound effects. Music bed from
+  Higgsfield Sonilo.
+- **Facts:** only sourced facts. Leave out anything the phone script marks "to confirm" unless the recruiter clears
+  it, and say so. Revenue is shown as **speed**, in the source's own words (e.g. "$0 in January to $1M by March").
+- **People:** real photos only (LinkedIn, company site, photos the recruiter supplies). Never AI-generate a real
+  person's face.
+- **Layout:** everything that matters inside x 60-940 of the 1080 frame; centre text inside that box.
+- **Cost:** about 45 Higgsfield credits per video. Ask before going much above that.
+- **Company data stays local.** Research, briefs, phone scripts, photos, audio and renders live in the gitignored
+  `companies/` and `src/companies/<slug>.ts`. Never commit them, never paste them anywhere public.
+
+### Writing rules (all on-screen text and the voiceover)
+- No em dashes or en dashes anywhere a viewer sees. Use a comma, colon or full stop.
+- Run the `humanizer` skill on the script and every on-screen line (its embedded mode: output only the final text).
+- Then score with SlopMonster, locally only: `python3 ~/.claude/skills/slopmonster/tools/deslop.py --text "<script>"`.
+  **Do not run its cleanse step**: that sends text to OpenAI and the script names client contacts (the founders).
+- Plain spoken English. No hype words, no "not X, but Y", no padding in threes. Never invent a fact to sound better.
+
+### Research rules
+- Public websites: Scrapling first (`scrapling extract get URL out.md`, plain fetcher). No paid scraping APIs.
+- LinkedIn: only public pages a logged-out visitor sees (company page, founder profiles, their public posts and
+  articles), one page at a time, plain fetcher, no login, no cookies. Stop on HTTP 999 or a login wall.
+  Never LinkedIn Recruiter, never people search, never anything logged in.
+
+### Working rules
+- Prove it before saying done: look at rendered frames yourself and report what you checked.
+- Report in plain language to the recruiter: what was done, did it work, what is next.
+
+## Process
+
+### 1. Intake (2 min)
+`mkdir -p "$KIT/companies/<slug>"/{research,assets/{web,founders,audio,gen}}`. Collect what the recruiter sent:
+brief, phone script, logo, site, founder LinkedIn URLs, any photos. Note the phone script's "to confirm" items now.
+
+### 2. Research: facts AND vibe (10-15 min)
+Follow `references/research.md`. Two outputs in `companies/<slug>/research/`:
+- `facts.md`: every usable fact with its source, plus a "do not use" list.
+- `vibe.md`: how this company sounds and looks, with evidence (quotes, hexes, fonts, image style, founder voice,
+  what the name evokes, who their customers are). This is what makes the video theirs.
+
+### 3. Creative direction: three concepts, pick one (5 min)
+Follow `references/creative-direction.md`. Write three genuinely different concepts into
+`companies/<slug>/concepts.md`, each setting every variation dial. Check each against STYLE-REGISTRY.md. Score,
+pick, and tell the recruiter the pick in 3-4 plain lines plus the runner-up in one line. Then keep going; they can
+redirect. Stop and ask only if a concept needs well over ~45 credits or something not yet cleared.
+
+### 4. Script (5 min)
+85-100 words in the house order (rules in `references/creative-direction.md`, "Script"). Humanizer, then the local
+SlopMonster score. Phonetic spellings go in the voice text only (spell a name the way it sounds, e.g. "Day-vee", when the voice gets it wrong).
+
+### 5. Assets (start the slow ones first)
+Hero clip (Seedance, ~10 min) in the background first, then voice, music (prompt from `vibe.md`), stills, logo
+trace, product screens from their own site. Commands in PLAYBOOK.
+
+### 6. Build (20-40 min)
+Copy `src/companies/_example.ts` to `src/companies/<slug>.ts` (it becomes video id `<slug>` automatically) and
+fill it. **Theme and scenes come from the concept:** set the company's palette and fonts, write a new Hook scene
+for the concept, and restyle or rewrite any scene whose look would repeat the registry. Shared parts that stay:
+`Captions`, `Scene`, `Hand` (drawn strokes), theme helpers, safe-zone values. Keep `src/scenes/` free of company
+names and facts, since that folder is shared code.
+
+### 7. Review loop (every version)
+Follow `references/review.md`: your own look at a 16-frame sheet, a fresh Claude reviewer, GPT
+(`codex exec -m gpt-6-astra`), plus the sameness check against past videos. Verify each finding against the
+sources before acting. Re-render and re-review until no high-severity items remain.
+
+### 8. Deliver
+`out/<slug>-final.mp4` plus a local link (`python3 -m http.server <free port> --bind 127.0.0.1 --directory "$KIT/out"`).
+Add a row to STYLE-REGISTRY.md and save `review/<slug>-final-sheet.png`. If a lesson applies to every future
+video, add it to PLAYBOOK.md with no company details.
