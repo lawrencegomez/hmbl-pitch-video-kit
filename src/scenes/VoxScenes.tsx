@@ -210,7 +210,6 @@ export const VoxTraction: React.FC<{c: Company}> = ({c}) => {
   const revAt = sec(r.at);
   const cAt = sec(t.stats[0].at);
   const toB = ease(frame, revAt - 4, revAt + 8);
-  const toC = ease(frame, cAt - 4, cAt + 8);
   const k = c.vox?.clipping;
   const office = c.vox?.office;
   const CHART = 'M 70 560 C 300 560, 450 545, 540 430 S 680 140, 720 90';
@@ -239,7 +238,7 @@ export const VoxTraction: React.FC<{c: Company}> = ({c}) => {
       )}
 
       {/* customer logos as taped labels: phase A and B */}
-      <div style={{opacity: 1 - toC, transform: `translateY(${toC * 300}px)`}}>
+      <div style={{display: frame >= cAt ? 'none' : undefined}}>
         {t.logos.map((l, i) => {
           const p = pop(frame, countAt + 10 + i * 3, true);
           const left = 90 + (i % 3) * 285, top = 1010 + Math.floor(i / 3) * 150, rot = [-3, 2, -2, 3, -2, 2][i];
@@ -253,10 +252,10 @@ export const VoxTraction: React.FC<{c: Company}> = ({c}) => {
       </div>
 
       {/* B: revenue, big, on graph paper */}
-      {frame >= revAt - 4 && frame < cAt + 10 && (() => {
+      {frame >= revAt - 4 && frame < cAt && (() => {
         const p = pop(frame, revAt);
         return (
-          <div style={{position: 'absolute', left: 90, top: 210, width: 840, height: 740, opacity: p * (1 - toC), transform: `rotate(-1.5deg) scale(${0.9 + 0.1 * p}) translateY(${toC * -300}px)`, boxShadow: '0 18px 30px rgba(40,25,10,0.3)',
+          <div style={{position: 'absolute', left: 90, top: 210, width: 840, height: 740, opacity: p, transform: `rotate(-1.5deg) scale(${0.9 + 0.1 * p})`, boxShadow: '0 18px 30px rgba(40,25,10,0.3)',
             backgroundColor: '#FDFBF4', backgroundImage: 'linear-gradient(rgba(70,120,190,0.18) 1px, transparent 1px), linear-gradient(90deg, rgba(70,120,190,0.18) 1px, transparent 1px)', backgroundSize: '40px 40px'}}>
             <Tape style={{left: 340, top: -20}} rotate={-3} w={170} />
             <div style={{position: 'absolute', left: 36, top: 30, fontFamily: voxFonts.type, fontSize: 48, color: INK}}>{r.title}</div>
@@ -274,7 +273,7 @@ export const VoxTraction: React.FC<{c: Company}> = ({c}) => {
       })()}
 
       {/* C: funding, team, office */}
-      {frame >= cAt - 4 && (() => {
+      {frame >= cAt && (() => {
         const [money, team] = t.stats;
         const pm = pop(frame, cAt);
         const pt = pop(frame, sec(team.at));
