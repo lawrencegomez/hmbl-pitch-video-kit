@@ -104,6 +104,7 @@ const example = {
 
   // Optional Vox touches (see the skill's Vox toolkit). null = plain look. Every field is optional.
   vox: null as null | {
+    full?: boolean; // swap the middle scenes for the Vox versions (src/scenes/VoxScenes.tsx)
     paper?: boolean; grain?: boolean; drift?: boolean; highlightExit?: boolean;
     founderStickers?: string[]; // transparent PNG cut-outs, same order as founders.people
     postStrip?: {label: string; src: string; w: number; h: number; at: number}; // a real public post line, cropped

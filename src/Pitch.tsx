@@ -4,6 +4,7 @@ import {Company} from './types';
 import {Captions} from './components/Captions';
 import {BoilFilter} from './components/Hand';
 import {Scene} from './components/Scene';
+import {VoxFounders, VoxTraction, VoxWhat, VoxWhy} from './scenes/VoxScenes';
 import {Drift, Grain, Paper} from './components/vox';
 import {Close} from './scenes/Close';
 import {Founders} from './scenes/Founders';
@@ -23,15 +24,15 @@ export const Pitch: React.FC<PitchProps> = ({c, useClip}) => {
       <BoilFilter />
       {c.vox?.paper && <Paper color={c.colors.bg} />}
       <Scene start={0} end={sec(s.what)} enter={false}><Hook c={c} /></Scene>
-      <Scene start={sec(s.what)} end={sec(s.founders)}>{c.vox?.drift ? <Drift depth={0.3} from={sec(s.what)} push={0.03}><What c={c} /></Drift> : <What c={c} />}</Scene>
-      <Scene start={sec(s.founders)} end={sec(s.why)}>{c.vox?.drift ? <Drift depth={0.3} from={sec(s.founders)} push={0.03}><Founders c={c} /></Drift> : <Founders c={c} />}</Scene>
-      <Scene start={sec(s.why)} end={sec(s.traction)}>{c.vox?.drift ? <Drift depth={0.3} from={sec(s.why)} push={0.03}><Why c={c} /></Drift> : <Why c={c} />}</Scene>
-      <Scene start={sec(s.traction)} end={sec(c.close.clipStart) + 8}>{c.vox?.drift ? <Drift depth={0.3} from={sec(s.traction)} push={0.03}><Traction c={c} /></Drift> : <Traction c={c} />}</Scene>
+      <Scene start={sec(s.what)} end={sec(s.founders)}>{c.vox?.drift ? <Drift depth={0.3} from={sec(s.what)} push={0.03}>{c.vox?.full ? <VoxWhat c={c} /> : <What c={c} />}</Drift> : (c.vox?.full ? <VoxWhat c={c} /> : <What c={c} />)}</Scene>
+      <Scene start={sec(s.founders)} end={sec(s.why)}>{c.vox?.drift ? <Drift depth={0.3} from={sec(s.founders)} push={0.03}>{c.vox?.full ? <VoxFounders c={c} /> : <Founders c={c} />}</Drift> : (c.vox?.full ? <VoxFounders c={c} /> : <Founders c={c} />)}</Scene>
+      <Scene start={sec(s.why)} end={sec(s.traction)}>{c.vox?.drift ? <Drift depth={0.3} from={sec(s.why)} push={0.03}>{c.vox?.full ? <VoxWhy c={c} /> : <Why c={c} />}</Drift> : (c.vox?.full ? <VoxWhy c={c} /> : <Why c={c} />)}</Scene>
+      <Scene start={sec(s.traction)} end={sec(c.close.clipStart) + 8}>{c.vox?.drift ? <Drift depth={0.3} from={sec(s.traction)} push={0.03}>{c.vox?.full ? <VoxTraction c={c} /> : <Traction c={c} />}</Drift> : (c.vox?.full ? <VoxTraction c={c} /> : <Traction c={c} />)}</Scene>
       <Scene start={sec(c.close.clipStart)} end={durationInFrames} enter={false}><Close c={c} useClip={useClip} /></Scene>
 
       <Captions tokens={c.words} fixes={c.captionFixes} lines={c.captionLines} ink={c.colors.ink} hi={c.colors.accent} y={1470} hideFrom={sec(c.sections.close)} />
 
-      {c.vox?.grain && <Grain />}
+      {c.vox?.grain && <Grain opacity={c.vox.full ? 0.26 : 0.16} />}
       <Audio src={staticFile(c.audio.vo)} />
       <Audio
         src={staticFile(c.audio.music)}
