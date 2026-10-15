@@ -42,7 +42,7 @@ export const Hook: React.FC<{c: Company}> = ({c}) => {
   const name = h.tools[active];
 
   // Collapse: the window flies into the logo spot.
-  const cx = (LOGO[0] - (WIN.x + WIN.w / 2)) * collapse;
+  const cx = (LOGO[0] - NUDGE_X - (WIN.x + WIN.w / 2)) * collapse; // the logo sits at true centre; this layer is nudged
   const cy = (LOGO[1] - (WIN.y + WIN.h / 2)) * collapse;
 
   return (

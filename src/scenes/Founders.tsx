@@ -3,7 +3,7 @@ import {AbsoluteFill, Img, staticFile, useCurrentFrame} from 'remotion';
 import {Company} from '../types';
 import {Draw} from '../components/Hand';
 import {Highlight, Sticker} from '../components/vox';
-import {fonts, pop, sec} from '../theme';
+import {NUDGE_X, fonts, pop, sec} from '../theme';
 
 export const Founders: React.FC<{c: Company}> = ({c}) => {
   const frame = useCurrentFrame();
@@ -16,7 +16,7 @@ export const Founders: React.FC<{c: Company}> = ({c}) => {
 
   return (
     <AbsoluteFill style={{background: c.vox?.paper ? 'transparent' : c.colors.bg}}>
-      <div style={{position: 'absolute', top: 230, width: '100%', textAlign: 'center', fontFamily: fonts.serif, fontSize: 120, color: c.colors.ink, transform: `scale(${title})`}}>
+      <div style={{position: 'absolute', left: -NUDGE_X, top: 230, width: '100%', textAlign: 'center', fontFamily: fonts.serif, fontSize: 120, color: c.colors.ink, transform: `scale(${title})`}}>
         {f.title}
       </div>
       <Draw d="M 330 375 C 450 395, 640 360, 760 380" at={sec(c.sections.founders) + 8} dur={12} color={c.colors.brand} width={8} />

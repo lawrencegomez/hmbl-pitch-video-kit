@@ -2,7 +2,7 @@ import React from 'react';
 import {AbsoluteFill, Img, OffthreadVideo, Sequence, staticFile, useCurrentFrame} from 'remotion';
 import {Company} from '../types';
 import {Check, Draw} from '../components/Hand';
-import {ease, fonts, pop, sec} from '../theme';
+import {NUDGE_X, ease, fonts, pop, sec} from '../theme';
 
 export const What: React.FC<{c: Company}> = ({c}) => {
   const frame = useCurrentFrame();
@@ -21,12 +21,12 @@ export const What: React.FC<{c: Company}> = ({c}) => {
       {/* burst ring behind the logo */}
       <div
         style={{
-          position: 'absolute', left: 540 - 260, top: 650 - 260, width: 520, height: 520, borderRadius: 260,
+          position: 'absolute', left: 540 - 260 - NUDGE_X, top: 650 - 260, width: 520, height: 520, borderRadius: 260,
           border: `6px solid ${c.colors.brand}`, opacity: (1 - ease(frame, sec(w.logoAt), sec(w.logoAt) + 18)) * (logo > 0.01 ? 1 : 0),
           transform: `scale(${0.4 + ease(frame, sec(w.logoAt), sec(w.logoAt) + 18) * 0.9})`,
         }}
       />
-      <div style={{position: 'absolute', left: 0, width: '100%', top: lockY - 200, transform: `scale(${lockS})`, transformOrigin: '50% 200px'}}>
+      <div style={{position: 'absolute', left: -NUDGE_X, width: '100%', top: lockY - 200, transform: `scale(${lockS})`, transformOrigin: '50% 200px'}}>
         <div style={{display: 'flex', justifyContent: 'center', alignItems: 'center', gap: 24, transform: `scale(${logo})`}}>
           <Img src={staticFile(c.logo)} style={{width: 170, height: 170}} />
           <span style={{fontFamily: fonts.serif, fontSize: 180, color: c.colors.ink, lineHeight: 1}}>{c.name}</span>

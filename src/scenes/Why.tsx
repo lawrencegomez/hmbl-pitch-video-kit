@@ -2,7 +2,7 @@ import React from 'react';
 import {AbsoluteFill, Img, staticFile, useCurrentFrame} from 'remotion';
 import {Company} from '../types';
 import {Check, Draw} from '../components/Hand';
-import {ease, fonts, pop, sec} from '../theme';
+import {NUDGE_X, ease, fonts, pop, sec} from '../theme';
 import {Clipping, HighlightBox} from '../components/vox';
 
 // Customer graph: the company in the middle, customers around it, plays flowing back.
@@ -82,7 +82,7 @@ export const Why: React.FC<{c: Company}> = ({c}) => {
           const pulse = 1 + Math.max(0, Math.sin((frame - graphAt - i * 5) / 5)) * 0.12;
           return <div key={i} style={{position: 'absolute', left: x - 34, top: yy - 34, width: 68, height: 68, borderRadius: 34, background: '#fff', border: `5px solid ${c.colors.ink}`, transform: `scale(${p * pulse})`}} />;
         })}
-        <div style={{position: 'absolute', left: 540 - 90, top: 860 - 90, width: 180, height: 180, borderRadius: 90, background: '#fff', boxShadow: '0 14px 30px rgba(30,30,30,0.18)', display: 'flex', alignItems: 'center', justifyContent: 'center', transform: `scale(${pop(frame, graphAt)})`}}>
+        <div style={{position: 'absolute', left: 540 - 90 - NUDGE_X, top: 860 - 90, width: 180, height: 180, borderRadius: 90, background: '#fff', boxShadow: '0 14px 30px rgba(30,30,30,0.18)', display: 'flex', alignItems: 'center', justifyContent: 'center', transform: `scale(${pop(frame, graphAt)})`}}>
           <Img src={staticFile(c.logo)} style={{width: 110, height: 110}} />
         </div>
       </AbsoluteFill>

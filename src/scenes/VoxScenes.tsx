@@ -5,7 +5,7 @@ import {AbsoluteFill, Img, OffthreadVideo, Sequence, staticFile, useCurrentFrame
 import {Company} from '../types';
 import {Check, Draw} from '../components/Hand';
 import {Clipping, Halftone, Highlight, HighlightBox, MarkerCircle, MARKER_RED, Pin, Slam, TornReveal, Sticker, Tape, voxFonts} from '../components/vox';
-import {ease, fonts, pop, sec} from '../theme';
+import {NUDGE_X, ease, fonts, pop, sec} from '../theme';
 
 const INK = '#141414';
 
@@ -36,7 +36,7 @@ export const VoxWhat: React.FC<{c: Company}> = ({c}) => {
   return (
     <AbsoluteFill>
       {/* logo on a taped paper card, docks to the top when the product shows */}
-      <div style={{position: 'absolute', left: 0, width: '100%', top: 560 - dock * 380, transform: `scale(${1 - dock * 0.45})`, transformOrigin: '50% 0'}}>
+      <div style={{position: 'absolute', left: -NUDGE_X, width: '100%', top: 560 - dock * 380, transform: `scale(${1 - dock * 0.45})`, transformOrigin: '50% 0'}}>
         <Clipping seed="logo" rotate={-2} width={760} style={{left: 160, top: 0, opacity: logoP > 0.02 ? 1 : 0, transform: `rotate(-2deg) scale(${0.7 + 0.3 * logoP})`}}>
           <div style={{display: 'flex', justifyContent: 'center', alignItems: 'center', gap: 20}}>
             <Img src={staticFile(c.logo)} style={{width: 140, height: 140}} />
@@ -191,7 +191,7 @@ export const VoxWhy: React.FC<{c: Company}> = ({c}) => {
               </Clipping>
             );
           })}
-          <div style={{position: 'absolute', left: 120, top: 1150, width: 820, fontFamily: voxFonts.marker, fontSize: 72, color: MARKER_RED, transform: `rotate(-3deg) scale(${pop(frame, winAt + 10)})`}}>
+          <div style={{position: 'absolute', left: 60, top: 1150, width: 880, textAlign: 'center', fontFamily: voxFonts.marker, fontSize: 72, color: MARKER_RED, transform: `rotate(-3deg) scale(${pop(frame, winAt + 10)})`}}>
             → {y.moatNote}
           </div>
         </div>

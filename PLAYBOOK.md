@@ -61,7 +61,8 @@ Never put an `afade=t=out` with `st=0` on the whole track: it silences everythin
 
 - Centre on the real middle of the frame (x 540). The scenes were first drawn for a 60-940 box (TikTok's button
   rail), which made every video lean left; `NUDGE_X` (40px) in `src/theme.ts` shifts them back. Check with a
-  centre line drawn on a frame before calling a layout done.
+  centre line drawn on a frame before calling a layout done. Anything already centred on the FULL frame
+  (`left: 0, width: 100%`, or `left: 540 - w/2`) must subtract `NUDGE_X`, or the nudge pushes it 40px right.
 - Hand-set `captionLines` beat any automatic phrase-break rule (names and places get split otherwise).
 - Every on-screen label is a factual claim: a badge must match the facts exactly (a founder who left a school
   without a degree is "School CS, left to build", not "School CS").

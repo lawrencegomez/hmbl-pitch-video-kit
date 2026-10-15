@@ -2,7 +2,7 @@ import React from 'react';
 import {AbsoluteFill, Img, staticFile, useCurrentFrame} from 'remotion';
 import {Company} from '../types';
 import {Draw} from '../components/Hand';
-import {ease, fonts, pop, sec} from '../theme';
+import {NUDGE_X, ease, fonts, pop, sec} from '../theme';
 import {Clipping, Highlight} from '../components/vox';
 
 export const Traction: React.FC<{c: Company}> = ({c}) => {
@@ -37,7 +37,7 @@ export const Traction: React.FC<{c: Company}> = ({c}) => {
           </Clipping>
         );
       })() : (
-        <div style={{position: 'absolute', top: 230, width: '100%', textAlign: 'center', transform: `scale(${big})`}}>
+        <div style={{position: 'absolute', left: -NUDGE_X, top: 230, width: '100%', textAlign: 'center', transform: `scale(${big})`}}>
         <div style={{fontFamily: fonts.serif, fontSize: 240, color: c.colors.brand, lineHeight: 0.95}}>{n}+</div>
         <div style={{fontFamily: fonts.sans, fontWeight: 700, fontSize: 46, color: c.colors.ink, marginTop: 6}}>{t.countLabel}</div>
       </div>
