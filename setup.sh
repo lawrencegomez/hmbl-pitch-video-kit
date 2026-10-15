@@ -86,8 +86,9 @@ if doing; then
   step "7. Whisper (word timings for captions; ~1.5 GB, downloads once)"
   (cd "$KIT" && node tools/transcribe.mjs --setup)
 
-  step "8. Local files that never go to GitHub"
+  step "8. Local files that never go to GitHub + the company-data guard"
   [ -f "$KIT/STYLE-REGISTRY.md" ] || cp "$KIT/STYLE-REGISTRY.example.md" "$KIT/STYLE-REGISTRY.md"
+  git -C "$KIT" config core.hooksPath .githooks
 
   step "9. Logins"
   if ! higgsfield account status >/dev/null 2>&1; then
@@ -128,6 +129,7 @@ COST="$(higgsfield generate cost elevenlabs_v4 --dialogue "[{\"text\":\"Hi.\",\"
 echo "$COST" | grep -q credits && ok "Higgsfield can price the Emily voice ($COST, nothing spent)" || bad "Higgsfield voice check failed: $COST"
 codex login status >/dev/null 2>&1 && ok "Codex logged in" || bad "Codex not logged in (run: codex login)"
 
+[ "$(git -C "$KIT" config core.hooksPath)" = ".githooks" ] && ok "Company-data guard on (blocks company names in commits)" || bad "Company-data guard off (run ./setup.sh)"
 (cd "$KIT" && npm run -s smoke >/dev/null 2>&1) && [ -f "$KIT/out/smoke.png" ] && ok "Test render works (out/smoke.png)" || bad "Test render failed (run: cd $KIT && npm run smoke)"
 
 echo

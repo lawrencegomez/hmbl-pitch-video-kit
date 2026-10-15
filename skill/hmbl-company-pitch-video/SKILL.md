@@ -64,6 +64,10 @@ not the look. Reusing any of it needs a reason rooted in the new company.
 
 ## Process
 
+### 0. Get the latest kit (every time, first)
+`git -C "$KIT" pull --ff-only --quiet`. If it fails (local edits in the way, or offline), say so in one line and
+carry on with the local copy; never discard local changes to force it.
+
 ### 1. Intake (2 min)
 `mkdir -p "$KIT/companies/<slug>"/{research,assets/{web,founders,audio,gen}}`. Collect what the recruiter sent:
 brief, phone script, logo, site, founder LinkedIn URLs, any photos. Note the phone script's "to confirm" items now.
@@ -102,5 +106,13 @@ sources before acting. Re-render and re-review until no high-severity items rema
 
 ### 8. Deliver
 `out/<slug>-final.mp4` plus a local link (`python3 -m http.server <free port> --bind 127.0.0.1 --directory "$KIT/out"`).
-Add a row to STYLE-REGISTRY.md and save `review/<slug>-final-sheet.png`. If a lesson applies to every future
-video, add it to PLAYBOOK.md with no company details.
+Add a row to STYLE-REGISTRY.md and save `review/<slug>-final-sheet.png`.
+
+### 9. Share improvements back (keeps every recruiter's kit current)
+If this video taught something that applies to every future video (a PLAYBOOK lesson, a better shared component,
+a new reusable scene, a skill fix), put it in the shared files with **no company names or facts**, then:
+`git -C "$KIT" add <only the shared files you changed>` (never `git add -A`), commit with a plain message, and
+`git -C "$KIT" push`. The pre-commit guard blocks company data (it checks the names in STYLE-REGISTRY.md and
+`companies/`); if it blocks, remove the company detail, don't bypass it (`--no-verify` is not allowed).
+If the push is refused (no write access to the repo), leave the commit local and tell the recruiter which lesson
+to send to the repo owner.
