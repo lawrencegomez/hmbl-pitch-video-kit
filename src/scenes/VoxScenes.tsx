@@ -4,7 +4,7 @@ import React from 'react';
 import {AbsoluteFill, Img, OffthreadVideo, Sequence, staticFile, useCurrentFrame} from 'remotion';
 import {Company} from '../types';
 import {Check, Draw} from '../components/Hand';
-import {Clipping, Halftone, Highlight, HighlightBox, MarkerCircle, MARKER_RED, Slam, Sticker, Tape, voxFonts} from '../components/vox';
+import {Clipping, Halftone, Highlight, HighlightBox, MarkerCircle, MARKER_RED, Pin, Redact, Slam, Sticker, Tape, voxFonts} from '../components/vox';
 import {ease, fonts, pop, sec} from '../theme';
 
 const INK = '#141414';
@@ -178,12 +178,12 @@ export const VoxWhy: React.FC<{c: Company}> = ({c}) => {
             const p = pop(frame, playsAt + 4 + i * 5);
             const judged = frame >= winAt + i * 3;
             return (
-              <Clipping key={pl.text} seed={`play${i}`} rotate={[-2, 1.5, -1][i]} width={800} tape={i === 0} style={{left: 90, top: 430 + i * 190, opacity: p > 0.02 ? 1 : 0, transform: `rotate(${[-2, 1.5, -1][i]}deg) translateX(${(1 - p) * 500}px)`}}>
+              <Clipping key={pl.text} seed={`play${i}`} rotate={[-2, 1.5, -1][i]} width={800} tape={i === 0} style={{left: 90, top: 420 + i * 235, opacity: p > 0.02 ? 1 : 0, transform: `rotate(${[-2, 1.5, -1][i]}deg) translateX(${(1 - p) * 500}px)`}}>
                 <div style={{display: 'flex', alignItems: 'center', gap: 18}}>
                   <div style={{position: 'relative', width: 54, height: 54, flexShrink: 0}}>
                     {pl.win && <Check at={winAt + i * 3} color="#1F9D55" size={54} />}
                   </div>
-                  <span style={{fontFamily: voxFonts.type, fontSize: 40, color: judged && !pl.win ? '#888' : INK}}>
+                  <span style={{fontFamily: voxFonts.type, fontSize: 46, lineHeight: 1.25, color: judged && !pl.win ? '#888' : INK}}>
                     {pl.win ? <Highlight at={winAt + i * 3 + 2}>{pl.text}</Highlight> : pl.text}
                   </span>
                 </div>
@@ -191,7 +191,7 @@ export const VoxWhy: React.FC<{c: Company}> = ({c}) => {
               </Clipping>
             );
           })}
-          <div style={{position: 'absolute', left: 140, top: 1060, width: 800, fontFamily: voxFonts.marker, fontSize: 62, color: MARKER_RED, transform: `rotate(-3deg) scale(${pop(frame, winAt + 10)})`}}>
+          <div style={{position: 'absolute', left: 120, top: 1150, width: 820, fontFamily: voxFonts.marker, fontSize: 72, color: MARKER_RED, transform: `rotate(-3deg) scale(${pop(frame, winAt + 10)})`}}>
             → {y.moatNote}
           </div>
         </div>
@@ -200,84 +200,133 @@ export const VoxWhy: React.FC<{c: Company}> = ({c}) => {
   );
 };
 
-// ---------------------------------------------------------------- traction
+// ---------------------------------------------------------------- traction (three full-screen phases)
+// A: customers (launch clipping + stamp + logos)  B: revenue (big graph paper, logos stay)  C: funding, team, office map
 export const VoxTraction: React.FC<{c: Company}> = ({c}) => {
   const frame = useCurrentFrame();
   const t = c.traction;
   const countAt = sec(t.countAt);
   const r = t.revenue;
   const revAt = sec(r.at);
-  const swap = ease(frame, revAt - 4, revAt + 8);
+  const cAt = sec(t.stats[0].at);
+  const toB = ease(frame, revAt - 4, revAt + 8);
+  const toC = ease(frame, cAt - 4, cAt + 8);
   const k = c.vox?.clipping;
-  const CHART = 'M 70 300 C 270 300, 420 292, 500 230 S 640 80, 690 50';
+  const office = c.vox?.office;
+  const CHART = 'M 70 560 C 300 560, 450 545, 540 430 S 680 140, 720 90';
+  const push = 1 + 0.08 * ease(frame, countAt + 4, countAt + 40);
   return (
     <AbsoluteFill>
-      {k && (
-        <Clipping seed="tractionclip" rotate={1.5} width={800} style={{left: 110, top: 200, opacity: pop(frame, sec(k.at)), transform: `rotate(1.5deg) scale(${0.9 + 0.1 * pop(frame, sec(k.at))})`}}>
-          <div style={{display: 'flex', alignItems: 'center', gap: 12, marginBottom: 12}}>
-            <div style={{width: 38, height: 38, background: '#FF6600', color: '#fff', fontFamily: fonts.sans, fontWeight: 800, fontSize: 26, display: 'flex', alignItems: 'center', justifyContent: 'center'}}>Y</div>
-            <div style={{fontFamily: fonts.sans, fontWeight: 600, fontSize: 26, color: '#666'}}>{k.source}</div>
+      {/* A: the launch post, pushed into */}
+      {k && frame < revAt + 10 && (
+        <div style={{position: 'absolute', inset: 0, opacity: 1 - toB, transform: `translateY(${toB * -300}px)`}}>
+          <Clipping seed="tractionclip" rotate={1.5} width={840} style={{left: 100, top: 190, opacity: pop(frame, sec(k.at)), transform: `rotate(1.5deg) scale(${(0.9 + 0.1 * pop(frame, sec(k.at))) * push})`, transformOrigin: '40% 70%'}}>
+            <div style={{display: 'flex', alignItems: 'center', gap: 12, marginBottom: 12}}>
+              <div style={{width: 40, height: 40, background: '#FF6600', color: '#fff', fontFamily: fonts.sans, fontWeight: 800, fontSize: 28, display: 'flex', alignItems: 'center', justifyContent: 'center'}}>Y</div>
+              <div style={{fontFamily: fonts.sans, fontWeight: 600, fontSize: 28, color: '#666'}}>{k.source}</div>
+            </div>
+            <div style={{fontFamily: fonts.sans, fontWeight: 800, fontSize: 42, lineHeight: 1.15, color: INK}}>{k.title}</div>
+            <div style={{fontFamily: 'Georgia, serif', fontSize: 38, lineHeight: 1.38, color: '#222', marginTop: 14}}>
+              {k.before}<Highlight at={countAt + 4}>{k.highlight}</Highlight>{k.after}
+            </div>
+            <div style={{fontFamily: voxFonts.type, fontSize: 24, color: '#888', marginTop: 12}}>{k.url}</div>
+          </Clipping>
+          <div style={{position: 'absolute', left: 560, top: 720, transform: 'rotate(-8deg)'}}>
+            <Slam at={countAt + 8} size={210} color={MARKER_RED}>{t.count}+</Slam>
           </div>
-          <div style={{fontFamily: fonts.sans, fontWeight: 800, fontSize: 38, lineHeight: 1.15, color: INK}}>{k.title}</div>
-          <div style={{fontFamily: 'Georgia, serif', fontSize: 34, lineHeight: 1.38, color: '#222', marginTop: 14}}>
-            {k.before}<Highlight at={countAt + 4}>{k.highlight}</Highlight>{k.after}
-          </div>
-          <div style={{fontFamily: voxFonts.type, fontSize: 22, color: '#888', marginTop: 12}}>{k.url}</div>
-        </Clipping>
+          <MarkerCircle at={countAt + 16} x={560} y={730} w={330} h={200} color={INK} />
+        </div>
       )}
-      {/* big stamped count, circled */}
-      <div style={{position: 'absolute', left: 560, top: 600, transform: 'rotate(-8deg)', opacity: 1 - swap}}>
-        <Slam at={countAt + 8} size={210} color={MARKER_RED}>{t.count}+</Slam>
-      </div>
-      {frame < revAt && <MarkerCircle at={countAt + 16} x={560} y={610} w={330} h={200} color={INK} />}
 
-      {/* customer logos as taped labels */}
-      <div style={{opacity: 1 - swap}}>
+      {/* customer logos as taped labels: phase A and B */}
+      <div style={{opacity: 1 - toC, transform: `translateY(${toC * 300}px)`}}>
         {t.logos.map((l, i) => {
           const p = pop(frame, countAt + 10 + i * 3, true);
-          const left = 90 + (i % 2) * 230, top = 640 + Math.floor(i / 2) * 120, rot = [-3, 2, 2, -3, -2, 3][i];
+          const left = 90 + (i % 3) * 285, top = 1010 + Math.floor(i / 3) * 150, rot = [-3, 2, -2, 3, -2, 2][i];
           return (
-            <div key={l} style={{position: 'absolute', left, top, width: 210, height: 96, background: '#FFFDF8', display: 'flex', alignItems: 'center', justifyContent: 'center', transform: `rotate(${rot}deg) scale(${p})`, boxShadow: '0 8px 14px rgba(40,25,10,0.22)'}}>
-              <Img src={staticFile(l)} style={{maxWidth: 170, maxHeight: 46, filter: 'brightness(0.2)'}} />
-              <Tape style={{left: 60, top: -20}} rotate={rot * 2} w={90} />
+            <div key={l} style={{position: 'absolute', left, top, width: 260, height: 118, background: '#FFFDF8', display: 'flex', alignItems: 'center', justifyContent: 'center', transform: `rotate(${rot}deg) scale(${p})`, boxShadow: '0 8px 14px rgba(40,25,10,0.22)'}}>
+              <Img src={staticFile(l)} style={{maxWidth: 210, maxHeight: 56, filter: 'brightness(0.2)'}} />
+              <Tape style={{left: 85, top: -20}} rotate={rot * 2} w={90} />
             </div>
           );
         })}
       </div>
 
-      {/* revenue on graph paper, drawn in marker */}
-      {frame >= revAt - 4 && (() => {
+      {/* B: revenue, big, on graph paper */}
+      {frame >= revAt - 4 && frame < cAt + 10 && (() => {
         const p = pop(frame, revAt);
         return (
-          <div style={{position: 'absolute', left: 100, top: 640, width: 820, height: 380, transform: `rotate(-1.5deg) scale(${0.9 + 0.1 * p})`, opacity: p, boxShadow: '0 18px 30px rgba(40,25,10,0.3)',
-            backgroundColor: '#FDFBF4', backgroundImage: 'linear-gradient(rgba(70,120,190,0.18) 1px, transparent 1px), linear-gradient(90deg, rgba(70,120,190,0.18) 1px, transparent 1px)', backgroundSize: '34px 34px'}}>
-            <Tape style={{left: 330, top: -20}} rotate={-3} w={160} />
-            <div style={{position: 'absolute', left: 30, top: 22, fontFamily: voxFonts.type, fontSize: 38, color: INK}}>{r.title}</div>
-            <Draw w={820} h={380} d={CHART} at={revAt + 4} dur={26} color={MARKER_RED} width={12} arrow />
+          <div style={{position: 'absolute', left: 90, top: 210, width: 840, height: 740, opacity: p * (1 - toC), transform: `rotate(-1.5deg) scale(${0.9 + 0.1 * p}) translateY(${toC * -300}px)`, boxShadow: '0 18px 30px rgba(40,25,10,0.3)',
+            backgroundColor: '#FDFBF4', backgroundImage: 'linear-gradient(rgba(70,120,190,0.18) 1px, transparent 1px), linear-gradient(90deg, rgba(70,120,190,0.18) 1px, transparent 1px)', backgroundSize: '40px 40px'}}>
+            <Tape style={{left: 340, top: -20}} rotate={-3} w={170} />
+            <div style={{position: 'absolute', left: 36, top: 30, fontFamily: voxFonts.type, fontSize: 48, color: INK}}>{r.title}</div>
+            <Draw w={840} h={740} d={CHART} at={revAt + 4} dur={26} color={MARKER_RED} width={14} arrow />
             {r.months.map((m, i) => (
-              <div key={m} style={{position: 'absolute', left: 80 + i * 290, top: 325, fontFamily: voxFonts.marker, fontSize: 30, color: '#555', opacity: ease(frame, revAt + 4 + i * 8, revAt + 10 + i * 8)}}>{m}</div>
+              <div key={m} style={{position: 'absolute', left: 70 + i * 300, top: 630, fontFamily: voxFonts.marker, fontSize: 40, color: '#555', opacity: ease(frame, revAt + 4 + i * 8, revAt + 10 + i * 8)}}>{m}</div>
             ))}
-            <div style={{position: 'absolute', left: 70, top: 240, fontFamily: voxFonts.marker, fontSize: 46, color: INK, opacity: ease(frame, revAt + 4, revAt + 10)}}>{r.from}</div>
-            <div style={{position: 'absolute', right: 40, top: 100, textAlign: 'right', transform: `scale(${pop(frame, revAt + 26, true)})`, transformOrigin: 'right top'}}>
-              <Slam at={revAt + 26} size={130} color={MARKER_RED}>{r.to}</Slam>
-              <div style={{fontFamily: voxFonts.marker, fontSize: 48, color: INK}}>{r.toLabel}</div>
+            <div style={{position: 'absolute', left: 60, top: 480, fontFamily: voxFonts.marker, fontSize: 64, color: INK, opacity: ease(frame, revAt + 4, revAt + 10)}}>{r.from}</div>
+            <div style={{position: 'absolute', right: 50, top: 200, textAlign: 'right'}}>
+              <div style={{fontFamily: voxFonts.slam, fontSize: 190, lineHeight: 1, color: MARKER_RED}}><Redact at={revAt + 24}>{r.to}</Redact></div>
+              <div style={{fontFamily: voxFonts.marker, fontSize: 64, color: INK, opacity: ease(frame, revAt + 32, revAt + 38)}}>{r.toLabel}</div>
             </div>
           </div>
         );
       })()}
 
-      {/* stats as clippings with the number highlighted */}
-      {t.stats.map((s, i) => {
-        const p = pop(frame, sec(s.at) - 2);
+      {/* C: funding, team, office */}
+      {frame >= cAt - 4 && (() => {
+        const [money, team] = t.stats;
+        const pm = pop(frame, cAt);
+        const pt = pop(frame, sec(team.at));
         return (
-          <Clipping key={s.big} seed={`stat${i}`} rotate={i ? 1.5 : -1.5} width={820} tape={false} style={{left: 100, top: 1060 + i * 170, opacity: p > 0.02 ? 1 : 0, transform: `rotate(${i ? 1.5 : -1.5}deg) translateY(${(1 - p) * 120}px)`}}>
-            <div style={{display: 'flex', alignItems: 'center', gap: 26}}>
-              <div style={{fontFamily: voxFonts.slam, fontSize: 96, lineHeight: 1, color: INK}}><Highlight at={sec(s.at) + 4}>{s.big}</Highlight></div>
-              <div style={{fontFamily: voxFonts.type, fontSize: 36, lineHeight: 1.2, color: '#222'}}>{s.small}</div>
-            </div>
-          </Clipping>
+          <>
+            <Clipping seed="money" rotate={-1.5} width={840} tape={false} style={{left: 90, top: 200, opacity: pm > 0.02 ? 1 : 0, transform: `rotate(-1.5deg) translateX(${(1 - pm) * -600}px)`}}>
+              <div style={{display: 'flex', alignItems: 'center', gap: 28}}>
+                <div style={{fontFamily: voxFonts.slam, fontSize: 130, lineHeight: 1, color: INK}}><Redact at={sec(money.revealAt ?? money.at)}>{money.big}</Redact></div>
+                <div style={{fontFamily: voxFonts.type, fontSize: 38, lineHeight: 1.2, color: '#222'}}>{money.small}</div>
+              </div>
+            </Clipping>
+            <Clipping seed="team" rotate={1.5} width={840} tape={false} style={{left: 90, top: 440, opacity: pt > 0.02 ? 1 : 0, transform: `rotate(1.5deg) translateX(${(1 - pt) * 600}px)`}}>
+              <div style={{display: 'flex', alignItems: 'center', gap: 24}}>
+                <div style={{fontFamily: voxFonts.slam, fontSize: 130, lineHeight: 1, color: MARKER_RED}}><Highlight at={sec(team.at) + 6}>{team.big}</Highlight></div>
+                <div style={{fontFamily: voxFonts.type, fontSize: 38, lineHeight: 1.2, color: '#222'}}>{team.small}</div>
+                <svg width={300} height={110} viewBox="0 0 300 110" style={{marginLeft: 'auto'}}>
+                  {Array.from({length: Number(team.big) || 0}, (_, j) => {
+                    const x = 30 + j * 60;
+                    const on = pop(frame, sec(team.at) + 8 + j * 3, true);
+                    return (
+                      <g key={j} transform={`translate(${x} ${110 - 110 * on}) `} stroke={INK} strokeWidth={5} fill="none" strokeLinecap="round" opacity={on}>
+                        <circle cx={0} cy={22} r={13} />
+                        <path d="M 0 36 L 0 72 M -20 52 L 20 52 M 0 72 L -16 100 M 0 72 L 16 100" />
+                      </g>
+                    );
+                  })}
+                </svg>
+              </div>
+            </Clipping>
+            {office && (() => {
+              const po = pop(frame, sec(t.stats[1].at) + 6);
+              const W = 840, H = 640, sc = 1.2;
+              const ox = W / 2 - office.pin[0] * sc, oy = H / 2 - office.pin[1] * sc;
+              return (
+                <div style={{position: 'absolute', left: 90, top: 690, width: W, opacity: po > 0.02 ? 1 : 0, transform: `rotate(-1deg) translateY(${(1 - po) * 300}px)`}}>
+                  <div style={{background: '#fff', padding: 14, boxShadow: '0 22px 40px rgba(40,25,10,0.35)'}}>
+                    <div style={{position: 'relative', height: H, overflow: 'hidden'}}>
+                      <Img src={staticFile(office.map)} style={{position: 'absolute', left: ox, top: oy, width: office.mapW * sc, transform: `scale(${1 + 0.06 * ease(frame, sec(office.at), sec(office.at) + 60)})`, transformOrigin: `${office.pin[0] * sc}px ${office.pin[1] * sc}px`}} />
+                      <Halftone x={W / 2} y={H / 2} size={240} at={sec(office.at)} color={MARKER_RED} />
+                      <Pin x={W / 2} y={H / 2} at={sec(office.at)} />
+                      <div style={{position: 'absolute', left: W / 2 + 50, top: H / 2 - 150, fontFamily: voxFonts.marker, fontSize: 52, color: INK, background: '#FFFDF8', padding: '4px 16px', transform: `rotate(-4deg) scale(${pop(frame, sec(office.at) + 8)})`, boxShadow: '0 6px 12px rgba(0,0,0,0.2)'}}>{office.label}</div>
+                      <div style={{position: 'absolute', right: 8, bottom: 6, fontFamily: fonts.sans, fontSize: 18, color: '#555', background: 'rgba(255,255,255,0.8)', padding: '2px 6px'}}>{office.credit}</div>
+                    </div>
+                  </div>
+                  <Tape style={{left: -30, top: -16}} rotate={-32} w={150} />
+                  <Tape style={{right: -30, top: -16}} rotate={30} w={150} />
+                </div>
+              );
+            })()}
+          </>
         );
-      })}
+      })()}
     </AbsoluteFill>
   );
 };

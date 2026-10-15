@@ -97,8 +97,8 @@ const example = {
     revenue: {at: 28.4, title: 'Revenue', from: '$0', to: '$XM', toLabel: 'by Month', months: ['Jan', 'Feb', 'Mar']},
     logos: [] as string[], // customer logos from their own site
     stats: [
-      {big: '$XM', small: 'raised from investors', at: 31.9},
-      {big: 'N', small: 'people in City', at: 33.6},
+      {big: '$XM', small: 'raised from investors', at: 31.9, revealAt: 32.6},
+      {big: 'N', small: 'person team', at: 33.6, revealAt: undefined as number | undefined},
     ],
   },
 
@@ -109,6 +109,7 @@ const example = {
     founderStickers?: string[]; // transparent PNG cut-outs, same order as founders.people
     postStrip?: {label: string; src: string; w: number; h: number; at: number}; // a real public post line, cropped
     clipping?: {source: string; title: string; before: string; highlight: string; after: string; url: string; at: number};
+    office?: {map: string; mapW: number; pin: [number, number]; label: string; credit: string; at: number}; // styled map + pin drop
   },
 
   close: {

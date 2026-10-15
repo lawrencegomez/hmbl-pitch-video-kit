@@ -67,12 +67,12 @@ these as seasoning on top of a concept; a concept can also be "full Vox". Built 
 | Typewriter text | Labels that type out (Special Elite) | `voxFonts.type` |
 | Halftone dots | Comic-print dot disc or panel behind a subject | `<Halftone>` |
 | Tape slap | Strips of tape slapped across a pile (great for "glued together") | `<Tape>` |
-| Push into a document | Camera zooms into a screenshot until one line fills the frame | build |
-| Map pins / route lines | A map with pins dropping and a line drawing between places (offices, customers) | build |
+| Push into a document | Camera pushes into a clipping as its key line is highlighted | built into the full-Vox traction scene |
+| Map pins / route lines | A real map (OpenStreetMap tiles, tinted to paper, credit on screen) with a pin drop + halftone on the office | `<Pin>` + `vox.office` |
 | Stacked timeline cards | Dated cards that stack or slide along a line (founding, YC, raise, launch) | build |
-| Redaction bars | Black bars that wipe off to reveal a number or name | build |
+| Redaction bars | Black bars that wipe off to reveal a number or name | `<Redact>` |
 | Split-screen before / after | The old way vs the new way side by side, one side wiped | build |
-| Torn reveal | The paper tears open to reveal the next scene | build |
+| Torn-paper wipe | A torn sheet sweeps across the frame on every section change | `<TornWipe>` (auto with `vox.full`) |
 | Photo rotoscope sketch | A photo turns into a pencil outline and back | build |
 | Colour isolation | Everything grey except the subject in the accent colour | build |
 | Data in hand-drawn form | Charts drawn as marker lines on graph paper, numbers circled | `<Draw>` |
@@ -82,6 +82,8 @@ Rules for Vox touches:
   headline, a post, or a quote.
 - Keep the house rules: safe area, small low captions, facts only.
 - Two or three techniques per scene is plenty. Highlighter + clipping + drift is the core combo.
+- Fill the frame down to the captions (y ~1400): when a beat leaves the bottom third empty, enlarge it or bring the next element in early.
+- `vox.full: true` swaps in the full Vox scene set (src/scenes/VoxScenes.tsx); without it, single touches (paper, grain, drift, stickers, post strip, clipping) still work on the plain scenes.
 
 ## Script
 

@@ -152,3 +152,47 @@ export const Slam: React.FC<{at: number; children: React.ReactNode; size: number
     </div>
   );
 };
+
+// Redaction bar that wipes off (left to right) at `at`, revealing what's underneath.
+export const Redact: React.FC<{at: number; children: React.ReactNode; dur?: number}> = ({at, children, dur = 10}) => {
+  const frame = useCurrentFrame();
+  const p = ease(frame, at, at + dur);
+  return (
+    <span style={{position: 'relative', display: 'inline-block'}}>
+      {children}
+      <span style={{position: 'absolute', left: '-4%', right: '-4%', top: '6%', bottom: '2%', background: '#141414', transform: `scaleX(${1 - p})`, transformOrigin: 'right center'}} />
+    </span>
+  );
+};
+
+// A torn sheet of paper that sweeps across the frame, hiding a cut. `at` = the frame of the cut.
+export const TornWipe: React.FC<{at: number; color?: string; seed?: string}> = ({at, color = '#EADBC0', seed = 'wipe'}) => {
+  const frame = useCurrentFrame();
+  const t = (frame - (at - 7)) / 14;
+  if (t <= 0 || t >= 1) return null;
+  const x = -1500 + t * 2700;
+  const teeth = 30;
+  const pts: string[] = [];
+  for (let i = 0; i <= teeth; i++) pts.push(`${random(`${seed}a${i}`) * 4}% ${(i / teeth) * 100}%`);
+  for (let i = teeth; i >= 0; i--) pts.push(`${96 + random(`${seed}b${i}`) * 4}% ${(i / teeth) * 100}%`);
+  return (
+    <div style={{position: 'absolute', top: -40, left: x, width: 1500, height: 2000, transform: 'rotate(4deg)', filter: 'drop-shadow(0 0 18px rgba(60,40,20,0.35))', pointerEvents: 'none'}}>
+      <div style={{width: '100%', height: '100%', background: color, clipPath: `polygon(${pts.join(',')})`}} />
+    </div>
+  );
+};
+
+// Map pin that drops in and bounces, with a shadow.
+export const Pin: React.FC<{x: number; y: number; at: number; color?: string}> = ({x, y, at, color = MARKER_RED}) => {
+  const frame = useCurrentFrame();
+  const p = pop(frame, at);
+  return (
+    <div style={{position: 'absolute', left: x - 30, top: y - 78}}>
+      <div style={{position: 'absolute', left: 14, top: 70, width: 32, height: 10, borderRadius: '50%', background: 'rgba(0,0,0,0.35)', transform: `scale(${p})`}} />
+      <svg width={60} height={80} viewBox="0 0 30 40" style={{transform: `translateY(${(1 - p) * -260}px)`, opacity: p > 0.02 ? 1 : 0, filter: 'drop-shadow(0 4px 4px rgba(0,0,0,0.35))'}}>
+        <path d="M15 1 C7 1 1 7 1 15 C1 26 15 39 15 39 C15 39 29 26 29 15 C29 7 23 1 15 1 Z" fill={color} stroke="#fff" strokeWidth={2} />
+        <circle cx={15} cy={15} r={5} fill="#fff" />
+      </svg>
+    </div>
+  );
+};

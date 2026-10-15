@@ -5,7 +5,7 @@ import {Captions} from './components/Captions';
 import {BoilFilter} from './components/Hand';
 import {Scene} from './components/Scene';
 import {VoxFounders, VoxTraction, VoxWhat, VoxWhy} from './scenes/VoxScenes';
-import {Drift, Grain, Paper} from './components/vox';
+import {Drift, Grain, Paper, TornWipe} from './components/vox';
 import {Close} from './scenes/Close';
 import {Founders} from './scenes/Founders';
 import {Hook} from './scenes/Hook';
@@ -32,6 +32,7 @@ export const Pitch: React.FC<PitchProps> = ({c, useClip}) => {
 
       <Captions tokens={c.words} fixes={c.captionFixes} lines={c.captionLines} ink={c.colors.ink} hi={c.colors.accent} y={1470} hideFrom={sec(c.sections.close)} />
 
+      {c.vox?.full && [sec(s.what), sec(s.founders), sec(s.why), sec(s.traction), sec(c.traction.stats[0].at)].map((a, i) => <TornWipe key={a} at={a} seed={`w${i}`} color={i % 2 ? '#E9D9BC' : '#F1E4CC'} />)}
       {c.vox?.grain && <Grain opacity={c.vox.full ? 0.26 : 0.16} />}
       <Audio src={staticFile(c.audio.vo)} />
       <Audio
