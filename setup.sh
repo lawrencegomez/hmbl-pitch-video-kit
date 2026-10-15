@@ -38,7 +38,7 @@ case "$(uname -s)" in MINGW*|MSYS*|CYGWIN*) WINDOWS=1 ;; esac
 
 # ---------------------------------------------------------------- install
 if doing && [ "$WINDOWS" = 1 ]; then
-  step "1. Scoop packages (ffmpeg, ImageMagick, potrace, Python 3.13, pipx, fnm)"
+  step "1. Scoop packages (ffmpeg, ImageMagick, potrace, Python 3.13, fnm)"
   if ! have scoop; then
     echo 'Scoop is missing. Open PowerShell (normal, not as admin) and run these two lines:'
     echo '  Set-ExecutionPolicy -ExecutionPolicy RemoteSigned -Scope CurrentUser'
@@ -48,7 +48,9 @@ if doing && [ "$WINDOWS" = 1 ]; then
   fi
   scoop bucket list 2>/dev/null | grep -q versions || scoop bucket add versions
   # python313 = the same Python the Mac setup runs Scrapling on. Already-installed apps are skipped.
-  scoop install ffmpeg imagemagick potrace versions/python313 pipx fnm
+  scoop install ffmpeg imagemagick potrace versions/python313 fnm
+  # Not Scoop's pipx: it bakes in whatever "python" it finds, often the Microsoft Store stub. Run pipx from python313.
+  python313 -m pip install --user --quiet --disable-pip-version-check "pipx==1.18.1"
 elif doing; then
   step "1. Homebrew packages (ffmpeg, ImageMagick, potrace, pipx, fnm)"
   if ! have brew; then
@@ -72,12 +74,20 @@ source "$KIT/bin/env.sh" >/dev/null 2>&1 || true
 
 if doing; then
   step "3. Higgsfield CLI $HF_CLI_VERSION + Codex CLI $CODEX_VERSION"
-  npm install -g "@higgsfield/cli@$HF_CLI_VERSION" "@openai/codex@$CODEX_VERSION"
+  if [ "$WINDOWS" = 1 ]; then
+    # Higgsfield's installer runs plain "tar"; Git Bash's tar reads "C:" as a remote host, Windows' own tar doesn't.
+    # Separate installs, so one failure can't roll back the other.
+    PATH="/c/Windows/System32:$PATH" npm install -g "@higgsfield/cli@$HF_CLI_VERSION"
+    npm install -g "@openai/codex@$CODEX_VERSION"
+  else
+    npm install -g "@higgsfield/cli@$HF_CLI_VERSION" "@openai/codex@$CODEX_VERSION"
+  fi
 
   step "4. Video code packages (exact versions from package-lock.json)"
   (cd "$KIT" && npm ci)
 
   step "5. Scrapling $SCRAPLING_VERSION (website reader) + its browsers"
+  pipx() { if [ "$WINDOWS" = 1 ]; then python313 -m pipx "$@"; else command pipx "$@"; fi; }
   pipx ensurepath >/dev/null 2>&1 || true
   export PATH="$HOME/.local/bin:$PATH"
   if ! scrapling --version 2>/dev/null | grep -q "$SCRAPLING_VERSION"; then
@@ -102,8 +112,9 @@ if doing; then
     if [ -e "$dest" ] && [ ! -L "$dest" ]; then mv "$dest" "$dest.backup-$(date +%Y%m%d%H%M%S)"; fi
     if [ "$WINDOWS" = 1 ]; then
       # A junction, not a symlink: needs no admin or Developer Mode, and Git Bash follows it like a symlink.
-      [ -L "$dest" ] && cmd //c rmdir "$(cygpath -w "$dest")"
-      cmd //c mklink /J "$(cygpath -w "$dest")" "$(cygpath -w "$1")" >/dev/null
+      # MSYS2_ARG_CONV_EXCL stops Git Bash rewriting "/J" and "/c" into file paths.
+      [ -L "$dest" ] && MSYS2_ARG_CONV_EXCL='*' cmd /c rmdir "$(cygpath -w "$dest")"
+      MSYS2_ARG_CONV_EXCL='*' cmd /c mklink /J "$(cygpath -w "$dest")" "$(cygpath -w "$1")" >/dev/null
     else
       ln -sfn "$1" "$dest"
     fi
