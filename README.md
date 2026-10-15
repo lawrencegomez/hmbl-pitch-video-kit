@@ -10,7 +10,7 @@ gets its own look, taken from the company's brand, its own words and its founder
 
 ## What you need
 
-- A Mac with [Homebrew](https://brew.sh)
+- A Mac with [Homebrew](https://brew.sh), or a Windows PC with [Git for Windows](https://git-scm.com/downloads/win) and [Scoop](https://scoop.sh)
 - [Claude Code](https://claude.com/claude-code)
 - A [Higgsfield](https://higgsfield.ai) account with credits (about 45 credits per video)
 - A ChatGPT account (for the GPT reviewer that double-checks each video)
@@ -25,6 +25,17 @@ git clone https://github.com/lawrencegomez/hmbl-pitch-video-kit.git ~/hmbl-pitch
 cd ~/hmbl-pitch-video-kit
 ./setup.sh
 ```
+
+**On Windows:** install Scoop first. Open PowerShell (a normal window, not as admin) and run:
+
+```powershell
+Set-ExecutionPolicy -ExecutionPolicy RemoteSigned -Scope CurrentUser
+Invoke-RestMethod -Uri https://get.scoop.sh | Invoke-Expression
+```
+
+Then open **Git Bash** (it comes with Git for Windows, and it's the shell Claude Code uses on Windows) and paste
+the same three lines as above. Windows symlinks need admin rights, so the setup links the skills with folder
+junctions instead, which don't.
 
 The setup script installs the exact tool versions this kit was built with, so your videos come out the same as
 everyone else's. It installs Node 24.15.0, ffmpeg, ImageMagick, potrace, Scrapling 0.4.15, the Higgsfield CLI,

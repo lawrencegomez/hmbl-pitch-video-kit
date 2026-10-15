@@ -1,0 +1,3 @@
+# Keep line endings Unix-style on Windows too: a CRLF in setup.sh, bin/env.sh, the git hook or .node-version
+# breaks them under Git Bash.
+* text=auto eol=lf

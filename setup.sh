@@ -1,6 +1,7 @@
 #!/usr/bin/env bash
 # Installs and checks everything the hmbl-company-pitch-video skill needs, pinned to the versions it was
-# built and tested with, so every machine renders the same video. macOS + Homebrew.
+# built and tested with, so every machine renders the same video. macOS + Homebrew, or Windows + Scoop
+# (run it from Git Bash, the shell Claude Code uses on Windows).
 #
 #   ./setup.sh           install anything missing, log in where needed, then run the full check
 #   ./setup.sh --check   check only, change nothing (safe to run any time)
@@ -30,9 +31,25 @@ bad()  { printf '  \033[31m✗\033[0m %s\n' "$1"; FAILS=$((FAILS + 1)); }
 step() { printf '\n\033[1m%s\033[0m\n' "$1"; }
 have() { command -v "$1" >/dev/null 2>&1; }
 doing() { [ "$CHECK_ONLY" = 0 ]; }
+WINDOWS=0
+case "$(uname -s)" in MINGW*|MSYS*|CYGWIN*) WINDOWS=1 ;; esac
+# Scoop's ImageMagick adds itself to PATH only in new shells; add it here so this run can use it.
+[ "$WINDOWS" = 1 ] && export PATH="$(cygpath -u "${SCOOP:-$USERPROFILE/scoop}")/apps/imagemagick/current:$PATH"
 
 # ---------------------------------------------------------------- install
-if doing; then
+if doing && [ "$WINDOWS" = 1 ]; then
+  step "1. Scoop packages (ffmpeg, ImageMagick, potrace, Python 3.13, pipx, fnm)"
+  if ! have scoop; then
+    echo 'Scoop is missing. Open PowerShell (normal, not as admin) and run these two lines:'
+    echo '  Set-ExecutionPolicy -ExecutionPolicy RemoteSigned -Scope CurrentUser'
+    echo '  Invoke-RestMethod -Uri https://get.scoop.sh | Invoke-Expression'
+    echo 'Then close and reopen Git Bash and re-run ./setup.sh'
+    exit 1
+  fi
+  scoop bucket list 2>/dev/null | grep -q versions || scoop bucket add versions
+  # python313 = the same Python the Mac setup runs Scrapling on. Already-installed apps are skipped.
+  scoop install ffmpeg imagemagick potrace versions/python313 pipx fnm
+elif doing; then
   step "1. Homebrew packages (ffmpeg, ImageMagick, potrace, pipx, fnm)"
   if ! have brew; then
     echo 'Homebrew is missing. Install it first, then re-run ./setup.sh:'
@@ -42,7 +59,9 @@ if doing; then
   for f in ffmpeg imagemagick potrace pipx fnm; do
     brew list --formula "$f" >/dev/null 2>&1 || brew install "$f"
   done
+fi
 
+if doing; then
   step "2. Node $NODE_VERSION (via fnm, only used inside this kit)"
   fnm install "$NODE_VERSION"
 fi
@@ -62,7 +81,11 @@ if doing; then
   pipx ensurepath >/dev/null 2>&1 || true
   export PATH="$HOME/.local/bin:$PATH"
   if ! scrapling --version 2>/dev/null | grep -q "$SCRAPLING_VERSION"; then
-    pipx install --force "scrapling[all]==$SCRAPLING_VERSION"
+    if [ "$WINDOWS" = 1 ]; then
+      pipx install --force --python python313 "scrapling[all]==$SCRAPLING_VERSION"
+    else
+      pipx install --force "scrapling[all]==$SCRAPLING_VERSION"
+    fi
   fi
   scrapling install
 
@@ -77,7 +100,13 @@ if doing; then
   link_skill() { # target name
     local dest="$SKILLS/$2"
     if [ -e "$dest" ] && [ ! -L "$dest" ]; then mv "$dest" "$dest.backup-$(date +%Y%m%d%H%M%S)"; fi
-    ln -sfn "$1" "$dest"
+    if [ "$WINDOWS" = 1 ]; then
+      # A junction, not a symlink: needs no admin or Developer Mode, and Git Bash follows it like a symlink.
+      [ -L "$dest" ] && cmd //c rmdir "$(cygpath -w "$dest")"
+      cmd //c mklink /J "$(cygpath -w "$dest")" "$(cygpath -w "$1")" >/dev/null
+    else
+      ln -sfn "$1" "$dest"
+    fi
   }
   link_skill "$SOURCES/humanizer" humanizer
   link_skill "$SOURCES/slopmonster" slopmonster
@@ -119,6 +148,8 @@ ls "$HOME/.cache/whisper-cpp/ggml-medium.en.bin" >/dev/null 2>&1 && ok "Whisper 
 for s in humanizer slopmonster hmbl-company-pitch-video; do
   [ -f "$SKILLS/$s/SKILL.md" ] && ok "Skill: $s" || bad "Skill missing: $s"
 done
+# The skill finds this kit by following its link back (SKILL.md, "Kit folder"); a copied folder would break that.
+[ "$(cd -P "$SKILLS/hmbl-company-pitch-video/../.." 2>/dev/null && pwd -P)" = "$(cd -P "$KIT" && pwd -P)" ] && ok "Skill links back to this kit" || bad "Skill does not link back to $KIT (run ./setup.sh)"
 [ "$(git -C "$SOURCES/humanizer" rev-parse --short HEAD 2>/dev/null)" = "$HUMANIZER_REF" ] && ok "humanizer at $HUMANIZER_REF" || bad "humanizer not at $HUMANIZER_REF"
 [ "$(git -C "$SOURCES/slopmonster" rev-parse --short HEAD 2>/dev/null)" = "$SLOP_REF" ] && ok "slopmonster at $SLOP_REF" || bad "slopmonster not at $SLOP_REF"
 python3 "$SKILLS/slopmonster/tools/deslop.py" --text "This is a quick test sentence." >/dev/null 2>&1 && ok "SlopMonster scorer runs" || bad "SlopMonster scorer failed"

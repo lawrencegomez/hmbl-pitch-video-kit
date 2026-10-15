@@ -3,10 +3,11 @@
 //        node tools/transcribe.mjs --setup   (download whisper.cpp + model only, ~1.5 GB once)
 import path from 'node:path';
 import fs from 'node:fs';
+import os from 'node:os';
 import {execFileSync} from 'node:child_process';
 import {installWhisperCpp, downloadWhisperModel, transcribe, toCaptions} from '@remotion/install-whisper-cpp';
 
-const dir = path.join(process.env.HOME, '.cache', 'whisper-cpp');
+const dir = path.join(os.homedir(), '.cache', 'whisper-cpp');
 const model = 'medium.en';
 await installWhisperCpp({to: dir, version: '1.5.5'});
 await downloadWhisperModel({model, folder: dir});
