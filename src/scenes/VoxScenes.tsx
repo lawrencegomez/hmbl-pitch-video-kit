@@ -4,7 +4,7 @@ import React from 'react';
 import {AbsoluteFill, Img, OffthreadVideo, Sequence, staticFile, useCurrentFrame} from 'remotion';
 import {Company} from '../types';
 import {Check, Draw} from '../components/Hand';
-import {Clipping, Halftone, Highlight, HighlightBox, MarkerCircle, MARKER_RED, Pin, Redact, Slam, Sticker, Tape, voxFonts} from '../components/vox';
+import {Clipping, Halftone, Highlight, HighlightBox, MarkerCircle, MARKER_RED, Pin, Slam, TornReveal, Sticker, Tape, voxFonts} from '../components/vox';
 import {ease, fonts, pop, sec} from '../theme';
 
 const INK = '#141414';
@@ -208,6 +208,7 @@ export const VoxTraction: React.FC<{c: Company}> = ({c}) => {
   const countAt = sec(t.countAt);
   const r = t.revenue;
   const revAt = sec(r.at);
+  const toAt = sec(r.toAt ?? r.at + 0.8); // the big number lands when the voice says it
   const cAt = sec(t.stats[0].at);
   const toB = ease(frame, revAt - 4, revAt + 8);
   const k = c.vox?.clipping;
@@ -230,15 +231,15 @@ export const VoxTraction: React.FC<{c: Company}> = ({c}) => {
             </div>
             <div style={{fontFamily: voxFonts.type, fontSize: 24, color: '#888', marginTop: 12}}>{k.url}</div>
           </Clipping>
-          <div style={{position: 'absolute', left: 560, top: 720, transform: 'rotate(-8deg)'}}>
+          <div style={{position: 'absolute', left: 540, top: 720, transform: 'rotate(-8deg)'}}>
             <Slam at={countAt + 8} size={210} color={MARKER_RED}>{t.count}+</Slam>
           </div>
-          <MarkerCircle at={countAt + 16} x={560} y={730} w={330} h={200} color={INK} />
+          <MarkerCircle at={countAt + 16} x={490} y={680} w={420} h={300} color={INK} />
         </div>
       )}
 
       {/* customer logos as taped labels: phase A and B */}
-      <div style={{display: frame >= cAt ? 'none' : undefined}}>
+      <div style={{display: frame >= cAt + 12 ? 'none' : undefined}}>
         {t.logos.map((l, i) => {
           const p = pop(frame, countAt + 10 + i * 3, true);
           const left = 90 + (i % 3) * 285, top = 1010 + Math.floor(i / 3) * 150, rot = [-3, 2, -2, 3, -2, 2][i];
@@ -252,7 +253,7 @@ export const VoxTraction: React.FC<{c: Company}> = ({c}) => {
       </div>
 
       {/* B: revenue, big, on graph paper */}
-      {frame >= revAt - 4 && frame < cAt && (() => {
+      {frame >= revAt - 4 && frame < cAt + 12 && (() => {
         const p = pop(frame, revAt);
         return (
           <div style={{position: 'absolute', left: 90, top: 210, width: 840, height: 740, opacity: p, transform: `rotate(-1.5deg) scale(${0.9 + 0.1 * p})`, boxShadow: '0 18px 30px rgba(40,25,10,0.3)',
@@ -265,15 +266,15 @@ export const VoxTraction: React.FC<{c: Company}> = ({c}) => {
             ))}
             <div style={{position: 'absolute', left: 60, top: 480, fontFamily: voxFonts.marker, fontSize: 64, color: INK, opacity: ease(frame, revAt + 4, revAt + 10)}}>{r.from}</div>
             <div style={{position: 'absolute', right: 50, top: 200, textAlign: 'right'}}>
-              <div style={{fontFamily: voxFonts.slam, fontSize: 190, lineHeight: 1, color: MARKER_RED}}><Redact at={revAt + 24}>{r.to}</Redact></div>
-              <div style={{fontFamily: voxFonts.marker, fontSize: 64, color: INK, opacity: ease(frame, revAt + 32, revAt + 38)}}>{r.toLabel}</div>
+              <div style={{fontFamily: voxFonts.slam, fontSize: 190, lineHeight: 1, color: MARKER_RED, transformOrigin: '70% 60%', opacity: pop(frame, toAt) > 0.02 ? 1 : 0, transform: `scale(${pop(frame, toAt)}) rotate(${(1 - pop(frame, toAt)) * -12}deg)`}}>{r.to}</div>
+              <div style={{fontFamily: voxFonts.marker, fontSize: 64, color: INK, opacity: ease(frame, toAt + 24, toAt + 30)}}>{r.toLabel}</div>
             </div>
           </div>
         );
       })()}
 
       {/* C: funding, team, office */}
-      {frame >= cAt && (() => {
+      <TornReveal at={cAt} paper={c.colors.bg} seed="phaseC">{(() => {
         const [money, team] = t.stats;
         const pm = pop(frame, cAt);
         const pt = pop(frame, sec(team.at));
@@ -281,7 +282,7 @@ export const VoxTraction: React.FC<{c: Company}> = ({c}) => {
           <>
             <Clipping seed="money" rotate={-1.5} width={840} tape={false} style={{left: 90, top: 200, opacity: pm > 0.02 ? 1 : 0, transform: `rotate(-1.5deg) translateX(${(1 - pm) * -600}px)`}}>
               <div style={{display: 'flex', alignItems: 'center', gap: 28}}>
-                <div style={{fontFamily: voxFonts.slam, fontSize: 130, lineHeight: 1, color: INK}}><Redact at={sec(money.revealAt ?? money.at)}>{money.big}</Redact></div>
+                <div style={{fontFamily: voxFonts.slam, fontSize: 130, lineHeight: 1, color: INK, opacity: pop(frame, sec(money.revealAt ?? money.at)) > 0.02 ? 1 : 0, transform: `scale(${pop(frame, sec(money.revealAt ?? money.at))})`}}>{money.big}</div>
                 <div style={{fontFamily: voxFonts.type, fontSize: 38, lineHeight: 1.2, color: '#222'}}>{money.small}</div>
               </div>
             </Clipping>
@@ -325,7 +326,7 @@ export const VoxTraction: React.FC<{c: Company}> = ({c}) => {
             })()}
           </>
         );
-      })()}
+      })()}</TornReveal>
     </AbsoluteFill>
   );
 };

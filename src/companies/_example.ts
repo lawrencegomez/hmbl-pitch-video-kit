@@ -94,7 +94,7 @@ const example = {
     countLabel: 'customers use it',
     countAt: 26.1,
     // Revenue as speed, in the source's own words. Leave out anything marked "to confirm".
-    revenue: {at: 28.4, title: 'Revenue', from: '$0', to: '$XM', toLabel: 'by Month', months: ['Jan', 'Feb', 'Mar']},
+    revenue: {at: 28.4, toAt: 29.2 as number | undefined, title: 'Revenue', from: '$0', to: '$XM', toLabel: 'by Month', months: ['Jan', 'Feb', 'Mar']},
     logos: [] as string[], // customer logos from their own site
     stats: [
       {big: '$XM', small: 'raised from investors', at: 31.9, revealAt: 32.6},

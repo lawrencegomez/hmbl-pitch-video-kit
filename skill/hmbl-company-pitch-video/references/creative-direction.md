@@ -70,9 +70,9 @@ these as seasoning on top of a concept; a concept can also be "full Vox". Built 
 | Push into a document | Camera pushes into a clipping as its key line is highlighted | built into the full-Vox traction scene |
 | Map pins / route lines | A real map (OpenStreetMap tiles, tinted to paper, credit on screen) with a pin drop + halftone on the office | `<Pin>` + `vox.office` |
 | Stacked timeline cards | Dated cards that stack or slide along a line (founding, YC, raise, launch) | build |
-| Redaction bars | Black bars that wipe off to reveal a number or name | `<Redact>` |
+| Redaction bars | Black bars that wipe off to reveal a number or name. Lawrence found them distracting on numbers (2026-10-15): prefer a pop-in timed to the voice | `<Redact>` |
 | Split-screen before / after | The old way vs the new way side by side, one side wiped | build |
-| Torn-paper wipe | A torn sheet sweeps across the frame on every section change | `<TornWipe>` (auto with `vox.full`) |
+| Torn-paper reveal | The next page slides over the old one with ONE torn edge (never a separate sheet: its two edges read as double paper) | `<TornReveal>` (auto with `vox.full`) |
 | Photo rotoscope sketch | A photo turns into a pencil outline and back | build |
 | Colour isolation | Everything grey except the subject in the accent colour | build |
 | Data in hand-drawn form | Charts drawn as marker lines on graph paper, numbers circled | `<Draw>` |

@@ -46,10 +46,11 @@ export const Grain: React.FC<{opacity?: number}> = ({opacity = 0.16}) => {
 };
 
 // 2.5D: children drift with the camera; depth 0 = background (slow), 1 = foreground (fast).
-export const Drift: React.FC<{depth: number; from: number; children: React.ReactNode; push?: number}> = ({depth, from, children, push = 0.05}) => {
+// slide={false}: push in only, so a full-page layer stays centred.
+export const Drift: React.FC<{depth: number; from: number; children: React.ReactNode; push?: number; slide?: boolean}> = ({depth, from, children, push = 0.05, slide = true}) => {
   const frame = useCurrentFrame();
   const t = frame - from;
-  const x = -t * 0.35 * depth;
+  const x = slide ? -t * 0.35 * depth : 0;
   const s = 1 + t * 0.0008 * depth + push * ease(frame, from, from + 90);
   return <AbsoluteFill style={{transform: `translateX(${x}px) scale(${s})`}}>{children}</AbsoluteFill>;
 };
@@ -179,6 +180,30 @@ export const TornWipe: React.FC<{at: number; color?: string; seed?: string}> = (
     <div style={{position: 'absolute', top: -40, left: x, width: 1500, height: 2000, transform: 'rotate(4deg)', filter: 'drop-shadow(0 0 18px rgba(60,40,20,0.35))', pointerEvents: 'none'}}>
       <div style={{width: '100%', height: '100%', background: color, clipPath: `polygon(${pts.join(',')})`}} />
     </div>
+  );
+};
+
+// Torn-paper reveal: the NEW page slides in over the old one with ONE torn, slightly tilted edge.
+// It carries its own paper, so the old page underneath stays put until it is covered (no second sheet, no double view).
+export const TornReveal: React.FC<{at: number; dur?: number; seed?: string; paper?: string; children: React.ReactNode}> = ({at, dur = 12, seed = 'reveal', paper = '#F6EBD7', children}) => {
+  const frame = useCurrentFrame();
+  if (frame < at) return null;
+  const t = Math.min(1, (frame - at) / dur);
+  if (t >= 1) return <Paper color={paper}>{children}</Paper>;
+  const e = -160 + (1 - Math.pow(1 - t, 2)) * 1400; // ease-out, edge travels past both tilted corners
+  const teeth = 34;
+  const pts = ['-10px -10px'];
+  for (let i = 0; i <= teeth; i++) {
+    const y = (i / teeth) * 1940 - 10;
+    pts.push(`${e + (960 - y) * 0.07 + random(`${seed}${i}`) * 26}px ${y}px`);
+  }
+  pts.push('-10px 1930px');
+  return (
+    <AbsoluteFill style={{filter: 'drop-shadow(10px 0 16px rgba(60,40,20,0.35))'}}>
+      <AbsoluteFill style={{clipPath: `polygon(${pts.join(',')})`}}>
+        <Paper color={paper}>{children}</Paper>
+      </AbsoluteFill>
+    </AbsoluteFill>
   );
 };
 
