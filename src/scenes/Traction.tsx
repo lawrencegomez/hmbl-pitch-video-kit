@@ -3,6 +3,7 @@ import {AbsoluteFill, Img, staticFile, useCurrentFrame} from 'remotion';
 import {Company} from '../types';
 import {Draw} from '../components/Hand';
 import {ease, fonts, pop, sec} from '../theme';
+import {Clipping, Highlight} from '../components/vox';
 
 export const Traction: React.FC<{c: Company}> = ({c}) => {
   const frame = useCurrentFrame();
@@ -18,13 +19,31 @@ export const Traction: React.FC<{c: Company}> = ({c}) => {
   const CHART = 'M 60 280 C 260 280, 400 276, 480 220 S 600 70, 640 40';
 
   return (
-    <AbsoluteFill style={{background: c.colors.bg}}>
-      <div style={{position: 'absolute', top: 230, width: '100%', textAlign: 'center', transform: `scale(${big})`}}>
+    <AbsoluteFill style={{background: c.vox?.paper ? 'transparent' : c.colors.bg}}>
+      {c.vox?.clipping ? (() => {
+        const k = c.vox.clipping;
+        const p = pop(frame, sec(k.at));
+        return (
+          <Clipping seed="tractionclip" rotate={1.5} width={800} style={{left: 110, top: 200, opacity: p, transform: `rotate(1.5deg) scale(${0.9 + 0.1 * p})`}}>
+            <div style={{display: 'flex', alignItems: 'center', gap: 12, marginBottom: 12}}>
+              <div style={{width: 38, height: 38, background: '#FF6600', color: '#fff', fontFamily: fonts.sans, fontWeight: 800, fontSize: 26, display: 'flex', alignItems: 'center', justifyContent: 'center'}}>Y</div>
+              <div style={{fontFamily: fonts.sans, fontWeight: 600, fontSize: 26, color: '#666'}}>{k.source}</div>
+            </div>
+            <div style={{fontFamily: fonts.sans, fontWeight: 800, fontSize: 38, lineHeight: 1.15, color: '#141414'}}>{k.title}</div>
+            <div style={{fontFamily: 'Georgia, serif', fontSize: 34, lineHeight: 1.38, color: '#222', marginTop: 14}}>
+              {k.before}<Highlight at={countAt + 4}>{k.highlight}</Highlight>{k.after}
+            </div>
+            <div style={{fontFamily: fonts.sans, fontSize: 22, color: '#888', marginTop: 12}}>{k.url}</div>
+          </Clipping>
+        );
+      })() : (
+        <div style={{position: 'absolute', top: 230, width: '100%', textAlign: 'center', transform: `scale(${big})`}}>
         <div style={{fontFamily: fonts.serif, fontSize: 240, color: c.colors.brand, lineHeight: 0.95}}>{n}+</div>
         <div style={{fontFamily: fonts.sans, fontWeight: 700, fontSize: 46, color: c.colors.ink, marginTop: 6}}>{t.countLabel}</div>
       </div>
+      )}
 
-      <div style={{position: 'absolute', left: 90, top: 640, width: 840, display: 'grid', gridTemplateColumns: '1fr 1fr 1fr', gap: 18, opacity: 1 - swap, transform: `scale(${1 - swap * 0.08})`}}>
+      <div style={{position: 'absolute', left: 90, top: c.vox?.clipping ? 690 : 640, width: 840, display: 'grid', gridTemplateColumns: '1fr 1fr 1fr', gap: 18, opacity: 1 - swap, transform: `scale(${1 - swap * 0.08})`}}>
         {t.logos.map((l, i) => {
           const p = pop(frame, countAt + 8 + i * 3, true);
           return (
@@ -38,7 +57,7 @@ export const Traction: React.FC<{c: Company}> = ({c}) => {
 
       {/* revenue: hand-drawn growth line, $0 in January to $1M */}
       {frame >= revAt - 4 && (
-        <div style={{position: 'absolute', left: 90, top: 620, width: 840, height: 360, background: '#fff', borderRadius: 28, boxShadow: '0 12px 28px rgba(30,30,30,0.12)', opacity: rev, transform: `scale(${0.92 + 0.08 * rev})`}}>
+        <div style={{position: 'absolute', left: 90, top: c.vox?.clipping ? 680 : 620, width: 840, height: 360, background: '#fff', borderRadius: 28, boxShadow: '0 12px 28px rgba(30,30,30,0.12)', opacity: rev, transform: `scale(${0.92 + 0.08 * rev})`}}>
           <div style={{position: 'absolute', left: 34, top: 24, fontFamily: fonts.sans, fontWeight: 700, fontSize: 36, color: c.colors.ink}}>{r.title}</div>
           <div style={{position: 'absolute', left: 50, top: 0, width: 760, height: 360}}>
             <Draw w={760} h={360} d={CHART} at={revAt + 4} dur={26} color={c.colors.brand} width={10} arrow />
@@ -54,7 +73,7 @@ export const Traction: React.FC<{c: Company}> = ({c}) => {
         </div>
       )}
 
-      <div style={{position: 'absolute', left: 90, top: 1010, width: 840, display: 'flex', flexDirection: 'column', gap: 16}}>
+      <div style={{position: 'absolute', left: 90, top: c.vox?.clipping ? 1060 : 1010, width: 840, display: 'flex', flexDirection: 'column', gap: 16}}>
         {t.stats.map((s, i) => {
           const p = pop(frame, sec(s.at) - 2);
           return (
@@ -65,7 +84,7 @@ export const Traction: React.FC<{c: Company}> = ({c}) => {
           );
         })}
       </div>
-      <Draw d="M 300 552 C 420 565, 640 540, 780 558" at={countAt + 12} dur={10} color={c.colors.ink} width={6} />
+      {!c.vox?.clipping && <Draw d="M 300 552 C 420 565, 640 540, 780 558" at={countAt + 12} dur={10} color={c.colors.ink} width={6} />}
     </AbsoluteFill>
   );
 };

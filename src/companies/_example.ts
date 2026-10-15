@@ -102,6 +102,14 @@ const example = {
     ],
   },
 
+  // Optional Vox touches (see the skill's Vox toolkit). null = plain look. Every field is optional.
+  vox: null as null | {
+    paper?: boolean; grain?: boolean; drift?: boolean; highlightExit?: boolean;
+    founderStickers?: string[]; // transparent PNG cut-outs, same order as founders.people
+    postStrip?: {label: string; src: string; w: number; h: number; at: number}; // a real public post line, cropped
+    clipping?: {source: string; title: string; before: string; highlight: string; after: string; url: string; at: number};
+  },
+
   close: {
     clip: `${A}/gen/hero_clip.mp4`, // Seedance hero shot from the concept's motif
     still: `${A}/gen/hero.png`,

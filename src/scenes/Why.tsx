@@ -3,6 +3,7 @@ import {AbsoluteFill, Img, staticFile, useCurrentFrame} from 'remotion';
 import {Company} from '../types';
 import {Check, Draw} from '../components/Hand';
 import {ease, fonts, pop, sec} from '../theme';
+import {Clipping, HighlightBox} from '../components/vox';
 
 // Customer graph: the company in the middle, customers around it, plays flowing back.
 const NODES = Array.from({length: 8}, (_, i) => {
@@ -21,11 +22,11 @@ export const Why: React.FC<{c: Company}> = ({c}) => {
   const graphOut = ease(frame, playsAt - 2, playsAt + 10);
 
   return (
-    <AbsoluteFill style={{background: c.colors.bg}}>
+    <AbsoluteFill style={{background: c.vox?.paper ? 'transparent' : c.colors.bg}}>
       <div style={{position: 'absolute', width: '100%', top: 470 - dockTitle * 240, textAlign: 'center', transform: `scale(${t * (1 - dockTitle * 0.45)})`}}>
         <div style={{fontFamily: fonts.serif, fontSize: frame < playsAt - 2 ? 200 : 185, color: c.colors.ink, lineHeight: 1, whiteSpace: 'nowrap'}}>{frame < playsAt - 2 ? y.title : y.moatTitle}</div>
         <div style={{display: 'flex', justifyContent: 'center', alignItems: 'center', gap: 30, marginTop: 34}}>
-          {frame < playsAt - 2 && y.batches.map((b, i) => {
+          {frame < playsAt - 2 && !c.vox?.postStrip && y.batches.map((b, i) => {
             const p = pop(frame, sec(y.titleAt) + 6 + i * 8, true);
             return (
               <React.Fragment key={b}>
@@ -39,12 +40,31 @@ export const Why: React.FC<{c: Company}> = ({c}) => {
         </div>
       </div>
 
+      {/* Vox: the founder's own public post, as a highlighted strip */}
+      {c.vox?.postStrip && frame < playsAt && (() => {
+        const ps = c.vox.postStrip;
+        const at = sec(ps.at);
+        const p = pop(frame, at);
+        const w = 760, h = (w * ps.h) / ps.w;
+        return (
+          <div style={{opacity: 1 - dockTitle}}>
+            <div style={{position: 'absolute', left: 80, top: 705, fontFamily: fonts.sans, fontWeight: 700, fontSize: 30, color: c.colors.ink, opacity: 0.6 * p, transform: 'rotate(-2deg)'}}>{ps.label}</div>
+            <Clipping seed="poststrip" rotate={-2} width={832} tape={false} style={{left: 90, top: 750, opacity: p > 0.02 ? 1 : 0, transform: `rotate(-2deg) translateX(${(1 - p) * -500}px)`}}>
+              <div style={{position: 'relative', width: w, height: h}}>
+                <HighlightBox at={at + 10} x={0} y={4} w={w} h={h - 4} />
+                <Img src={staticFile(ps.src)} style={{position: 'absolute', inset: 0, width: '100%', mixBlendMode: 'multiply'}} />
+              </div>
+            </Clipping>
+          </div>
+        );
+      })()}
+
       {/* real photo of the founders together (e.g. a stage or team shot from their LinkedIn) */}
       {frame < playsAt && (() => {
         const p = pop(frame, sec(y.titleAt) + 10);
         return (
-          <div style={{position: 'absolute', left: 120, top: 800, width: 780, padding: 14, paddingBottom: 18, background: '#fff', borderRadius: 10, boxShadow: '0 22px 50px rgba(30,30,30,0.22)', transform: `rotate(-2.5deg) translateY(${(1 - p) * 140}px) scale(${0.9 + 0.1 * p})`, opacity: Math.min(1, p * 1.5) * (1 - dockTitle)}}>
-            <div style={{height: 430, overflow: 'hidden', borderRadius: 4}}>
+          <div style={{position: 'absolute', left: 120, top: c.vox?.postStrip ? 930 : 800, width: 780, padding: 14, paddingBottom: 18, background: '#fff', borderRadius: 10, boxShadow: '0 22px 50px rgba(30,30,30,0.22)', transform: `rotate(-2.5deg) translateY(${(1 - p) * 140}px) scale(${0.9 + 0.1 * p})`, opacity: Math.min(1, p * 1.5) * (1 - dockTitle)}}>
+            <div style={{height: c.vox?.postStrip ? 370 : 430, overflow: 'hidden', borderRadius: 4}}>
               <Img src={staticFile(y.stagePhoto)} style={{width: '100%', height: '100%', objectFit: 'cover', objectPosition: '50% 40%', transform: `scale(${1.04 + (frame - sec(y.titleAt)) * 0.0008})`}} />
             </div>
           </div>

@@ -17,7 +17,7 @@ export const What: React.FC<{c: Company}> = ({c}) => {
   const card = pop(frame, firstStep);
 
   return (
-    <AbsoluteFill style={{background: c.colors.bg}}>
+    <AbsoluteFill style={{background: c.vox?.paper ? 'transparent' : c.colors.bg}}>
       {/* burst ring behind the logo */}
       <div
         style={{

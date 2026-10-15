@@ -2,6 +2,7 @@ import React from 'react';
 import {AbsoluteFill, Img, staticFile, useCurrentFrame} from 'remotion';
 import {Company} from '../types';
 import {Draw} from '../components/Hand';
+import {Highlight, Sticker} from '../components/vox';
 import {fonts, pop, sec} from '../theme';
 
 export const Founders: React.FC<{c: Company}> = ({c}) => {
@@ -14,7 +15,7 @@ export const Founders: React.FC<{c: Company}> = ({c}) => {
   const stamp = pop(frame, exitAt + 16, true);
 
   return (
-    <AbsoluteFill style={{background: c.colors.bg}}>
+    <AbsoluteFill style={{background: c.vox?.paper ? 'transparent' : c.colors.bg}}>
       <div style={{position: 'absolute', top: 230, width: '100%', textAlign: 'center', fontFamily: fonts.serif, fontSize: 120, color: c.colors.ink, transform: `scale(${title})`}}>
         {f.title}
       </div>
@@ -27,7 +28,11 @@ export const Founders: React.FC<{c: Company}> = ({c}) => {
         return (
           <div key={p.name} style={{position: 'absolute', left: x - 200, top: 470, width: 400, textAlign: 'center', transform: `scale(${s})`, opacity: s}}>
             <div style={{position: 'relative', width: 320, height: 320, margin: '0 auto'}}>
-              <Img src={staticFile(p.photo)} style={{width: 320, height: 320, borderRadius: 160, objectFit: 'cover', border: `8px solid #fff`, boxShadow: '0 18px 40px rgba(30,30,30,0.18)'}} />
+              {c.vox?.founderStickers?.[i] ? (
+                <Sticker src={c.vox.founderStickers[i]} style={{width: 320, height: 320, objectFit: 'contain', transform: `rotate(${i ? 3 : -3}deg)`}} outline={9} />
+              ) : (
+                <Img src={staticFile(p.photo)} style={{width: 320, height: 320, borderRadius: 160, objectFit: 'cover', border: `8px solid #fff`, boxShadow: '0 18px 40px rgba(30,30,30,0.18)'}} />
+              )}
               <div
                 style={{
                   position: 'absolute', right: -6, bottom: 6, background: c.colors.ink, color: '#fff', borderRadius: 16, padding: '6px 16px',
@@ -54,7 +59,7 @@ export const Founders: React.FC<{c: Company}> = ({c}) => {
       <div style={{position: 'absolute', left: 90, top: 1090, width: 840, opacity: exit, transform: `translateY(${(1 - exit) * 80}px)`}}>
         <div style={{background: '#fff', borderRadius: 28, padding: '26px 34px', boxShadow: '0 12px 28px rgba(30,30,30,0.12)'}}>
           <div style={{fontFamily: fonts.sans, fontWeight: 600, fontSize: 36, color: c.colors.ink, opacity: 0.75}}>{f.exit.from}</div>
-          <div style={{fontFamily: fonts.serif, fontSize: 64, color: c.colors.ink, lineHeight: 1.05, marginTop: 6}}>{f.exit.to}</div>
+          <div style={{fontFamily: fonts.serif, fontSize: 64, color: c.colors.ink, lineHeight: 1.05, marginTop: 6}}>{c.vox?.highlightExit ? <Highlight at={sec(f.exit.at) + 10}>{f.exit.to}</Highlight> : f.exit.to}</div>
         </div>
         <div
           style={{
