@@ -59,8 +59,9 @@ Never put an `afade=t=out` with `st=0` on the whole track: it silences everythin
 
 ## Craft lessons (apply to every video)
 
-- Centre text blocks inside the safe box (`left: 60, width: 880`), never the full 1080 frame, or centred lines
-  drift into the right-hand button rail. Cards and chips end by x 940.
+- Centre on the real middle of the frame (x 540). The scenes were first drawn for a 60-940 box (TikTok's button
+  rail), which made every video lean left; `NUDGE_X` (40px) in `src/theme.ts` shifts them back. Check with a
+  centre line drawn on a frame before calling a layout done.
 - Hand-set `captionLines` beat any automatic phrase-break rule (names and places get split otherwise).
 - Every on-screen label is a factual claim: a badge must match the facts exactly (a founder who left a school
   without a degree is "School CS, left to build", not "School CS").

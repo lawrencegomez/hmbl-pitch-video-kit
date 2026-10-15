@@ -45,7 +45,7 @@ const fromLines = (words: Word[], lines: string[]) => {
 };
 
 // left / width / size default to the vertical pitch layout; the 16:9 training videos pass their own.
-export const Captions: React.FC<{tokens: Token[]; fixes: Record<string, string>; lines?: string[]; ink: string; hi: string; y?: number; hideFrom?: number; left?: number; width?: number; size?: number; font?: string}> = ({tokens, fixes, lines, ink, hi, y = 1330, hideFrom = Infinity, left = 60, width = 880, size = 46, font = fonts.sans}) => {
+export const Captions: React.FC<{tokens: Token[]; fixes: Record<string, string>; lines?: string[]; ink: string; hi: string; y?: number; hideFrom?: number; left?: number; width?: number; size?: number; font?: string}> = ({tokens, fixes, lines, ink, hi, y = 1330, hideFrom = Infinity, left = 60, width = 960, size = 46, font = fonts.sans}) => {
   const frame = useCurrentFrame();
   const ms = (frame / FPS) * 1000;
   const chunks = useMemo(() => (lines ? fromLines(toWords(tokens, fixes), lines) : chunk(toWords(tokens, fixes))), [tokens, fixes, lines]);

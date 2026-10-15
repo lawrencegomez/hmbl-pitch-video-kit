@@ -40,7 +40,7 @@ not the look. Reusing any of it needs a reason rooted in the new company.
   it, and say so. Revenue is shown as **speed**, in the source's own words (e.g. "$0 in January to $1M by March").
 - **People:** real photos only (LinkedIn, company site, photos the recruiter supplies). Never AI-generate a real
   person's face.
-- **Layout:** everything that matters inside x 60-940 of the 1080 frame; centre text inside that box.
+- **Layout:** content centred on the true middle of the 1080 frame (x 540), inside x 60-1020. These videos go straight to candidates, not onto TikTok, so there is no right-hand button rail to dodge (Lawrence, 2026-10-15). Scenes drawn for the old 60-940 box are shifted by `NUDGE_X` in `src/theme.ts`.
 - **Cost:** about 45 Higgsfield credits per video. Ask before going much above that.
 - **Company data stays local.** Research, briefs, phone scripts, photos, audio and renders live in the gitignored
   `companies/` and `src/companies/<slug>.ts`. Never commit them, never paste them anywhere public.

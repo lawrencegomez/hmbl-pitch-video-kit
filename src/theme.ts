@@ -13,7 +13,9 @@ export const FPS = 30;
 export const W = 1080;
 export const H = 1920;
 // TikTok / Reels UI covers the bottom ~420px and the right ~140px; keep key content inside this box.
-export const SAFE = {top: 200, bottom: 1480, left: 60, right: 940};
+export const SAFE = {top: 200, bottom: 1480, left: 60, right: 1020};
+// shortcut: scenes were drawn for a 60-940 box (TikTok button rail); this nudge puts them at true centre. Redraw at 60-1020 if a scene is rebuilt.
+export const NUDGE_X = 40;
 
 export const sec = (s: number) => Math.round(s * FPS);
 

@@ -22,7 +22,7 @@ export const Close: React.FC<{c: Company; useClip: boolean}> = ({c, useClip}) =>
           <Img src={staticFile(k.still)} style={{width: '100%', height: '100%', objectFit: 'cover'}} />
         </AbsoluteFill>
       )}
-      <div style={{position: 'absolute', top: 250, left: 90, width: 840, padding: '36px 0 40px', borderRadius: 40, background: 'rgba(254,246,235,0.86)', backdropFilter: 'blur(10px)', textAlign: 'center', transform: `translateY(${(1 - lock) * 40}px)`, opacity: lock}}>
+      <div style={{position: 'absolute', top: 250, left: 120, width: 840, padding: '36px 0 40px', borderRadius: 40, background: 'rgba(254,246,235,0.86)', backdropFilter: 'blur(10px)', textAlign: 'center', transform: `translateY(${(1 - lock) * 40}px)`, opacity: lock}}>
         <div style={{display: 'flex', justifyContent: 'center', alignItems: 'center', gap: 22}}>
           <Img src={staticFile(c.logo)} style={{width: 150, height: 150}} />
           <span style={{fontFamily: fonts.serif, fontSize: 170, color: c.colors.ink, lineHeight: 1}}>{c.name}</span>

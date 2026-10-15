@@ -1,7 +1,7 @@
 import React from 'react';
 import {AbsoluteFill, interpolate, useCurrentFrame} from 'remotion';
 import {Company} from '../types';
-import {ease, easeIn, fonts, pop, sec} from '../theme';
+import {NUDGE_X, ease, easeIn, fonts, pop, sec} from '../theme';
 
 // "Tab chaos": a drawn browser where tool tabs pile up faster and faster, alerts stack, a cursor
 // panics, tape gets slapped on, then the whole mess is sucked into the company logo.
@@ -49,6 +49,7 @@ export const Hook: React.FC<{c: Company}> = ({c}) => {
     <AbsoluteFill style={{background: c.colors.ink}}>
       {/* faint dot grid */}
       <AbsoluteFill style={{backgroundImage: 'radial-gradient(rgba(255,255,255,0.07) 2px, transparent 2px)', backgroundSize: '36px 36px', opacity: 1 - collapse}} />
+      <AbsoluteFill style={{transform: `translateX(${NUDGE_X}px)`}}>
 
       <div style={{position: 'absolute', top: 230, left: 60, width: 880, textAlign: 'center', fontFamily: fonts.hand, fontWeight: 700, fontSize: 70, color: '#fff', opacity: ease(frame, 0, 8) * (1 - collapse), transform: `rotate(-2deg) translateY(${(1 - ease(frame, 0, 10)) * 30}px)`}}>
         {h.kicker}
@@ -156,6 +157,7 @@ export const Hook: React.FC<{c: Company}> = ({c}) => {
           </svg>
         </div>
       )}
+      </AbsoluteFill>
     </AbsoluteFill>
   );
 };

@@ -23,12 +23,12 @@ export const Pitch: React.FC<PitchProps> = ({c, useClip}) => {
     <AbsoluteFill style={{background: c.colors.bg}}>
       <BoilFilter />
       {c.vox?.paper && <Paper color={c.colors.bg} />}
-      <Scene start={0} end={sec(s.what) + (c.vox?.full ? 12 : 0)} enter={false} cutOut={!!c.vox?.full}><Hook c={c} /></Scene>
+      <Scene start={0} end={sec(s.what) + (c.vox?.full ? 12 : 0)} enter={false} nudge={false} cutOut={!!c.vox?.full}><Hook c={c} /></Scene>
       <Scene start={sec(s.what)} end={sec(s.founders) + (c.vox?.full ? 12 : 0)} torn={c.vox?.full ? c.colors.bg : undefined}>{c.vox?.drift ? <Drift depth={0.3} from={sec(s.what)} push={0.03} slide={false}>{c.vox?.full ? <VoxWhat c={c} /> : <What c={c} />}</Drift> : (c.vox?.full ? <VoxWhat c={c} /> : <What c={c} />)}</Scene>
       <Scene start={sec(s.founders)} end={sec(s.why) + (c.vox?.full ? 12 : 0)} torn={c.vox?.full ? c.colors.bg : undefined}>{c.vox?.drift ? <Drift depth={0.3} from={sec(s.founders)} push={0.03} slide={false}>{c.vox?.full ? <VoxFounders c={c} /> : <Founders c={c} />}</Drift> : (c.vox?.full ? <VoxFounders c={c} /> : <Founders c={c} />)}</Scene>
       <Scene start={sec(s.why)} end={sec(s.traction) + (c.vox?.full ? 12 : 0)} torn={c.vox?.full ? c.colors.bg : undefined}>{c.vox?.drift ? <Drift depth={0.3} from={sec(s.why)} push={0.03} slide={false}>{c.vox?.full ? <VoxWhy c={c} /> : <Why c={c} />}</Drift> : (c.vox?.full ? <VoxWhy c={c} /> : <Why c={c} />)}</Scene>
       <Scene start={sec(s.traction)} end={sec(c.close.clipStart) + 8} torn={c.vox?.full ? c.colors.bg : undefined}>{c.vox?.drift ? <Drift depth={0.3} from={sec(s.traction)} push={0.03} slide={false}>{c.vox?.full ? <VoxTraction c={c} /> : <Traction c={c} />}</Drift> : (c.vox?.full ? <VoxTraction c={c} /> : <Traction c={c} />)}</Scene>
-      <Scene start={sec(c.close.clipStart)} end={durationInFrames} enter={false}><Close c={c} useClip={useClip} /></Scene>
+      <Scene start={sec(c.close.clipStart)} end={durationInFrames} enter={false} nudge={false}><Close c={c} useClip={useClip} /></Scene>
 
       <Captions tokens={c.words} fixes={c.captionFixes} lines={c.captionLines} ink={c.colors.ink} hi={c.colors.accent} y={1470} hideFrom={sec(c.sections.close)} />
 
