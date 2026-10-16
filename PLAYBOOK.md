@@ -33,6 +33,12 @@ Before any node / npx / higgsfield / codex command: `source bin/env.sh` (from th
      `higgsfield generate create elevenlabs_v4 --dialogue '[{"text":"...","voice_id":"<id>","voice_type":"preset"}]' --wait --json`
      then download `result_url`. Speed up: `ffmpeg -i in.mp3 -af atempo=1.1 -ar 44100 vo_final.mp3` (keeps pitch).
      Pad the end so whisper keeps the last words: `-af "apad=pad_dur=1.5"`. About 0.25 credits.
+   - **Own ElevenLabs account (optional, per person):** `./setup.sh --elevenlabs` saves the key to
+     `~/.config/hmbl-pitch-video-kit/elevenlabs.env` (private, outside the repo). Then
+     `node tools/voice.mjs --list`, `node tools/voice.mjs --default-voice <id>`, and
+     `node tools/voice.mjs "<script>" companies/<slug>/assets/audio/vo_raw.mp3` (model `eleven_multilingual_v2`
+     unless `--model` says otherwise). Same 1.1x speed-up and end padding afterwards. Billed to that person's
+     ElevenLabs plan, not Higgsfield. A key never goes in chat, a commit or a company file (the guard blocks `sk_` keys).
    - **Music:** `sonilo_music --duration <seconds+1> --prompt "<from vibe.md>"`, about 2.25 credits. Volume 0.16 under the voice.
    - **Stills:** `gpt_image_2_5 --aspect_ratio 9:16 --quality high --resolution 2k`, about 2.75 credits each.
    - **Hero clip:** `seedance_2_5 --mode omni_reference --start-image <UPLOAD_ID> --aspect_ratio 9:16 --duration 5 --resolution 720p --generate_audio false`,

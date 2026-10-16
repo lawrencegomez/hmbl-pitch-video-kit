@@ -14,6 +14,9 @@ gets its own look, taken from the company's brand, its own words and its founder
 - [Claude Code](https://claude.com/claude-code)
 - A [Higgsfield](https://higgsfield.ai) account with credits (about 45 credits per video)
 - A ChatGPT account (for the GPT reviewer that double-checks each video)
+- Optional: your own [ElevenLabs](https://elevenlabs.io) account, to use your own or cloned voices. Run
+  `./setup.sh --elevenlabs` and paste your API key (typing is hidden; it stays in a private file on your computer,
+  never on GitHub). Without it, the voice comes from Higgsfield.
 - About 3 GB of free disk space
 
 ## Install

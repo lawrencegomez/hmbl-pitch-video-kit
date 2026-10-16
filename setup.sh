@@ -5,6 +5,7 @@
 #
 #   ./setup.sh           install anything missing, log in where needed, then run the full check
 #   ./setup.sh --check   check only, change nothing (safe to run any time)
+#   ./setup.sh --elevenlabs   optional: save YOUR OWN ElevenLabs key on this machine (typing is hidden)
 #
 # Re-running is safe: finished steps are skipped.
 
@@ -12,6 +13,22 @@ set -uo pipefail
 KIT="$(cd "$(dirname "$0")" && pwd)"
 CHECK_ONLY=0
 [ "${1:-}" = "--check" ] && CHECK_ONLY=1
+
+if [ "${1:-}" = "--elevenlabs" ]; then
+  # Each person's own key, kept outside the repo in a file only they can read. Never commit it.
+  dir="$HOME/.config/hmbl-pitch-video-kit"; file="$dir/elevenlabs.env"
+  mkdir -p "$dir"
+  printf 'Paste your ElevenLabs API key (elevenlabs.io > Developers > API Keys), then press Enter: '
+  read -rs key; echo
+  [ -n "$key" ] || { echo "No key entered, nothing changed."; exit 1; }
+  code="$(curl -s -o /dev/null -w '%{http_code}' -H "xi-api-key: $key" 'https://api.elevenlabs.io/v2/voices?page_size=1')"
+  [ "$code" = 200 ] || { echo "ElevenLabs refused that key (HTTP $code). Nothing saved."; exit 1; }
+  keep="$( [ -f "$file" ] && /usr/bin/grep -v '^ELEVENLABS_API_KEY=' "$file" || true)"
+  (umask 077; { [ -n "$keep" ] && printf '%s\n' "$keep"; printf 'ELEVENLABS_API_KEY=%s\n' "$key"; } > "$file")
+  chmod 600 "$file" 2>/dev/null
+  echo "Saved to $file (only you can read it). Next: node tools/voice.mjs --list, then --default-voice <id>."
+  exit 0
+fi
 
 NODE_VERSION="$(cat "$KIT/.node-version")"
 HF_CLI_VERSION=1.1.17

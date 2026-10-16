@@ -19,4 +19,7 @@ if [ -n "$words" ]; then
     done
   done <<< "$words"
 fi
-if [ "$fail" = 1 ]; then echo "Commit blocked: remove company data from shared files, then commit again."; exit 1; fi
+# API keys (ElevenLabs keys start with sk_; also any xi-api-key value written out).
+keys="$(git diff --cached -U0 --diff-filter=AM | /usr/bin/grep -E '^\+[^+]' | /usr/bin/grep -E 'sk_[A-Za-z0-9]{20,}|ELEVENLABS_API_KEY=[A-Za-z0-9_]{10,}' | head -3)"
+if [ -n "$keys" ]; then echo "⛔ Something that looks like an API key is staged:"; echo "$keys" | cut -c1-40; fail=1; fi
+if [ "$fail" = 1 ]; then echo "Commit blocked: remove company data or keys from shared files, then commit again."; exit 1; fi

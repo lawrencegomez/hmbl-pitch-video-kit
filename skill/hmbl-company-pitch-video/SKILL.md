@@ -34,7 +34,8 @@ not the look. Reusing any of it needs a reason rooted in the new company.
 - **Hook:** motion graphics, never a stock photo. A different hook type and visual idea per company.
 - **Close:** "That's <Company>." + logo + the hero clip. **No call to action, no URL.**
 - **Captions:** small (46 px) and low (top y 1470), word highlight, hand-set phrase lines.
-- **Voice:** Emily (Higgsfield `elevenlabs_v4`, id in PLAYBOOK), sped up 1.1x. No sound effects. Music bed from
+- **Voice:** Emily (Higgsfield `elevenlabs_v4`, id in PLAYBOOK), sped up 1.1x. If this machine has its own ElevenLabs key
+  (`node tools/voice.mjs --list` works), use `tools/voice.mjs` with the default voice saved there instead; ask once which voice if none is saved. No sound effects. Music bed from
   Higgsfield Sonilo.
 - **Facts:** only sourced facts. Leave out anything the phone script marks "to confirm" unless the recruiter clears
   it, and say so. Revenue is shown as **speed**, in the source's own words (e.g. "$0 in January to $1M by March").
