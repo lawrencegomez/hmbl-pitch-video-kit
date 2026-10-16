@@ -100,7 +100,7 @@ for the concept, and restyle or rewrite any scene whose look would repeat the re
 names and facts, since that folder is shared code.
 
 ### 7. Review loop (every version)
-Follow `references/review.md`: your own look at a 16-frame sheet, a fresh Claude reviewer, GPT
+Follow `references/review.md`: the frame checks (`tools/check-frames.sh`: centring and every transition), your own look at a 16-frame sheet, a fresh Claude reviewer, GPT
 (`codex exec -m gpt-6-astra`), plus the sameness check against past videos. Verify each finding against the
 sources before acting. Re-render and re-review until no high-severity items remain.
 
