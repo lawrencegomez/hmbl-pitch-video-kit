@@ -1,6 +1,6 @@
 ---
 name: hmbl-company-pitch-video
-description: Make a 30-40 second vertical (TikTok / Reels shaped) pitch video about a client company to send to candidates before the first recruiter call. Researches the company's facts AND its vibe (own words, founders' public posts, brand colours and type), pitches three distinct creative concepts, builds the chosen one in Remotion with Higgsfield voice, music and a hero clip, then runs a multi-reviewer audit loop. Trigger on "pitch video", "candidate video", "company video", "explainer video for <company>", or a brief + phone script handed over with a request for a video.
+description: Make a 30-40 second vertical (TikTok / Reels shaped) pitch video about a client company to send to candidates before the first recruiter call. Researches the company's facts AND its vibe (own words, founders' public posts, brand colours and type), pitches three distinct creative concepts, gets the hook, script and a section-by-section storyboard approved before spending anything, builds it in Remotion with Higgsfield voice, music and a hero clip, then runs a multi-reviewer audit loop. Trigger on "pitch video", "candidate video", "company video", "explainer video for <company>", or a brief + phone script handed over with a request for a video.
 ---
 
 # HMBL company pitch video
@@ -17,6 +17,10 @@ company, never a specific role.
 - **Past looks on this machine:** `$KIT/STYLE-REGISTRY.md` (local only, never committed).
 - **Before running node / npx / higgsfield / codex:** `source "$KIT/bin/env.sh"` (pins Node 24.15.0).
 - **If anything is missing:** `"$KIT/setup.sh" --check`, then `"$KIT/setup.sh"` to fix.
+- **What Lawrence likes, dislikes and has had changed:** `references/taste.md`. Read it before the concepts and the
+  storyboard; it outranks your own taste.
+- **Vox style asked for:** load the `vox-style-video` skill (Mode A = full Vox, Mode B = a touch or two), then follow
+  PLAYBOOK "Full Vox style" and build from `src/voxa/kit.tsx`. The house rules below still apply.
 
 ## The one idea that matters
 
@@ -28,15 +32,18 @@ not the look. Reusing any of it needs a reason rooted in the new company.
 
 ## House rules (fixed; settled by HMBL, do not re-litigate)
 
-- **Order:** hook -> what they build -> founders -> why it's different -> traction -> close. 30-40 s total.
+- **Order:** hook -> what they build -> founders -> why it's different -> traction -> close. 30-40 s total; up to
+  ~42 s is fine when every second carries motion (Lawrence, 2026-10-16).
 - **Five takeaways** a candidate must get with sound off: what it does, who founded it and why they matter, what
   makes it different, traction (customers / revenue speed / funding / team size), where they are.
 - **Hook:** motion graphics, never a stock photo. A different hook type and visual idea per company.
 - **Close:** "That's <Company>." + logo + the hero clip. **No call to action, no URL.**
 - **Captions:** small (46 px) and low (top y 1470), word highlight, hand-set phrase lines.
-- **Voice:** Emily (Higgsfield `elevenlabs_v4`, id in PLAYBOOK), sped up 1.1x. If this machine has its own ElevenLabs key
+- **Voice:** Emily (Higgsfield `elevenlabs_v4`, id in PLAYBOOK), sped up 1.1x. A bold-claim hook can be read serious
+  and matter of fact (its own take, spliced in; PLAYBOOK "Voice"), then the upbeat read from the next scene. If this machine has its own ElevenLabs key
   (`node tools/voice.mjs --list` works), use `tools/voice.mjs` with the default voice saved there instead; ask once which voice if none is saved. No sound effects. Music bed from
-  Higgsfield Sonilo.
+  Higgsfield Sonilo: one steady groove the whole way (no build, no drop). Check the bed for section changes before
+  using it and loop its opening bars if it shifts (PLAYBOOK "Music").
 - **Facts:** only sourced facts. Leave out anything the phone script marks "to confirm" unless the recruiter clears
   it, and say so. Revenue is shown as **speed**, in the source's own words (e.g. "$0 in January to $1M by March").
 - **People:** real photos only (LinkedIn, company site, photos the recruiter supplies). Never AI-generate a real
@@ -81,13 +88,32 @@ Follow `references/research.md`. Two outputs in `companies/<slug>/research/`:
 
 ### 3. Creative direction: three concepts, pick one (5 min)
 Follow `references/creative-direction.md`. Write three genuinely different concepts into
-`companies/<slug>/concepts.md`, each setting every variation dial. Check each against STYLE-REGISTRY.md. Score,
-pick, and tell the recruiter the pick in 3-4 plain lines plus the runner-up in one line. Then keep going; they can
-redirect. Stop and ask only if a concept needs well over ~45 credits or something not yet cleared.
+`companies/<slug>/concepts.md`, each setting every variation dial. Check each against STYLE-REGISTRY.md. Score and
+pick one; it goes to the recruiter inside the storyboard (step 4), with the runner-up in one line.
 
-### 4. Script (5 min)
-85-100 words in the house order (rules in `references/creative-direction.md`, "Script"). Humanizer, then the local
-SlopMonster score. Phonetic spellings go in the voice text only (spell a name the way it sounds, e.g. "Day-vee", when the voice gets it wrong).
+### 4. Script + storyboard, then STOP for the recruiter's yes (10 min)
+Write the hook first (`references/creative-direction.md`, "The hook"), then the script: 85-100 words in the house
+order ("Script" in the same file). Humanizer, then the local SlopMonster score. Phonetic spellings go in the voice
+text only (spell a name the way it sounds, e.g. "Day-vee", when the voice gets it wrong).
+
+Then write `companies/<slug>/storyboard.md` and show it to the recruiter in the chat, short enough to read on a phone:
+- **Hook options:** 2-3 opening lines, each with its hook type and what is on screen in the first 2 seconds. Mark
+  your pick.
+- **The script**, with its word count and estimated length (about 3.1 words a second after the 1.1x speed-up).
+- **One row per section:** seconds · the voice line · what is on screen · the Vox or kit pieces it uses · assets
+  it needs (and their credits) · the source of every fact in it.
+- **Concept** in 3-4 lines (look, motif, signature moment) and the runner-up in one line.
+- **Credits** for the whole video.
+
+**Nothing that costs credits or builds the video happens before the recruiter approves** (Lawrence's rule,
+2026-10-16): no voice, music, images or Seedance clip, and no composition code. Research and free look-ups (their
+screenshots, product clips, map tiles) are fine. Apply their changes to the storyboard and re-show the changed rows
+until they say yes. Writing the script, the sections and what each one shows up front is what makes the build fast
+and keeps it from being rebuilt.
+
+**Revisions follow the same gate:** when the notes change the script or what a section shows, send the updated
+storyboard with the changed rows marked and wait. A fix the recruiter already spelled out exactly (a bigger stamp, a
+label moved) can go straight to the build.
 
 ### 5. Assets (start the slow ones first)
 Hero clip (Seedance, ~10 min) in the background first, then voice, music (prompt from `vibe.md`), stills, logo
@@ -104,9 +130,14 @@ names and facts, since that folder is shared code.
 Follow `references/review.md`: the frame checks (`tools/check-frames.sh`: centring and every transition), your own look at a 16-frame sheet, a fresh Claude reviewer, GPT
 (`codex exec -m gpt-6-astra`), plus the sameness check against past videos. Verify each finding against the
 sources before acting. Re-render and re-review until no high-severity items remain.
+Small revisions (a few exact fixes): your own frame checks are enough; save the two outside reviewers for a new video
+or big changes, since Lawrence wants revision rounds fast. Offer the live preview (`npx remotion studio`, a free port,
+never 3000) when he is making many small tweaks.
 
 ### 8. Deliver
 `out/<slug>-final.mp4` plus a local link (`python3 -m http.server <free port> --bind 127.0.0.1 --directory "$KIT/out"`).
+Also send a phone-size copy (crf 23, ~11 MB) as a playable file card so it reaches the recruiter's phone. When they
+want to keep it, copy the final to `~/Downloads/<Company> pitch video.mp4`.
 Add a row to STYLE-REGISTRY.md and save `review/<slug>-final-sheet.png`.
 
 ### 9. Share improvements back (keeps every recruiter's kit current)

@@ -45,7 +45,8 @@ const fromLines = (words: Word[], lines: string[]) => {
 };
 
 // left / width / size default to the vertical pitch layout; the 16:9 training videos pass their own.
-export const Captions: React.FC<{tokens: Token[]; fixes: Record<string, string>; lines?: string[]; ink: string; hi: string; y?: number; hideFrom?: number; left?: number; width?: number; size?: number; font?: string}> = ({tokens, fixes, lines, ink, hi, y = 1330, hideFrom = Infinity, left = 60, width = 960, size = 46, font = fonts.sans}) => {
+// vox: the real Vox caption look (white on a dark bar, yellow box behind the spoken word, no pop).
+export const Captions: React.FC<{tokens: Token[]; fixes: Record<string, string>; lines?: string[]; ink: string; hi: string; y?: number; hideFrom?: number; left?: number; width?: number; size?: number; font?: string; vox?: boolean}> = ({tokens, fixes, lines, ink, hi, y = 1330, hideFrom = Infinity, left = 60, width = 960, size = 46, font = fonts.sans, vox = false}) => {
   const frame = useCurrentFrame();
   const ms = (frame / FPS) * 1000;
   const chunks = useMemo(() => (lines ? fromLines(toWords(tokens, fixes), lines) : chunk(toWords(tokens, fixes))), [tokens, fixes, lines]);
@@ -53,6 +54,23 @@ export const Captions: React.FC<{tokens: Token[]; fixes: Record<string, string>;
   const i = chunks.findIndex((c, k) => ms >= c[0].start - 60 && ms < (chunks[k + 1]?.[0].start ?? c[c.length - 1].end + 500) - 60);
   if (i < 0) return null;
   const c = chunks[i];
+  if (vox) {
+    return (
+      <div style={{position: 'absolute', left, width, top: y, display: 'flex', justifyContent: 'center'}}>
+        <div style={{background: 'rgba(26,25,23,0.78)', borderRadius: 8, padding: '7px 18px 10px', fontFamily: font, fontWeight: 700, fontSize: size, letterSpacing: '-0.01em', lineHeight: 1.12, color: '#fff', whiteSpace: 'nowrap'}}>
+          {c.map((w, k) => {
+            const on = ms >= w.start - 40 && ms < w.end + 120;
+            return (
+              <React.Fragment key={k}>
+                {k > 0 ? ' ' : ''}
+                <span style={{background: on ? hi : 'transparent', color: on ? ink : '#fff', borderRadius: 4, padding: '0 6px', margin: '0 -6px'}}>{w.text}</span>
+              </React.Fragment>
+            );
+          })}
+        </div>
+      </div>
+    );
+  }
   const s = pop(frame, Math.round(((c[0].start - 60) / 1000) * FPS), true);
   return (
     <div style={{position: 'absolute', left, width, top: y, display: 'flex', justifyContent: 'center'}}>

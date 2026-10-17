@@ -22,7 +22,7 @@ central motif, display font, palette, and hero clip subject.
 | **Transitions** | Cuts on the beat · morph one object into the next · whip pans · masks and wipes · zoom through |
 | **Hero clip** (Seedance, close) | Something from the motif or their world, real-looking, no real people's faces. |
 | **Signature moment** | One beat a candidate will remember (e.g. the problem sucked into the logo; a revenue hockey stick). |
-| **Music** | Tempo, instruments and mood from the energy line. Written as a Sonilo prompt. |
+| **Music** | Tempo, instruments and mood from the energy line, as ONE steady groove (no build, no drop, no new section). Written as a Sonilo prompt. |
 
 ## The three concepts
 
@@ -85,12 +85,34 @@ Rules for Vox touches:
 - Fill the frame down to the captions (y ~1400): when a beat leaves the bottom third empty, enlarge it or bring the next element in early.
 - `vox.full: true` swaps in the full Vox scene set (src/scenes/VoxScenes.tsx); without it, single touches (paper, grain, drift, stickers, post strip, clipping) still work on the plain scenes.
 
+## The hook (first 2-3 seconds; write it before the rest of the script)
+
+The hook decides whether the candidate watches the other 35 seconds, so it gets the most drafts.
+- **Write five, show the best two or three** in the storyboard, each a different hook type from the dials table.
+- **Lead with a claim or a tension**, not a definition or a company intro. The charged word should land in the first
+  ~6 words (about 2 seconds). A line like "<jargon> means ..." explains before anyone cares; put the explanation in
+  line two.
+- **Their own boldest words beat ours.** Look first in the launch post, founders' posts and the site's headline for
+  a contrarian or provocative claim. Quoted, sourced and shown on screen, it can be as controversial as they made it.
+  Lawrence's verdict (2026-10-16): the company's own launch-post claim ("<old way> is dead!") was far stronger than
+  a definition of the old way as the opener.
+- **Show the evidence while it is said.** Put the real post, number or screenshot on screen from frame 0 and
+  highlight each word as the voice says it.
+- **Hit the charged word visually** (a stamp, a strike-through, a shake, a colour flash) so the controversy reads
+  with the sound off. Skip novelty stickers (a "HOT TAKE" burst looked weird to Lawrence) and keep the hero object
+  big and central, never half-covering the stamp.
+- **Read it serious.** A bold claim sounds right read matter of fact; switch to the upbeat read on the next scene.
+- **Check it:** said aloud it fits in ~2 seconds; a candidate scrolling past would stop; it is true and sourced; line
+  two answers the question it raises.
+
 ## Script
 
 - 85-100 words, house order, plain spoken English a recruiter would say out loud.
-- The hook line follows the chosen hook type. It just needs to start the video well, not shock.
+- The hook line comes from "The hook" above.
 - Use their own words where they're good (tagline, the job they replace). One specific, memorable fact per beat.
-- Founders: names, the pedigree that matters, and one human detail from their posts if it's true and short.
+- Founders: names, the pedigree that matters, and one human detail from their posts if it's true and short. Tell the
+  story ("repeat founders who sold their last startup to <buyer>, then came back to YC"), not every win: a line
+  about which customers their last startup won was "weird and not needed". A press headline makes good evidence.
 - Difference: say it the way the founders do, in candidate terms.
 - Traction: revenue as speed in the source's words, customers by name if on their site, funding, team, city.
 - End: "That's <Company>." Nothing after it.

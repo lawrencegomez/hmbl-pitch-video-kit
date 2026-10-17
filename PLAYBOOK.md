@@ -62,6 +62,18 @@ the new sentence with the same voice, speed it 1.1x, trim its silence
 (`silenceremove=start_periods=1:start_threshold=-40dB,areverse,silenceremove=start_periods=1:start_threshold=-40dB,areverse`),
 find pause points in the old file (`-af silencedetect=noise=-38dB:d=0.12`), concat with short silent gaps, re-transcribe.
 Never put an `afade=t=out` with `st=0` on the whole track: it silences everything.
+A segment can have its own tone: a serious, matter-of-fact hook = `--stability 0.85`, sped 1.18x instead of 1.1x
+(record two short takes and let the recruiter pick). Match loudness with `-af volumedetect` (within 0.5 dB), keep about
+0.38 s between sentences, and move the later cue times by the exact splice offset (one small helper per section, e.g.
+`const tw = (s) => t(s - 0.05)`) instead of re-timing by hand.
+
+**Music check (before using a bed):** Sonilo beds can switch to a louder, brighter section partway through, which
+Lawrence rejected ("starts off cool but then sounds different"). Prompt for "one steady groove from start to finish,
+same instruments throughout, no build, no drop". Scan the bed in 2 s windows (loudness and brightness; a jump of 6-10 dB
+in the lows means a new section). If it shifts, loop the opening 8 bars instead of buying a new bed: find the tempo
+(onset autocorrelation; the beds land near 120 bpm, 8 bars about 16 s) and the first downbeat, then
+`asplit=4`, `atrim=0:<end>` for the first copy, `atrim=<downbeat>:<end>` for the repeats, `acrossfade=d=0.02` between
+them, `afade=t=out` over the last 2 s.
 
 ## Craft lessons (apply to every video)
 
@@ -109,6 +121,61 @@ Never put an `afade=t=out` with `st=0` on the whole track: it silences everythin
   save under `companies/<slug>/assets/map/`. A handful of tiles is within OSM's usage policy; never bulk-fetch.
 - The credit "© OpenStreetMap contributors" must stay visible on screen (`vox.office.credit`).
 - Note in the company file where the location came from (call notes vs a public source).
+
+## Full Vox style ("Mode A" of the `vox-style-video` skill, 2026-10-16)
+
+When the recruiter asks for a Vox-style video, read `~/.claude/skills/vox-style-video/SKILL.md` and open each rule's
+reference images first. The parts live in `src/voxa/kit.tsx` (no company data); a video is one
+`src/companies/<slug>-voxa.tsx` that composes them (see the comments there for which rule each part covers).
+
+- **Pipeline:** render raw (`npx remotion render src/index.ts <slug>-voxa out/<slug>-voxa-vN-raw.mp4 --crf=14`, about
+  a minute), then the lens pass `tools/vox-ca.sh out/<slug>-voxa-vN-raw.mp4 out/<slug>-voxa-vN.mp4` (rule 1, ~10 s).
+  Photos get the print look first: `tools/vox-halftone.sh in.png out.png 400 55` (keeps the cut-out's alpha; pure
+  dot halftone makes faces unrecognisable, this blend keeps them readable).
+- **12 fps (rule 2):** wrap every visual in `<Stepped>` (one `Freeze` on the stepped frame); audio stays outside.
+  Prove it: count new images a second with a frame-difference script; a moving stretch must read ~12/s.
+- **Cuts (rule 5):** each scene is a `<Shot from to enter exit>`; the exit move of one and the enter move of the next
+  are two halves of one ease, so the hard cut lands at peak speed. Check with a strip of frames cut-12 ... cut+10.
+- **Depth layers (rule 6):** split a photo into back plate / subject / foreground with masks, fill the plate's holes
+  with a down-and-up-scale pyramid (ImageMagick `-compose dst_over`), and keep ORIGINAL pixels everywhere except a
+  thin zone right under each cut-out, or every edge gets a light halo.
+- **12 fps and the last cut:** a cut lands on the next 12 fps step (up to 2 frames late), so the next caption line can
+  flash over the old scene. Hide the captions 3 frames before the close cut (`hideFrom={C.close - 3}`).
+- **Odometer text:** the target glyph (invisible) sets the width and the reel rolls in a clipped window; otherwise the
+  letters spread apart and neighbours bleed in. After landing, draw the plain glyph.
+- **Board scenes:** anything parked further down or to the side of the board shows during zoom-out entries and under
+  the captions. Hide it until the camera heads its way (`showFrom`), or slide it in with the pan.
+- **Hand circles:** wrap the words (`<Circled>`), never place a circle by board coordinates; give two-line headlines
+  ~1.2 line height so the loop doesn't cut the line above.
+- **Yellow:** the only accent. A brand's own colour stays only in its logo and real footage; tone down map colours
+  that compete (OpenStreetMap's yellow roads).
+- **One text animation at a time:** schedule them against the word timings and check for overlaps before rendering.
+- **Bright Vox (Lawrence 2026-10-16: the grey version felt "dark and gloomy"; a startup explainer should excite).**
+  Use Vox Explained pastels per scene (sky, mint, sun, lavender, coral) with white soft grids, `PrintTexture
+  vignette={0.1}`, grain ~0.13, colour halftone on photos (`tools/vox-halftone-color.sh`), and lots of small moving
+  parts from `src/voxa/bits.tsx` (people, envelopes, chips, radar, stamps, bursts, starbursts, rockets, tiles, cash, confetti, network pulses).
+  Yellow letters on pastel need `<VoxText stroke>`; dimmed crowds stay pastel, not grey; `MapFocus bright`.
+- **Hold every fact:** a short shot spends ~36-51% of its frames in the cut moves. Bring supporting labels in with the
+  cut (cut + 2 to 4 frames), animate only the hero number on its word, and use `inHalf/outHalf` 12 on short traction
+  shots (keep the pair equal on both sides of a cut).
+- **Labels are claims:** "WINS" on example plays implied results nobody sourced; "KEEP" says the same thing honestly.
+  A source tag must match the exact source (logos named in the launch post vs logos only on the site).
+- **Real evidence as the hook (2026-10-16):** open with the company's own boldest sourced line on its real page,
+  each word highlighted as the voice says it (multiply yellow boxes over the screenshot), then hit the charged word
+  (`Stamp bold`, `Burst`, a red strike `DrawPath`, a short shake, a red flash; `Starburst` for a "HOT TAKE" sticker).
+  Capture with Aside (`aside repl`): a plain window screenshot is 2x; for a line shown big, set
+  `transform: scale(3)` on its paragraph in the page first so the text stays crisp, and measure word boxes with a DOM
+  Range. In Aside, `Emulation.setDeviceMetricsOverride` and `Page.captureScreenshot` clips came back tiled; crop
+  locally instead.
+- **Numbers with units:** the odometer rolls only digits when the text holds a number (kit, 2026-10-16); a rolling
+  "M" flashed "$5B+" on the way to "$5M+". Settle a number by its spoken word, never during the exit move.
+- **Scale reveals:** bars drawn to scale (a goal 10x the current bar, dashed = not there yet), then the camera zooms
+  out to show the whole height. Keep the reveal's label clear of anything still moving.
+- **Deep map zoom (office location):** stack OpenStreetMap levels by geography in one transformed layer: z14 3x3 (the
+  city), z16 3x3 (blocks), z18 4x4 (the street). A zN image sits at its tile offset and spans 256 x 2^(14-N) z14 px per
+  tile. Cross-fade z16 in as the scale passes ~2 and z18 past ~6; draw the place's outline from Overpass
+  (`way["name"="..."](bbox); out geom;`) inside the z18 layer, yellow multiply fill + red outline; soften the rest
+  with a `backdrop-filter` blur under a radial mask (rule 10). Reach the place by the city name and hold ~1 s.
 
 ## Cost per video
 About 45 Higgsfield credits: voice under 1, music 2.25, one or two stills 3-6, one Seedance clip 35.
