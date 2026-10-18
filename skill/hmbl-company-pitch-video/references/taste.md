@@ -17,6 +17,13 @@ with what to do about each. No company names here: this file is shared with ever
 - **Liked:** opening on the company's own bold claim from its launch post ("<old way> is dead!"), with the words
   highlighted as they are said, a red strike-through, and a big bold stamp on the charged word.
 - **Disliked:** a definition as the opener ("<jargon> means ..."), and gimmick stickers ("HOT TAKE" looked weird).
+- **Look pick (2026-10-18): Bright Vox is the standard** for every pitch video unless he says otherwise up front.
+  Picked from four looks on one 8 s test: full newspaper Vox felt too "newspaper"; Bright Vox (pastel grid paper,
+  bold sans type, clean white cards, light grain, Vox motion kept) "looks best for sure". PLAYBOOK "Bright Vox".
+- **Review format (2026-10-18):** when he first sees the sections and the style-frame images, show which Vox
+  elements are used and where, and give him other Vox elements he could swap in (there are a lot).
+- **Voice pick (2026-10-18):** Maya is the default (clear, warm, made for explainers); Arthur (soft British male) is
+  the backup when he wants a different voice; he does not like Brooks. Heard side by side on the same 8 s test.
 - **Voice:** the bold claim read serious and matter of fact (steadier take, slightly faster), then the normal upbeat
   read from the next scene on. He asked for this after an excited read of the claim "sounded weird".
 - **Clean hero objects:** a small envelope half-covering the stamp "looked weird". Make the key object big and central

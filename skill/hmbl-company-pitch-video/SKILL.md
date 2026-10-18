@@ -19,8 +19,10 @@ company, never a specific role.
 - **If anything is missing:** `"$KIT/setup.sh" --check`, then `"$KIT/setup.sh"` to fix.
 - **What Lawrence likes, dislikes and has had changed:** `references/taste.md`. Read it before the concepts and the
   storyboard; it outranks your own taste.
-- **Vox style asked for:** load the `vox-style-video` skill (Mode A = full Vox, Mode B = a touch or two), then follow
-  PLAYBOOK "Full Vox style" and build from `src/voxa/kit.tsx`. The house rules below still apply.
+- **The look is Bright Vox by default** (Lawrence, 2026-10-18): every video, unless he asks for something else up
+  front. Load the `vox-style-video` skill for the techniques, then follow PLAYBOOK "Bright Vox: the standard look"
+  (what is on, what is off, the Vox element menu) and build from `src/voxa/kit.tsx`. Full newspaper Vox (Mode A) or
+  a plain style only when he says so. The house rules below still apply.
 
 ## The one idea that matters
 
@@ -42,7 +44,8 @@ not the look. Reusing any of it needs a reason rooted in the new company.
   the logo (it reads as "a different logo", 2026-10-17).
 - **Captions:** small (46 px) and low (top y 1470), plain words with no per-word highlight (`<Captions plain>`;
   Lawrence 2026-10-17: the moving highlight "doesn't move smooth enough"), hand-set phrase lines.
-- **Voice:** Emily (Higgsfield `elevenlabs_v4`, id in PLAYBOOK), sped up 1.1x. A bold-claim hook can be read serious
+- **Voice:** Maya (Higgsfield `elevenlabs_v4`, id in PLAYBOOK), sped up 1.1x; Arthur only if Lawrence asks for another
+  voice, never Brooks. A bold-claim hook can be read serious
   and matter of fact (its own take, spliced in; PLAYBOOK "Voice"), then the upbeat read from the next scene. If this machine has its own ElevenLabs key
   (`node tools/voice.mjs --list` works), use `tools/voice.mjs` with the default voice saved there instead; ask once which voice if none is saved. No sound effects. Music bed from
   Higgsfield Sonilo: one steady groove the whole way (no build, no drop). Check the bed for section changes before
@@ -103,8 +106,11 @@ Then write `companies/<slug>/storyboard.md` and show it to the recruiter in the 
 - **Hook options:** 2-3 opening lines, each with its hook type and what is on screen in the first 2 seconds. Mark
   your pick.
 - **The script**, with its word count and estimated length (about 3.1 words a second after the 1.1x speed-up).
-- **One row per section:** seconds · the voice line · what is on screen · the Vox or kit pieces it uses · assets
-  it needs (and their credits) · the source of every fact in it.
+- **One row per section:** seconds · the voice line · what is on screen · **the Vox elements it uses and where they
+  sit**, in the plain names of PLAYBOOK's "Vox element menu" (e.g. "hidden cut: push into the map", "yellow
+  highlight: behind 10,500 on the top card") · assets it needs (and their credits) · the source of every fact in it.
+- **Other Vox options:** 3-5 menu elements this video does not use yet, each with the section it would suit and
+  what it would add, so Lawrence can swap one in (his ask, 2026-10-18).
 - **Concept** in 3-4 lines (look, motif, signature moment) and the runner-up in one line.
 - **Credits** for the whole video.
 
@@ -121,8 +127,10 @@ label moved) can go straight to the build.
 ### 4b. Style frames, then STOP again (free, ~20 min)
 After the storyboard yes, build the composition with estimated word timings (a stand-in `words_est.json`, about 3.1
 words a second) and render 8-12 stills of the key moments, one per section, with `node tools/stills.mjs <slug> out/<slug>-style-frames <frame> ...`
-(bundles once, renders many frames). Put them on one board (`magick montage`) and show the recruiter the look before
-anything is spent. Apply their notes, then go to assets only on their yes (Lawrence's process, 2026-10-17: "write the
+(bundles once, renders many frames). Put them on one board (`magick montage`, PLAYBOOK "In review") with a label
+under each still: the section and seconds, then the Vox elements in it and where they sit, in the menu's plain names.
+Under the board, repeat the "Other Vox options" list (update it if the storyboard notes changed it). Show the
+recruiter the look before anything is spent. Apply their notes, then go to assets only on their yes (Lawrence's process, 2026-10-17: "write the
 script ... I will approve, then you will create images first to give me style details, and then we will create the
 full video").
 

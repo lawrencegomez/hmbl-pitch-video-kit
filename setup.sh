@@ -38,7 +38,7 @@ HUMANIZER_REPO=https://github.com/blader/humanizer.git
 HUMANIZER_REF=225a6f3
 SLOP_REPO=https://github.com/ItsssssJack/SlopMonster.git
 SLOP_REF=3fc9787
-EMILY_VOICE=6b3e3642-f7b7-4cb8-9688-51e233c4b92f
+VOICE_ID=b0f766b7-8703-4bd1-b973-f857c36837b6  # Maya, the default voice (PLAYBOOK step 5)
 SKILLS="$HOME/.claude/skills"
 SOURCES="$HOME/.claude/sources"
 
@@ -184,8 +184,8 @@ python3 "$SKILLS/slopmonster/tools/deslop.py" --text "This is a quick test sente
 
 ACCOUNT="$(higgsfield account status 2>/dev/null | head -1)"
 [ -n "$ACCOUNT" ] && ok "Higgsfield logged in: $ACCOUNT" || bad "Higgsfield not logged in (run: higgsfield auth login)"
-COST="$(higgsfield generate cost elevenlabs_v4 --dialogue "[{\"text\":\"Hi.\",\"voice_id\":\"$EMILY_VOICE\",\"voice_type\":\"preset\"}]" 2>&1 | tail -1)"
-echo "$COST" | grep -q credits && ok "Higgsfield can price the Emily voice ($COST, nothing spent)" || bad "Higgsfield voice check failed: $COST"
+COST="$(higgsfield generate cost elevenlabs_v4 --dialogue "[{\"text\":\"Hi.\",\"voice_id\":\"$VOICE_ID\",\"voice_type\":\"preset\"}]" 2>&1 | tail -1)"
+echo "$COST" | grep -q credits && ok "Higgsfield can price the Maya voice ($COST, nothing spent)" || bad "Higgsfield voice check failed: $COST"
 codex login status >/dev/null 2>&1 && ok "Codex logged in" || bad "Codex not logged in (run: codex login)"
 
 [ "$(git -C "$KIT" config core.hooksPath)" = ".githooks" ] && ok "Company-data guard on (blocks company names in commits)" || bad "Company-data guard off (run ./setup.sh)"

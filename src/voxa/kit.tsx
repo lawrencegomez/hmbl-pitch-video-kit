@@ -1,7 +1,7 @@
-// Vox "Mode A" toolkit (the vox-style-video skill's 10 rules as reusable parts). No company data in here.
-// Rule map: 2 Stepped/stepped(), 3 glide()/VOX_EASE, 4 PrintTexture + Bokeh, 5 Shot (cut the curve),
+// Vox "Mode A" toolkit (the vox-style-video skill's 12 rules as reusable parts). No company data in here.
+// Rule map: 2 Stepped/stepped(), 3 glide()/VOX_EASE, 4 Texture (+ older PrintTexture) + Bokeh, 5 Shot (cut the curve),
 // 6 Depth (parallax layers), 7 Bokeh, 8 YellowBox / Sweep / Evidence + tools/vox-halftone.sh, 9 VoxText + HandCircle,
-// 10 MapFocus.
+// 10 MapFocus, 11 Texture + PaperDisplace + tools/vox-texture.sh, 12 Backdrop.
 // Rule 1 (chromatic aberration) runs on the finished file: tools/vox-ca.sh.
 import React from 'react';
 import {AbsoluteFill, Easing, Freeze, Img, interpolate, random, staticFile, useCurrentFrame} from 'remotion';
@@ -49,6 +49,25 @@ export const Bokeh: React.FC<{c: [string, string, string, string]; base: string;
   );
 };
 
+// ---------------------------------------------------------------- Bright Vox (the standard look, PLAYBOOK, 2026-10-18)
+// Vox Explained pastels: one per scene, soft white grid on top. <PastelPaper tone="mint" /> as a Shot's bg.
+export const PASTEL = {
+  sky: {c: ['#BFE3F7', '#9FD3F0', '#D3EEF8', '#A9DCEB'], base: '#B5DEF3'},
+  mint: {c: ['#C9EEDC', '#ADE3CB', '#DDF3E6', '#BCE8D6'], base: '#C3EBD8'},
+  sun: {c: ['#FFE6A3', '#FFD3B5', '#FFF0C4', '#FFCFA0'], base: '#FFE1AC'},
+  lavender: {c: ['#E3DCF7', '#CFC6F0', '#EEE8FA', '#D6D0F0'], base: '#DDD6F4'},
+  coral: {c: ['#FFD3C7', '#FFBFAE', '#FFE3D8', '#FFCABB'], base: '#FFD0C2'},
+  leaf: {c: ['#D6F2C9', '#BFEAB2', '#E7F8DC', '#CAEDBF'], base: '#D2F0C7'},
+} satisfies Record<string, {c: [string, string, string, string]; base: string}>;
+export const PastelPaper: React.FC<{tone: keyof typeof PASTEL; seed?: number}> = ({tone, seed = 5}) => (
+  <Bokeh c={PASTEL[tone].c} base={PASTEL[tone].base} line="rgba(255,255,255,0.6)" seed={seed} />
+);
+
+// Bright Vox card: clean white, rounded, soft shadow (torn <Paper> belongs to the print look).
+export const Card: React.FC<{w: number; h?: number; tone?: string; rotate?: number; pad?: number; style?: React.CSSProperties; children?: React.ReactNode}> = ({w, h, tone = '#FFFFFF', rotate = 0, pad = 40, style, children}) => (
+  <div style={{position: 'absolute', width: w, height: h, padding: pad, boxSizing: 'border-box', borderRadius: 22, background: tone, transform: `rotate(${rotate}deg)`, boxShadow: '0 18px 40px rgba(40,28,14,0.18)', ...style}}>{children}</div>
+);
+
 // Over the whole frame: crumpled-paper relief, fibres, a faint graph-paper grid (real Vox lays it over footage too), vignette.
 // vignette: edge darkening (0.3 = moody, ~0.1 for bright videos).
 export const PrintTexture: React.FC<{strength?: number; grid?: boolean; vignette?: number}> = ({strength = 1, grid = true, vignette = 0.3}) => (
@@ -75,6 +94,71 @@ export const PrintTexture: React.FC<{strength?: number; grid?: boolean; vignette
     <AbsoluteFill style={{background: `radial-gradient(ellipse at 50% 46%, transparent 52%, rgba(30,22,12,${vignette}) 100%)`}} />
   </AbsoluteFill>
 );
+
+// ---------------------------------------------------------------- rule 11: real texture photos, curves not opacity
+// Shared public-domain textures (companies/_textures/CREDITS.md), each already grey, 1080x1920 and averaging mid-grey.
+export const TEX = {crumple: '_textures/paper-crumple.jpg', old: '_textures/paper-old.jpg', news: '_textures/newsprint.jpg', dust: '_textures/dust.png', disp: '_textures/dispmap.png'};
+
+// A texture photo over the scene: blend mode at FULL opacity, strength from a curve on the texture itself
+// (out = pivot + (in - pivot) x amount; pivot = the blend's neutral grey). Never lower the opacity: that mixes flat grey
+// into the colours (muddy, pasted on). blend: overlay (default) / hard-light ("Pin Light" look) / soft-light / multiply.
+// jitter: jump to a new random offset on every (stepped) frame, like film dust; static scratches read as a screen fault.
+export const Texture: React.FC<{src: string; amount?: number; blend?: 'overlay' | 'hard-light' | 'soft-light' | 'multiply'; mask?: string; jitter?: boolean}> = ({src, amount = 0.5, blend = 'overlay', mask, jitter = false}) => {
+  const id = useId('tx');
+  const f = useCurrentFrame();
+  const pivot = blend === 'multiply' ? 1 : 0.5;
+  const fn = {type: 'linear', slope: amount, intercept: pivot * (1 - amount)} as const;
+  return (
+    <>
+      <svg width={0} height={0} style={{position: 'absolute'}}>
+        <filter id={id} colorInterpolationFilters="sRGB" x="0" y="0" width="100%" height="100%">
+          <feComponentTransfer><feFuncR {...fn} /><feFuncG {...fn} /><feFuncB {...fn} /></feComponentTransfer>
+        </filter>
+      </svg>
+      <Img src={staticFile(src)} style={{position: 'absolute', inset: 0, width: '100%', height: '100%', objectFit: 'cover', pointerEvents: 'none', mixBlendMode: blend, filter: `url(#${id})`, WebkitMaskImage: mask, maskImage: mask, transform: jitter ? `translate(${(random(`jx${f}`) - 0.5) * 240}px, ${(random(`jy${f}`) - 0.5) * 240}px) scale(1.25)` : undefined}} />
+    </>
+  );
+};
+
+// Rule 11 step 5: letters take on the form of the paper (the texture is the displacement map). Wrap full-frame text;
+// scale ~3-8 px (more reads as broken type). Stepped frames keep it still between steps, like the real thing.
+export const PaperDisplace: React.FC<{children: React.ReactNode; scale?: number; map?: string; w?: number; h?: number}> = ({children, scale = 5, map = TEX.disp, w = 1080, h = 1920}) => {
+  const id = useId('pd');
+  return (
+    <AbsoluteFill style={{filter: `url(#${id})`}}>
+      <svg width={0} height={0} style={{position: 'absolute'}}>
+        <filter id={id} filterUnits="userSpaceOnUse" primitiveUnits="userSpaceOnUse" x="0" y="0" width={w} height={h} colorInterpolationFilters="sRGB">
+          <feImage href={staticFile(map)} x="0" y="0" width={w} height={h} preserveAspectRatio="none" result="map" />
+          <feDisplacementMap in="SourceGraphic" in2="map" scale={scale} xChannelSelector="R" yChannelSelector="G" />
+        </filter>
+      </svg>
+      {children}
+    </AbsoluteFill>
+  );
+};
+
+// ---------------------------------------------------------------- rule 12: layered image backgrounds
+// Instead of a flat dark solid: a few faint topic images (grey, screen-blended so they pile up softly), then a tint so
+// pure black becomes dark grey (floor) and white only a mid-light grey (ceil). The content on top must stay clearly
+// brighter and sharper. Oversized like Bokeh, so camera moves never show an edge. Add <Texture> layers over the scene.
+export type BackdropLayer = {src: string; x: number; y: number; w: number; h: number; rot?: number; bright?: number; blur?: number};
+const SOFT_EDGES = 'linear-gradient(to bottom, transparent 0%, #000 22%, #000 78%, transparent 100%)';
+export const Backdrop: React.FC<{layers: BackdropLayer[]; floor?: number; ceil?: number}> = ({layers, floor = 0.12, ceil = 0.36}) => {
+  const id = useId('bd');
+  const fn = {type: 'linear', slope: ceil - floor, intercept: floor} as const;
+  return (
+    <div style={{position: 'absolute', inset: -360, background: '#000', isolation: 'isolate', overflow: 'hidden', filter: `url(#${id})`}}>
+      <svg width={0} height={0} style={{position: 'absolute'}}>
+        <filter id={id} colorInterpolationFilters="sRGB" x="0" y="0" width="100%" height="100%">
+          <feComponentTransfer><feFuncR {...fn} /><feFuncG {...fn} /><feFuncB {...fn} /></feComponentTransfer>
+        </filter>
+      </svg>
+      {layers.map((l) => (
+        <Img key={l.src} src={staticFile(l.src)} style={{position: 'absolute', left: l.x + 360, top: l.y + 360, width: l.w, height: l.h, objectFit: 'cover', transform: `rotate(${l.rot ?? 0}deg)`, filter: `grayscale(1) contrast(0.9) brightness(${l.bright ?? 1})${l.blur ? ` blur(${l.blur}px)` : ''}`, mixBlendMode: 'screen', WebkitMaskImage: SOFT_EDGES, maskImage: SOFT_EDGES}} />
+      ))}
+    </div>
+  );
+};
 
 // Film grain; the seed follows the (stepped) frame.
 export const Grain: React.FC<{opacity?: number}> = ({opacity = 0.2}) => {

@@ -29,7 +29,10 @@ Before any node / npx / higgsfield / codex command: `source bin/env.sh` (from th
 4. **Script:** 85-100 words. Humanizer, then `python3 ~/.claude/skills/slopmonster/tools/deslop.py --text "..."`
    (score only, never cleanse: founder names are client contacts).
 5. **Higgsfield** (needs a Higgsfield account with credits; `higgsfield account status` shows the balance):
-   - **Voice:** `elevenlabs_v4`, voice **Emily** `6b3e3642-f7b7-4cb8-9688-51e233c4b92f` (young female, preset).
+   - **Voice:** `elevenlabs_v4`, voice **Maya** `b0f766b7-8703-4bd1-b973-f857c36837b6` (clear, warm female built for
+     explainers; Lawrence's pick 2026-10-18). Backup only when he asks for another voice: **Arthur**
+     `30fc8796-ceb6-4a66-b3a7-4a145ef7f346` (soft-spoken British male, history documentaries). Never Brooks (he
+     disliked it). Emily (the old default, a bubbly UGC voice) is retired.
      `higgsfield generate create elevenlabs_v4 --dialogue '[{"text":"...","voice_id":"<id>","voice_type":"preset"}]' --wait --json`
      then download `result_url`. Speed up: `ffmpeg -i in.mp3 -af atempo=1.1 -ar 44100 vo_final.mp3` (keeps pitch).
      Pad the end so whisper keeps the last words: `-af "apad=pad_dur=1.5"`. About 0.25 credits.
@@ -126,6 +129,59 @@ them, `afade=t=out` over the last 2 s.
 - The credit "© OpenStreetMap contributors" must stay visible on screen (`vox.office.credit`).
 - Note in the company file where the location came from (call notes vs a public source).
 
+## Bright Vox: the standard look (Lawrence, 2026-10-18)
+
+**Every HMBL pitch video uses Bright Vox unless Lawrence asks for something else up front.** He picked it from four
+looks on the same 8 s test (full newspaper Vox, clean dark Vox, Bright Vox, Vox touches only): it keeps the Vox motion
+and personality without the newspaper feel. The look's grammar is fixed; the skin still changes per company (pastel
+per scene, the company's own sans-serif if `vibe.md` names one, the hook idea, the motifs), so no two videos match.
+
+- **On:** everything marked "standard" in the menu below. Pastel paper per scene (`<PastelPaper tone>`), clean white
+  cards (`<Card>`), bold sans display type (`fonts.sans` 800, kickers 600) with `<VoxText stroke>` on pastel, one
+  `<Texture src={TEX.crumple} amount={0.15} />` over the film, `<Stepped>`, `<Shot>` cuts, `MapFocus bright`, the lens
+  pass (`tools/vox-ca.sh`).
+- **Off:** newsprint, dust and scratches, old-paper edges, dotted halftone on photos, torn paper edges, paper-bent
+  letters (`PaperDisplace`), dark archive backdrops. Each can come back as an "other option" for one beat.
+- **Reference build:** the 8 s test he picked from lives on Lawrence's machine only (test files stay local, like
+  company files); ask him for the render if you need to see the look.
+
+### Vox element menu (the names used in every storyboard and style-frame board)
+Name each element in these plain words and say where it sits ("yellow highlight: behind 10,500 on the top card").
+
+| Plain name | What the viewer sees | Rule | Kit part | Standard? |
+|---|---|---|---|---|
+| Choppy 12 fps motion | movement steps like stop-motion | 2 | `Stepped` | yes |
+| Slow eased moves | camera and objects glide over 1-2 s | 3 | `glide`, `Camera` | yes |
+| Pastel grid paper | pastel background with a soft white grid | 7 | `PastelPaper` | yes |
+| Paper grain | faint paper relief over everything | 11 | `Texture` crumple 0.15 | yes |
+| Clean cards | white rounded cards with a soft shadow | | `Card` | yes |
+| Hidden cut | the cut hides in the fastest part of a push or whip | 5 | `Shot` | yes |
+| Depth drift | a cut-out moves more than the card behind it | 6 | offset by `glide` | yes |
+| Yellow highlight | one yellow box or bar behind the key word | 8 | `YellowBox`, `Sweep` | yes |
+| Text pop | letters flash yellow then settle, or pop in out of order | 9 | `VoxText` fill / random | yes |
+| Rolling number | digits roll like a slot machine | 9 | `VoxText` odometer | yes |
+| Hand-drawn circle | a pen loop around a word or a spot | 9 | `HandCircle`, `Circled` | yes |
+| Map focus pull | the map softens except where the eye should go | 10 | `MapFocus bright` | yes, on maps |
+| Drawn-on line | a line or region draws itself | 10 | `DrawPath` | yes |
+| Lens fringe | faint colour fringe at the frame edges | 1 | `tools/vox-ca.sh` | yes |
+| Highlighted evidence | a real headline or post, words lit as they are said | 8 | `Evidence` | option |
+| Stamp | a bold double-border stamp that slams down with a shake | | bits `Stamp`, `Burst` | option |
+| Moving bits | small people, envelopes, chips, cash, confetti | | `src/voxa/bits.tsx` | option |
+| Parallax photo | a photo split into layers, slow camera drift | 6 | `Depth` | option |
+| Whip-pan cut | a sideways whip with motion blur at the cut | 5 | `Shot` whip | option |
+| Scale reveal | bars drawn to scale, camera zooms out to show the gap | | `Camera` | option |
+| Deep map zoom | city, then blocks, then the street, place outlined | 10 | "Deep map zoom" below | option |
+| Timeline bar | a yellow bar grows along dated marks | 8 | `DrawPath` + labels | option |
+| Colour halftone | printed-dot look on photos (adds some print back) | 8 | `tools/vox-halftone-color.sh` | option |
+| Archive backdrop | faint topic images behind a dark, serious beat | 12 | `Backdrop` | option |
+| Paper-bent letters | title letters take the paper's creases | 11 | `PaperDisplace` | option (print) |
+| Newsprint and dust | the full newspaper texture layer | 11 | `Texture` news, dust | option (print) |
+
+**In review:** every storyboard row names its elements and where they sit; the style-frame board carries the same
+names under each still; both end with **Other Vox options**: 3-5 menu items not used yet, each with the section it
+would suit and what it would add, so Lawrence can swap one in (his ask, 2026-10-18). Label a board with
+`magick montage -label` (one line per element, `\n` between) `-font Helvetica -pointsize 18 -geometry 432x768+8+8`.
+
 ## Full Vox style ("Mode A" of the `vox-style-video` skill, 2026-10-16)
 
 When the recruiter asks for a Vox-style video, read `~/.claude/skills/vox-style-video/SKILL.md` and open each rule's
@@ -140,6 +196,20 @@ reference images first. The parts live in `src/voxa/kit.tsx` (no company data); 
   Prove it: count new images a second with a frame-difference script; a moving stretch must read ~12/s.
 - **Cuts (rule 5):** each scene is a `<Shot from to enter exit>`; the exit move of one and the enter move of the next
   are two halves of one ease, so the hard cut lands at peak speed. Check with a strip of frames cut-12 ... cut+10.
+- **Push cuts need margin (2026-10-18):** a shot entered with a push starts at 1/√k of its size (k 1.9 = 72%) and grows
+  to full, so anything filling the frame (a map, a photo) must reach ~1.4x past it, or the first frames after the cut
+  show a framed rectangle. `Bokeh` and `Backdrop` are already oversized; draw a map with a margin past the frame.
+- **Textures (rule 11, 2026-10-18):** real texture photos, never generated noise at lowered opacity. Put `<Texture
+  src={TEX.crumple} amount={0.45} />` layers over the finished film (after the shots): blend mode at full opacity,
+  strength = `amount` (a curve on the texture). Shared public-domain set in `companies/_textures/` (crumple, old paper,
+  newsprint, dust, displacement map; `CREDITS.md`). Mix that worked on the first test: old 0.55, crumple 0.45, news
+  0.07 `hard-light`, dust 1 `jitter`. Newsprint above ~0.1 starts to read as content, and any drawing or ad in a scan
+  ghosts through, so use text-only crops. Own picks (Texturelabs, Texture Fabrik) go in the company's assets folder
+  (their licence forbids sharing the files) through `tools/vox-texture.sh`. Title text goes inside `<PaperDisplace
+  scale={5}>` so the letters take the paper's form. `PrintTexture` / `Grain` are the old way: only to match older videos.
+- **Layered backgrounds (rule 12, 2026-10-18):** a dark scene's `bg` is `<Backdrop layers={[...]}>` (2-4 faint
+  topic images: archive scans, old photos, paintings), never a flat dark solid. Blacks lift to dark grey, whites stay
+  mid-grey, so the content on top must be clearly brighter and sharper.
 - **Depth layers (rule 6):** split a photo into back plate / subject / foreground with masks, fill the plate's holes
   with a down-and-up-scale pyramid (ImageMagick `-compose dst_over`), and keep ORIGINAL pixels everywhere except a
   thin zone right under each cut-out, or every edge gets a light halo.
@@ -154,11 +224,9 @@ reference images first. The parts live in `src/voxa/kit.tsx` (no company data); 
 - **Yellow:** the only accent. A brand's own colour stays only in its logo and real footage; tone down map colours
   that compete (OpenStreetMap's yellow roads).
 - **One text animation at a time:** schedule them against the word timings and check for overlaps before rendering.
-- **Bright Vox (Lawrence 2026-10-16: the grey version felt "dark and gloomy"; a startup explainer should excite).**
-  Use Vox Explained pastels per scene (sky, mint, sun, lavender, coral) with white soft grids, `PrintTexture
-  vignette={0.1}`, grain ~0.13, colour halftone on photos (`tools/vox-halftone-color.sh`), and lots of small moving
-  parts from `src/voxa/bits.tsx` (people, envelopes, chips, radar, stamps, bursts, starbursts, rockets, tiles, cash, confetti, network pulses).
-  Yellow letters on pastel need `<VoxText stroke>`; dimmed crowds stay pastel, not grey; `MapFocus bright`.
+- **Bright Vox:** now the standard, see "Bright Vox: the standard look" above. The first version (2026-10-16) used `PrintTexture` and colour halftone on photos; the 2026-10-18 standard drops both (real `Texture`
+  grain, plain photos). Still true: small moving parts from `src/voxa/bits.tsx` help a startup video feel alive,
+  dimmed crowds stay pastel, not grey.
 - **Hold every fact:** a short shot spends ~36-51% of its frames in the cut moves. Bring supporting labels in with the
   cut (cut + 2 to 4 frames), animate only the hero number on its word, and use `inHalf/outHalf` 12 on short traction
   shots (keep the pair equal on both sides of a cut).
