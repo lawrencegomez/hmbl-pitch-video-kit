@@ -19,6 +19,9 @@ company, never a specific role.
 - **If anything is missing:** `"$KIT/setup.sh" --check`, then `"$KIT/setup.sh"` to fix.
 - **What Lawrence likes, dislikes and has had changed:** `references/taste.md`. Read it before the concepts and the
   storyboard; it outranks your own taste.
+- **Story, pacing and checks** (the first-3-seconds test, one open question answered on screen, timing to the words,
+  evidence over decoration, narration and loudness checks; adapted from Nate Herk's editing playbook):
+  `references/edit-craft.md`. Read it with `taste.md`; the house rules and taste win where they differ.
 - **The look is Bright Vox by default** (Lawrence, 2026-10-18): every video, unless he asks for something else up
   front. Load the `vox-style-video` skill for the techniques, then follow PLAYBOOK "Bright Vox: the standard look"
   (what is on, what is off, the Vox element menu) and build from `src/voxa/kit.tsx`. Full newspaper Vox (Mode A) or
@@ -104,7 +107,7 @@ text only (spell a name the way it sounds, e.g. "Day-vee", when the voice gets i
 
 Then write `companies/<slug>/storyboard.md` and show it to the recruiter in the chat, short enough to read on a phone:
 - **Hook options:** 2-3 opening lines, each with its hook type and what is on screen in the first 2 seconds. Mark
-  your pick.
+  your pick, and say why it passes the first-3-seconds test (`references/edit-craft.md`).
 - **The script**, with its word count and estimated length (about 3.1 words a second after the 1.1x speed-up).
 - **One row per section:** seconds · the voice line · what is on screen · **the Vox elements it uses and where they
   sit**, in the plain names of PLAYBOOK's "Vox element menu" (e.g. "hidden cut: push into the map", "yellow
@@ -147,8 +150,9 @@ names and facts, since that folder is shared code.
 
 ### 7. Review loop (every version)
 Follow `references/review.md`: the frame checks (`tools/check-frames.sh`: centring and every transition), your own look at a 16-frame sheet, a fresh Claude reviewer, GPT
-(`codex exec -m gpt-6-astra`), plus the sameness check against past videos. Verify each finding against the
-sources before acting. Re-render and re-review until no high-severity items remain.
+(`codex exec -m gpt-6-astra`), plus the sameness check against past videos, plus the edit-craft checks (first second
+frame by frame, narration re-transcribed against the script, loudness on the final MP4; `references/edit-craft.md`).
+Verify each finding against the sources before acting. Re-render and re-review until no high-severity items remain.
 Small revisions (a few exact fixes): your own frame checks are enough; save the two outside reviewers for a new video
 or big changes, since Lawrence wants revision rounds fast. Offer the live preview (`npx remotion studio`, a free port,
 never 3000) when he is making many small tweaks.

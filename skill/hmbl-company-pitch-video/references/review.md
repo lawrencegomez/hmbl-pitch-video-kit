@@ -11,6 +11,8 @@ the template below into `review/BRIEF_vN.md`.
    - `review/check/transitions.png`: each row must go old page, then ONE torn edge, then new page. Fail it if the
      old page shows again after the cut, if two paper edges sweep past, or if both pages are half-visible.
    Reviewers working from a 16-frame sheet miss both of these: they only show between frames.
+   Then the edit-craft checks (`edit-craft.md`, "Checks to add"): the first second frame by frame, the narration
+   re-transcribed and compared with the script, and loudness and true peak measured on the final MP4.
 1. **Me:** look at the sheet before anyone else; fix the obvious.
 2. **Fresh Claude reviewer** (Agent, general-purpose; on later rounds resume the same one so it checks its own list).
 3. **GPT** for a different model family: `codex exec --skip-git-repo-check -s read-only -m gpt-6-astra -C <project>
