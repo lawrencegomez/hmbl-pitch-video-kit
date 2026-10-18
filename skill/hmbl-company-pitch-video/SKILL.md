@@ -37,8 +37,11 @@ not the look. Reusing any of it needs a reason rooted in the new company.
 - **Five takeaways** a candidate must get with sound off: what it does, who founded it and why they matter, what
   makes it different, traction (customers / revenue speed / funding / team size), where they are.
 - **Hook:** motion graphics, never a stock photo. A different hook type and visual idea per company.
-- **Close:** "That's <Company>." + logo + the hero clip. **No call to action, no URL.**
-- **Captions:** small (46 px) and low (top y 1470), word highlight, hand-set phrase lines.
+- **Close:** "That's <Company>." + logo + the hero clip. **No call to action, no URL.** The end logo is the
+  company's real logo, the same one shown earlier in the video; a hero clip must never be a re-imagined version of
+  the logo (it reads as "a different logo", 2026-10-17).
+- **Captions:** small (46 px) and low (top y 1470), plain words with no per-word highlight (`<Captions plain>`;
+  Lawrence 2026-10-17: the moving highlight "doesn't move smooth enough"), hand-set phrase lines.
 - **Voice:** Emily (Higgsfield `elevenlabs_v4`, id in PLAYBOOK), sped up 1.1x. A bold-claim hook can be read serious
   and matter of fact (its own take, spliced in; PLAYBOOK "Voice"), then the upbeat read from the next scene. If this machine has its own ElevenLabs key
   (`node tools/voice.mjs --list` works), use `tools/voice.mjs` with the default voice saved there instead; ask once which voice if none is saved. No sound effects. Music bed from
@@ -114,6 +117,14 @@ and keeps it from being rebuilt.
 **Revisions follow the same gate:** when the notes change the script or what a section shows, send the updated
 storyboard with the changed rows marked and wait. A fix the recruiter already spelled out exactly (a bigger stamp, a
 label moved) can go straight to the build.
+
+### 4b. Style frames, then STOP again (free, ~20 min)
+After the storyboard yes, build the composition with estimated word timings (a stand-in `words_est.json`, about 3.1
+words a second) and render 8-12 stills of the key moments, one per section, with `node tools/stills.mjs <slug> out/<slug>-style-frames <frame> ...`
+(bundles once, renders many frames). Put them on one board (`magick montage`) and show the recruiter the look before
+anything is spent. Apply their notes, then go to assets only on their yes (Lawrence's process, 2026-10-17: "write the
+script ... I will approve, then you will create images first to give me style details, and then we will create the
+full video").
 
 ### 5. Assets (start the slow ones first)
 Hero clip (Seedance, ~10 min) in the background first, then voice, music (prompt from `vibe.md`), stills, logo

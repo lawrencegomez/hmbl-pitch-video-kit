@@ -36,6 +36,9 @@ with what to do about each. No company names here: this file is shared with ever
 - **Third-party press is good evidence:** a news headline torn out big, with the key words highlighted as said.
 - **Stamps:** make them bold and big (double border, dense ink, slam with a shake and impact lines). Thin, faded
   stamps read as weak.
+- **Builders, not "self-taught".** Show what a founder built before (a company, a trading system); "self-taught" may
+  not land with every candidate (2026-10-17).
+- **Vary the photos:** a different real photo per scene, never the same pair photo reused.
 
 ## Traction
 - **Revenue as speed and trajectory:** launch month, the first big milestone, and where it is heading, in the
@@ -46,7 +49,19 @@ with what to do about each. No company names here: this file is shared with ever
 - **Zoom in close** to the neighbourhood (city, then blocks, then the street) and **highlight the area in colour**
   (yellow fill, red outline, label). A city-level map was not enough.
 
+## Captions and highlights (2026-10-17)
+- **Captions are plain words, no moving word highlight** (the per-word box "doesn't move smooth enough"):
+  `<Captions vox plain ...>`.
+- **A highlight is one unbroken bar** along each line, growing word by word as the words are said. Never separate
+  boxes with gaps between neighbouring words. Applies everywhere: headlines, posts, quotes.
+
+## Close
+- **The end logo must match the logo shown earlier.** An AI hero clip of a sphere that looked like their logo read as
+  "a different logo"; the close reused the section-2 logo card (real SVG logo, orbit rings, serif name, tagline).
+  A hero clip must never be a re-imagined version of the logo.
+
 ## Music
+- **Level:** music gain 0.16 under the voice was "a little too loud"; 0.10 was the fix.
 - **Keep one feel the whole way.** A bed that "starts off cool but then sounds different" (a louder, brighter section
   partway through) was rejected. Prompt for one steady groove; check the bed for section changes and loop the opening
   bars if it shifts (PLAYBOOK "Music").

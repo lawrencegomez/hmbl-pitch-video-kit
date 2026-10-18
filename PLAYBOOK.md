@@ -39,7 +39,7 @@ Before any node / npx / higgsfield / codex command: `source bin/env.sh` (from th
      `node tools/voice.mjs "<script>" companies/<slug>/assets/audio/vo_raw.mp3` (model `eleven_multilingual_v2`
      unless `--model` says otherwise). Same 1.1x speed-up and end padding afterwards. Billed to that person's
      ElevenLabs plan, not Higgsfield. A key never goes in chat, a commit or a company file (the guard blocks `sk_` keys).
-   - **Music:** `sonilo_music --duration <seconds+1> --prompt "<from vibe.md>"`, about 2.25 credits. Volume 0.16 under the voice.
+   - **Music:** `sonilo_music --duration <seconds+1> --prompt "<from vibe.md>"`, about 2.25 credits. Volume 0.10 under the voice (0.16 was "a little too loud", 2026-10-17).
    - **Stills:** `gpt_image_2_5 --aspect_ratio 9:16 --quality high --resolution 2k`, about 2.75 credits each.
    - **Hero clip:** `seedance_2_5 --mode omni_reference --start-image <UPLOAD_ID> --aspect_ratio 9:16 --duration 5 --resolution 720p --generate_audio false`,
      35 credits (1080p is 80). Takes about 10 minutes: start it first, in the background.
@@ -61,6 +61,10 @@ Before any node / npx / higgsfield / codex command: `source bin/env.sh` (from th
 the new sentence with the same voice, speed it 1.1x, trim its silence
 (`silenceremove=start_periods=1:start_threshold=-40dB,areverse,silenceremove=start_periods=1:start_threshold=-40dB,areverse`),
 find pause points in the old file (`-af silencedetect=noise=-38dB:d=0.12`), concat with short silent gaps, re-transcribe.
+Re-transcribing nudges words near the cut by tens of ms: keep the old `words.json` entries before the cut and take only
+the new line's words; if a shot change is cued off the new line's first word, pick the offset that keeps the old cut
+frame. Prove nothing else moved before sending: `ffmpeg -t <cut s> -i new.mp4 -t <cut s> -i old.mp4 -lavfi psnr -f null -`
+(min PSNR above ~40 dB = the same frames; a lower min names the frames that changed via `psnr=stats_file=...`).
 Never put an `afade=t=out` with `st=0` on the whole track: it silences everything.
 A segment can have its own tone: a serious, matter-of-fact hook = `--stability 0.85`, sped 1.18x instead of 1.1x
 (record two short takes and let the recruiter pick). Match loudness with `-af volumedetect` (within 0.5 dB), keep about
@@ -160,8 +164,13 @@ reference images first. The parts live in `src/voxa/kit.tsx` (no company data); 
   shots (keep the pair equal on both sides of a cut).
 - **Labels are claims:** "WINS" on example plays implied results nobody sourced; "KEEP" says the same thing honestly.
   A source tag must match the exact source (logos named in the launch post vs logos only on the site).
+- **Highlights never break (Lawrence 2026-10-17, everywhere):** words lit one after another form ONE bar per line that
+  grows at one steady speed with the voice. Screenshots: kit `<Evidence src b w lit>` (word boxes with a `line` number
+  per word, `wordAt()` to find them). Typeset quotes: kit `<Sweep>`, one per word, the space inside the first box. Never
+  separate per-word boxes: their gaps, seams and notches show for 2-3 frames at every join. Check by stepping through
+  every frame of each highlight, not a still sheet.
 - **Real evidence as the hook (2026-10-16):** open with the company's own boldest sourced line on its real page,
-  each word highlighted as the voice says it (multiply yellow boxes over the screenshot), then hit the charged word
+  each word highlighted as the voice says it (kit `<Evidence>`, one unbroken bar per line), then hit the charged word
   (`Stamp bold`, `Burst`, a red strike `DrawPath`, a short shake, a red flash; `Starburst` for a "HOT TAKE" sticker).
   Capture with Aside (`aside repl`): a plain window screenshot is 2x; for a line shown big, set
   `transform: scale(3)` on its paragraph in the page first so the text stays crisp, and measure word boxes with a DOM

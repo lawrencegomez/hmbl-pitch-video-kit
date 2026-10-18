@@ -1,6 +1,7 @@
 // Vox "Mode A" toolkit (the vox-style-video skill's 10 rules as reusable parts). No company data in here.
 // Rule map: 2 Stepped/stepped(), 3 glide()/VOX_EASE, 4 PrintTexture + Bokeh, 5 Shot (cut the curve),
-// 6 Depth (parallax layers), 7 Bokeh, 8 YellowBox + tools/vox-halftone.sh, 9 VoxText + HandCircle, 10 MapFocus.
+// 6 Depth (parallax layers), 7 Bokeh, 8 YellowBox / Sweep / Evidence + tools/vox-halftone.sh, 9 VoxText + HandCircle,
+// 10 MapFocus.
 // Rule 1 (chromatic aberration) runs on the finished file: tools/vox-ca.sh.
 import React from 'react';
 import {AbsoluteFill, Easing, Freeze, Img, interpolate, random, staticFile, useCurrentFrame} from 'remotion';
@@ -195,6 +196,85 @@ export const YellowBox: React.FC<{at: number; children: React.ReactNode; dur?: n
       <span style={{position: 'absolute', left: '-0.12em', right: '-0.12em', top: '0.04em', bottom: '0.0em', background: color, transform: `scaleX(${p})`, transformOrigin: f >= until ? 'right center' : 'left center'}} />
       <span style={{position: 'relative'}}>{children}</span>
     </span>
+  );
+};
+
+// ---------------------------------------------------------------- rule 8: highlights that never break
+// Lawrence 2026-10-17: "no breaks, just one long highlight that progresses as needed", everywhere. Neighbouring words
+// lit one after another form ONE bar per line, growing at one steady speed with the voice. Use Sweep / Evidence for
+// any run of words (YellowBox stays for a lone word that wipes off again).
+export const SWEEP_PX = 28; // px per frame, every highlight
+export const sweepDur = (px: number) => Math.max(3, Math.round(px / SWEEP_PX));
+
+// Typeset words: give each word (with its trailing space as a no-break space) its own Sweep, the space inside the
+// first one's box and padR="0em", so the bar reaches exactly the next word's start and never covers it early:
+//   <Sweep at={a} dur={4} padR="0em">data{'\u00A0'}</Sweep><Sweep at={Math.max(b, a + 4)} dur={7}>business</Sweep>
+export const Sweep: React.FC<{at: number; dur: number; children: React.ReactNode; color?: string; padR?: string}> = ({at, dur, children, color = VOX_YELLOW, padR = '0.12em'}) => {
+  const p = interpolate(useCurrentFrame(), [at, at + dur], [0, 1], {extrapolateLeft: 'clamp', extrapolateRight: 'clamp'});
+  return (
+    <span style={{position: 'relative', display: 'inline-block'}}>
+      <span style={{position: 'absolute', left: '-0.12em', right: `-${padR}`, top: '0.04em', bottom: 0, background: color, transform: `scaleX(${p})`, transformOrigin: 'left center'}} />
+      <span style={{position: 'relative'}}>{children}</span>
+    </span>
+  );
+};
+
+// A real screenshot (a post, a headline) with its words lit as the voice says them. Word boxes come from the page
+// (DOM Range per word, in screenshot pixels, with the line number): {image, width, height, words: [{text, x, y, w, h, line}]}.
+// Each word owns a slot reaching halfway into the gaps to its neighbours (slots touch exactly); a word sweeps only once
+// its lit left neighbour is full; every bar is a sub-path of ONE svg path, so touching bars and stacked lines fill as
+// one shape (no seam, no darker stripe under multiply). lit = [[wordIndex, frame], ...].
+export type WordBox = {text: string; x: number; y: number; w: number; h: number; line?: number};
+export type Boxes = {image: string; width: number; height: number; words: WordBox[]};
+const normWord = (s: string) => s.toLowerCase().replace(/[^a-z0-9$.]/g, '').replace(/\.$/, '');
+// Index of the n-th word in a screenshot's word list that matches `text` (throws if missing).
+export const wordAt = (b: Boxes, text: string, n = 0) => {
+  let k = -1;
+  const i = b.words.findIndex((w) => normWord(w.text) === normWord(text) && ++k === n);
+  if (i < 0) throw new Error(`word "${text}" not in ${b.image}`);
+  return i;
+};
+export const Evidence: React.FC<{src: string; b: Boxes; w: number; lit: [number, number][]; pad?: number; color?: string}> = ({src, b, w, lit, pad = 6, color = VOX_YELLOW}) => {
+  const f = useCurrentFrame();
+  const k = w / b.width;
+  const sameLine = (i: number, j: number) => j >= 0 && j < b.words.length && (b.words[i].line ?? 0) === (b.words[j].line ?? 0);
+  const slot = b.words.map((wb, i) => {
+    const prev = sameLine(i, i - 1) ? b.words[i - 1] : null;
+    const next = sameLine(i, i + 1) ? b.words[i + 1] : null;
+    return {l: prev ? ((prev.x + prev.w + wb.x) / 2) * k : wb.x * k - pad, r: next ? ((wb.x + wb.w + next.x) / 2) * k : (wb.x + wb.w) * k + pad};
+  });
+  const dur = slot.map((q) => sweepDur(q.r - q.l));
+  const said = new Map(lit); // when the voice says each word
+  const start = new Map(lit); // when its sweep starts
+  for (let i = 1; i < b.words.length; i++) {
+    const t = said.get(i), tp = said.get(i - 1);
+    // said after its left neighbour: wait until that neighbour's sweep is full (compare SAID order, not pushed starts)
+    if (t !== undefined && tp !== undefined && sameLine(i, i - 1) && tp <= t) start.set(i, Math.max(t, start.get(i - 1)! + dur[i - 1]));
+  }
+  const pieces: {line: number; l: number; r: number; t: number; btm: number}[] = [];
+  b.words.forEach((wb, i) => {
+    const t0 = start.get(i);
+    const p = t0 === undefined ? 0 : interpolate(f, [t0, t0 + dur[i]], [0, 1], {extrapolateLeft: 'clamp', extrapolateRight: 'clamp'});
+    if (p <= 0) return;
+    const {l, r} = slot[i];
+    pieces.push({line: wb.line ?? 0, l, r: l + (r - l) * p, t: wb.y * k - pad * 0.6, btm: (wb.y + wb.h) * k + pad * 0.6});
+  });
+  pieces.sort((a, c) => a.line - c.line || a.l - c.l);
+  const bars: typeof pieces = [];
+  for (const q of pieces) {
+    const last = bars[bars.length - 1];
+    if (last && last.line === q.line && q.l <= last.r + 0.5) Object.assign(last, {r: Math.max(last.r, q.r), t: Math.min(last.t, q.t), btm: Math.max(last.btm, q.btm)});
+    else bars.push({...q});
+  }
+  return (
+    <div style={{position: 'relative', width: w, height: b.height * k}}>
+      <Img src={staticFile(src)} style={{position: 'absolute', inset: 0, width: w, height: b.height * k}} />
+      {bars.length > 0 && (
+        <svg width={w} height={b.height * k} style={{position: 'absolute', left: 0, top: 0, overflow: 'visible', mixBlendMode: 'multiply'}}>
+          <path d={bars.map((m) => `M${m.l} ${m.t}H${m.r}V${m.btm}H${m.l}Z`).join('')} fill={color} />
+        </svg>
+      )}
+    </div>
   );
 };
 

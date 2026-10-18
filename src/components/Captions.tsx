@@ -46,7 +46,8 @@ const fromLines = (words: Word[], lines: string[]) => {
 
 // left / width / size default to the vertical pitch layout; the 16:9 training videos pass their own.
 // vox: the real Vox caption look (white on a dark bar, yellow box behind the spoken word, no pop).
-export const Captions: React.FC<{tokens: Token[]; fixes: Record<string, string>; lines?: string[]; ink: string; hi: string; y?: number; hideFrom?: number; left?: number; width?: number; size?: number; font?: string; vox?: boolean}> = ({tokens, fixes, lines, ink, hi, y = 1330, hideFrom = Infinity, left = 60, width = 960, size = 46, font = fonts.sans, vox = false}) => {
+// plain: no per-word highlight, words as normal text (Lawrence 2026-10-17: the moving highlight "doesn't move smooth enough").
+export const Captions: React.FC<{tokens: Token[]; fixes: Record<string, string>; lines?: string[]; ink: string; hi: string; y?: number; hideFrom?: number; left?: number; width?: number; size?: number; font?: string; vox?: boolean; plain?: boolean}> = ({tokens, fixes, lines, ink, hi, y = 1330, hideFrom = Infinity, left = 60, width = 960, size = 46, font = fonts.sans, vox = false, plain = false}) => {
   const frame = useCurrentFrame();
   const ms = (frame / FPS) * 1000;
   const chunks = useMemo(() => (lines ? fromLines(toWords(tokens, fixes), lines) : chunk(toWords(tokens, fixes))), [tokens, fixes, lines]);
@@ -59,7 +60,7 @@ export const Captions: React.FC<{tokens: Token[]; fixes: Record<string, string>;
       <div style={{position: 'absolute', left, width, top: y, display: 'flex', justifyContent: 'center'}}>
         <div style={{background: 'rgba(26,25,23,0.78)', borderRadius: 8, padding: '7px 18px 10px', fontFamily: font, fontWeight: 700, fontSize: size, letterSpacing: '-0.01em', lineHeight: 1.12, color: '#fff', whiteSpace: 'nowrap'}}>
           {c.map((w, k) => {
-            const on = ms >= w.start - 40 && ms < w.end + 120;
+            const on = !plain && ms >= w.start - 40 && ms < w.end + 120;
             return (
               <React.Fragment key={k}>
                 {k > 0 ? ' ' : ''}
@@ -91,7 +92,7 @@ export const Captions: React.FC<{tokens: Token[]; fixes: Record<string, string>;
         }}
       >
         {c.map((w, k) => (
-          <span key={k} style={{color: ms >= w.start - 40 && ms < w.end + 120 ? hi : '#fff'}}>
+          <span key={k} style={{color: !plain && ms >= w.start - 40 && ms < w.end + 120 ? hi : '#fff'}}>
             {k > 0 ? ' ' : ''}
             {w.text}
           </span>
