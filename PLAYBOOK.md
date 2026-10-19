@@ -51,6 +51,10 @@ Before any node / npx / higgsfield / codex command: `source bin/env.sh` (from th
      and pass the returned id.
    - Always `higgsfield generate cost <model> ...` first (free) when unsure.
    - ⛔ Never generate a real person's face.
+   - **Photo cut-outs for free (Mac):** `swiftc -O tools/cutout.swift -o /tmp/cutout && /tmp/cutout in.png cut.png mask.png`
+     (Apple Vision subject lift, local, no upload, no credits; upscale small photos 2x first). Replaces the 1-credit
+     `image_background_remover` for founder photos. For a parallax back plate, fill the hole row by row from the pixels
+     either side (then blur it); a shrink-and-grow pyramid fill smears bright floors and walls up into the hole.
 6. **Word timings:** `node tools/transcribe.mjs companies/<slug>/assets/audio/vo_final.mp3 companies/<slug>/assets/audio/words.json`
    (local whisper.cpp, free, private). Read section cue times off the word list.
 7. **Company file:** copy `src/companies/_example.ts` to `src/companies/<slug>.ts`, `export default` it, import the
@@ -69,6 +73,8 @@ the new line's words; if a shot change is cued off the new line's first word, pi
 frame. Prove nothing else moved before sending: `ffmpeg -t <cut s> -i new.mp4 -t <cut s> -i old.mp4 -lavfi psnr -f null -`
 (min PSNR above ~40 dB = the same frames; a lower min names the frames that changed via `psnr=stats_file=...`).
 Never put an `afade=t=out` with `st=0` on the whole track: it silences everything.
+Word cues ignore punctuation, so "it's" and "its" (and "U.S." and "us") are the same word to `cue()`: count the
+occurrences (`cue("it's", 2)`) or cue a neighbouring word, or a highlight fires on the wrong sentence.
 A segment can have its own tone: a serious, matter-of-fact hook = `--stability 0.85`, sped 1.18x instead of 1.1x
 (record two short takes and let the recruiter pick). Match loudness with `-af volumedetect` (within 0.5 dB), keep about
 0.38 s between sentences, and move the later cue times by the exact splice offset (one small helper per section, e.g.

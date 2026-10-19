@@ -39,7 +39,7 @@ CREATIVE CONCEPT: <the chosen concept block from concepts.md>
 PAST VIDEOS: <registry rows> (sheets: $KIT/review/<slug>-final-sheet.png)
 REVIEW: concrete defects only, most severe first, max 15. Each: timestamp, problem, why it matters for a
 candidate on a phone, exact fix. Cover (1) factual accuracy incl. what visuals imply, (2) legibility at phone
-size and the caption zone (bottom ~420 px; content centred on x 540, no TikTok button rail since videos go direct), (3) the five takeaways, (4) polish and pacing,
+size and the caption zone (bottom ~420 px; content centred on x 540, no TikTok button rail since videos go direct), (3) the five takeaways, (4) polish, pacing and spacing (anything added to a screen needs clear room from its neighbours; flag any crowded group),
 (5) captions, (6) SAMENESS: anything that reads as a reskin of a past video (same hook idea, motif, layout,
 typography, transitions) or that ignores the concept. Skip praise.
 ```

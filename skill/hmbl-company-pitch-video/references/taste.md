@@ -58,6 +58,13 @@ with what to do about each. No company names here: this file is shared with ever
   source's words. A to-scale bar chart where the camera zooms out to reveal a dashed goal bar worked.
 - **Liked as is:** a tile grid for "40+ customers", cash stacking for the raise.
 
+## Spacing (2026-10-18, his standing rule)
+- **Everything added to a screen gets clear room from its neighbours, always.** "This part of the first slide is a bit
+  crunched. Make sure the spacing of things that get added to a screen are properly spaced out always." A big number,
+  its label, its source tag and the next object down each need their own breathing room (about 40-60 px between
+  groups). Check every still for a crowded group before showing it, and plan the whole stack of a scene (what lands
+  first, what lands under it) so the last piece still fits.
+
 ## Office map
 - **Zoom in close** to the neighbourhood (city, then blocks, then the street) and **highlight the area in colour**
   (yellow fill, red outline, label). A city-level map was not enough.
