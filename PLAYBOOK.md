@@ -131,7 +131,7 @@ them, `afade=t=out` over the last 2 s.
 
 ## Bright Vox: the standard look (Lawrence, 2026-10-18)
 
-**Every HMBL pitch video uses Bright Vox unless Lawrence asks for something else up front.** He picked it from four
+**Every HMBL pitch video uses Bright Vox, put together the Herk mix way (below), unless Lawrence asks for something else up front.** He picked it from four
 looks on the same 8 s test (full newspaper Vox, clean dark Vox, Bright Vox, Vox touches only): it keeps the Vox motion
 and personality without the newspaper feel. The look's grammar is fixed; the skin still changes per company (pastel
 per scene, the company's own sans-serif if `vibe.md` names one, the hook idea, the motifs), so no two videos match.
@@ -144,6 +144,27 @@ per scene, the company's own sans-serif if `vibe.md` names one, the hook idea, t
   letters (`PaperDisplace`), dark archive backdrops. Each can come back as an "other option" for one beat.
 - **Reference build:** the 8 s test he picked from lives on Lawrence's machine only (test files stay local, like
   company files); ask him for the render if you need to see the look.
+
+### Herk mix: how every Bright Vox video is put together (Lawrence, 2026-10-18)
+He loved a 10 s giraffe test built with Nate Herk's editing kit ("not too much Vox, not too little, interesting all
+around") and ruled: keep Bright Vox's pastel paper and type, and borrow that video's cut-outs, stop-motion, timeline
+camera, and Nate's way of building the story. So the Bright Vox standard now includes:
+- **One world the camera hops through.** Lay the sections out on one board (panels side by side, left to right =
+  toward today) inside `<Camera>`, everything inside `<Stepped>`. Chapter changes are choppy camera hops (9-10 frame
+  keys), not page swaps. Things already shown stay where they are; spent ones go quiet (opacity about 0.45).
+- **The empty slot.** The hook plants what the video is about as an empty dashed outline (usually the company's real
+  logo or product) with a question on it; the close fills it from the ground up (`<EmptySlot>`). It pairs with the
+  house close: the logo that fills in is the same real logo, then "That's <Company>." and the hero clip.
+- **Sticker cut-outs** for key objects and photos: white sticker edge, thin ink edge, crisp offset shadow, no blur
+  (`<Cutout>`). Cards stay clean white.
+- **Chapter tags** top right, numbered with a plain name ("02 · TRACTION"), switching on each hop (`<ChapterTag>`).
+- **Timeline ruler** along the floor with a fixed "you are here" marker when the story has dates (founded, raised,
+  today): `<TimelineRuler>`, `<YouAreHere>`. Without dates, the world is a map or a process laid out instead.
+- **Stop-motion growth:** a value, bar or object grows in visible steps on its word (`stepsOf(progress, 8-10)`).
+- **Story build** (Nate's method, `skill/.../references/edit-craft.md` "How the giraffe test was put together"): every
+  beat lands on its word from `words.json`, one highlight per beat, the first frame already shows the subject.
+- Parts: `src/voxa/herk.tsx`. Reference build: a 10.6 s giraffe rebuild in `src/companies/` on Lawrence's machine
+  only (test files stay local, like company files); ask him for the render.
 
 ### Vox element menu (the names used in every storyboard and style-frame board)
 Name each element in these plain words and say where it sits ("yellow highlight: behind 10,500 on the top card").
@@ -164,6 +185,12 @@ Name each element in these plain words and say where it sits ("yellow highlight:
 | Map focus pull | the map softens except where the eye should go | 10 | `MapFocus bright` | yes, on maps |
 | Drawn-on line | a line or region draws itself | 10 | `DrawPath` | yes |
 | Lens fringe | faint colour fringe at the frame edges | 1 | `tools/vox-ca.sh` | yes |
+| Camera hop through one world | sections side by side, the camera hops between them in choppy steps | 5 | `Camera` + `Stepped` (Herk mix) | yes |
+| Empty slot | the hook's dashed outline of the subject fills in at the close | | `EmptySlot` | yes |
+| Sticker cut-out | white sticker edge, ink edge, crisp shadow on a key object or photo | | `Cutout` | yes |
+| Chapter tag | "02 · TRACTION" top right, switches on each hop | | `ChapterTag` | yes |
+| Timeline ruler | a ruler along the floor, "you are here" marker fixed above it | | `TimelineRuler`, `YouAreHere` | yes, when dates |
+| Stop-motion growth | something grows in visible steps on its word | 2 | `stepsOf` | yes |
 | Highlighted evidence | a real headline or post, words lit as they are said | 8 | `Evidence` | option |
 | Stamp | a bold double-border stamp that slams down with a shake | | bits `Stamp`, `Burst` | option |
 | Moving bits | small people, envelopes, chips, cash, confetti | | `src/voxa/bits.tsx` | option |

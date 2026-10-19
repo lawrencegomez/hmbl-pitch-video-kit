@@ -22,8 +22,10 @@ company, never a specific role.
 - **Story, pacing and checks** (the first-3-seconds test, one open question answered on screen, timing to the words,
   evidence over decoration, narration and loudness checks; adapted from Nate Herk's editing playbook):
   `references/edit-craft.md`. Read it with `taste.md`; the house rules and taste win where they differ.
-- **The look is Bright Vox by default** (Lawrence, 2026-10-18): every video, unless he asks for something else up
-  front. Load the `vox-style-video` skill for the techniques, then follow PLAYBOOK "Bright Vox: the standard look"
+- **The look is Bright Vox, put together the Herk mix way, by default** (Lawrence, 2026-10-18): every video, unless
+  he asks for something else up front. The Herk mix (PLAYBOOK "Herk mix", parts in `src/voxa/herk.tsx`) = one world
+  the camera hops through, an empty slot planted in the hook and filled at the close, sticker cut-outs, chapter tags,
+  a timeline ruler when the story has dates, stop-motion growth. Load the `vox-style-video` skill for the techniques, then follow PLAYBOOK "Bright Vox: the standard look"
   (what is on, what is off, the Vox element menu) and build from `src/voxa/kit.tsx`. Full newspaper Vox (Mode A) or
   a plain style only when he says so. The house rules below still apply.
 
@@ -114,6 +116,8 @@ Then write `companies/<slug>/storyboard.md` and show it to the recruiter in the 
   highlight: behind 10,500 on the top card") · assets it needs (and their credits) · the source of every fact in it.
 - **Other Vox options:** 3-5 menu elements this video does not use yet, each with the section it would suit and
   what it would add, so Lawrence can swap one in (his ask, 2026-10-18).
+- **The world and the empty slot** (Herk mix): what the camera travels through and in what order (left to right
+  toward today), the chapter tag for each section, and what the hook plants as an empty outline that the close fills.
 - **Concept** in 3-4 lines (look, motif, signature moment) and the runner-up in one line.
 - **Credits** for the whole video.
 

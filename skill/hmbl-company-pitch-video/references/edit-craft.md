@@ -79,6 +79,21 @@ differ; "Not for pitch videos" at the end names the clashes. Read this with `tas
   candidate finish? where would they stop?") beats a 1-10 score.
 - Lawrence's watch is the final gate. Nate caught a sync drift that every automated check missed.
 
+## How the giraffe test was put together (the recipe Lawrence loved, 2026-10-18)
+1. Facts first, sourced, before any script. Then the script, about 3.1 words a second, through `humanizer`.
+2. Voice, then word times (`words.json`). Every beat below is anchored to a word, entering up to 0.15 s early.
+3. Pick the world: one board the camera travels through, left to right toward today, with a ruler on the floor
+   when the story has dates. Decide the chapters and their numbered tags.
+4. The hook opens tight on the subject itself, pulls back, and leaves it as an empty dashed outline with one
+   question on it. That outline is the open loop.
+5. Each chapter: hop the camera (choppy, under 0.35 s), land the big fact first, then the one detail that proves it,
+   then one highlight. Earlier chapters go quiet, never vanish.
+6. One physical change per chapter that the viewer can watch (a neck growing in steps, a bar climbing, a stack
+   filling), timed to the words that name it.
+7. The close hops back to the empty outline and fills it from the ground up while the answer lands; hold it.
+8. Check like Nate: frame sheet, contiguous strips across every hop, re-transcribe the final against the script,
+   loudness on the final file.
+
 ## Notes become rules
 When Lawrence gives a note, fix the video, then write the note as a rule into `taste.md`, PLAYBOOK or a check
 (SKILL step 9), so the next video starts from it. Record the note and the rule together.

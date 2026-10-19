@@ -13,6 +13,12 @@ with what to do about each. No company names here: this file is shared with ever
 - **The bar:** "really great" came from evidence on screen (real posts, real product, real headline) plus playful
   cut-paper motion, all timed to the words.
 
+- **The Herk mix (2026-10-18).** A 10 s giraffe test made with Nate Herk's kit: "wow that's dope, love the video... Not
+  too much Vox, not too little, interesting all around." His ruling: keep Bright Vox's pastel paper, borrow its
+  cut-outs, stop-motion, timeline camera, and Nate's storyline building. Liked in it: the hook zoomed on the
+  subject then left an empty outline with a question; the camera whipping back in time along a ruler; chapter tags;
+  the neck growing in choppy steps on its words; the empty outline filling at the close. (PLAYBOOK "Herk mix".)
+
 ## Hook
 - **Liked:** opening on the company's own bold claim from its launch post ("<old way> is dead!"), with the words
   highlighted as they are said, a red strike-through, and a big bold stamp on the charged word.

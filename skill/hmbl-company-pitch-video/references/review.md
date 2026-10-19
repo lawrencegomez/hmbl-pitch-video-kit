@@ -10,6 +10,8 @@ the template below into `review/BRIEF_vN.md`.
      pieces placed off-centre on purpose are fine; say which ones in your report).
    - `review/check/transitions.png`: each row must go old page, then ONE torn edge, then new page. Fail it if the
      old page shows again after the cut, if two paper edges sweep past, or if both pages are half-visible.
+     A Herk mix camera hop instead goes old panel, a few choppy in-between positions, new panel; fail it if the
+     camera stops and restarts, jumps back, or a frame shows an empty board.
    Reviewers working from a 16-frame sheet miss both of these: they only show between frames.
    Then the edit-craft checks (`edit-craft.md`, "Checks to add"): the first second frame by frame, the narration
    re-transcribed and compared with the script, and loudness and true peak measured on the final MP4.
