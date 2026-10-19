@@ -171,6 +171,19 @@ camera, and Nate's way of building the story. So the Bright Vox standard now inc
   beat lands on its word from `words.json`, one highlight per beat, the first frame already shows the subject.
 - Parts: `src/voxa/herk.tsx`. Reference build: a 10.6 s giraffe rebuild in `src/companies/` on Lawrence's machine
   only (test files stay local, like company files); ask him for the render.
+- **Lessons from the first full Herk-mix videos (2026-10-19, both outside reviewers agreed):**
+  - Hold the hook on the empty slot about 1.5 s before the first hop (cue the hop a few frames after the next
+    scene's first word), or the setup the close pays off goes unseen.
+  - No panel sits near-empty after a hop: the main object (product card, founder photo with its name card, the
+    frame of a chart) lands with the hop; details pop on their words.
+  - The close: hold the filled slot about 1.5 s before the logo push (push after the last word, not on "That's").
+    When the story is about precision, the filled object lands small on ONE target, not over the whole crowd.
+  - Product screens: crop to the rows that prove the claim (drop headers and toggle columns) so the text reads on a
+    phone; fade a cut edge (`WebkitMaskImage` gradient) instead of slicing through a glyph.
+  - Two sourced data points (e.g. $0 in January, $1M in March) get a straight line, never a curve (a curve implies
+    monthly data); stop-motion growth finishes on the payoff word and holds until the hop.
+  - Caption lines of 4-6 words; with a wide font (e.g. Sora) keep them under about 30 characters.
+  - Illustrations that could pass for real data (a chart, message cards) carry a small "ILLUSTRATION" tag.
 
 ### Vox element menu (the names used in every storyboard and style-frame board)
 Name each element in these plain words and say where it sits ("yellow highlight: behind 10,500 on the top card").
