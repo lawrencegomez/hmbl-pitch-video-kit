@@ -80,6 +80,15 @@ with what to do about each. No company names here: this file is shared with ever
   "a different logo"; the close reused the section-2 logo card (real SVG logo, orbit rings, serif name, tagline).
   A hero clip must never be a re-imagined version of the logo.
 
+- **Show the company's effect at the close, not just tidiness (2026-10-18).** A paperwork pile that only squared itself
+  read as "more paperwork"; he asked for the stack "getting turned into much less". Shrink, remove or resolve the
+  problem object (visual only, no unsourced "X% less"). He also chose to end on the real logo + tagline with no hero
+  clip rather than spend ~38 more credits on a new one: offer that free option when a clip would need regenerating.
+
+## Voice: names
+- **Ask how founders' names are pronounced before recording** (2026-10-18: a phonetic guess was wrong; he gave the
+  right one after the first cut). Re-record only that sentence and splice it in (PLAYBOOK "Splicing a changed line").
+
 ## Music
 - **Level:** music gain 0.16 under the voice was "a little too loud"; 0.10 was the fix.
 - **Keep one feel the whole way.** A bed that "starts off cool but then sounds different" (a louder, brighter section
