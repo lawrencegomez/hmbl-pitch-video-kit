@@ -1,7 +1,7 @@
 // Spec Explainer: a JSON config in, a 1080x1920 30 fps video out. See src/spec/README.md.
 import React, {useMemo} from 'react';
 import {AbsoluteFill, Audio, CalculateMetadataFunction, interpolate, Sequence, staticFile, useCurrentFrame, useVideoConfig} from 'remotion';
-import {Captions} from '../components/Captions';
+import {Captions, toWords} from '../components/Captions';
 import {FPS} from '../theme';
 import {Hud} from './parts';
 import {SCENES, Sfx, SpecConfig} from './scenes';
@@ -17,7 +17,8 @@ const GAIN: Record<Sfx, number> = {click: 0.5, pop: 0.45, whoosh: 0.35, blip: 0.
 export const specMetadata: CalculateMetadataFunction<SpecProps> = async ({props}) => {
   const v = props.cfg.voice;
   const tokens: Token[] = v.words ? await fetch(staticFile(v.words)).then((r) => r.json()) : estimateTokens(v.script, v.wps);
-  const lastWord = tokens.length ? tokens[tokens.length - 1].endMs / 1000 : 0;
+  const spoken = toWords(tokens, {}); // drops whisper's [BLANK_AUDIO] marker, which can run seconds past the last word
+  const lastWord = spoken.length ? spoken[spoken.length - 1].end / 1000 : 0;
   return {durationInFrames: Math.round((props.cfg.durationSec ?? lastWord + (props.cfg.tail ?? 3.2)) * FPS), props: {...props, tokens}};
 };
 
