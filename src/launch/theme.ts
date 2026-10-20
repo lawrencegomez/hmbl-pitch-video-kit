@@ -31,11 +31,19 @@ const clamp = {extrapolateLeft: 'clamp', extrapolateRight: 'clamp'} as const;
 
 // Calm, no-overshoot arrival for words (the keynote feel); a small overshoot for objects that "land".
 export const settle = (frame: number, at: number, dur = 14) => interpolate(frame, [at, at + dur], [0, 1], {...clamp, easing: Easing.bezier(0.16, 1, 0.3, 1)});
-export const land = (frame: number, at: number) => spring({frame: frame - at, fps: FPS, config: {damping: 14, stiffness: 180, mass: 0.7}});
-// Exits start fast too (Emil: never ease-in on what the viewer is watching); `rush` is the one accelerating move,
-// for a camera pushing through the frame.
+// Critically damped: settles as fast as the old spring (frame 13 vs 12) with no overshoot. The old one overshot 7.9%,
+// and bounce is the first thing that makes a launch film look cheap (HeyGen's launch skill; Emil agrees).
+export const land = (frame: number, at: number) => spring({frame: frame - at, fps: FPS, config: {damping: 22.5, stiffness: 180, mass: 0.7}});
+// Exits start fast too (Emil: never ease-in on what the viewer is watching). The one exception is a cut's outgoing
+// half, which accelerates into the seam on purpose (see Beat).
 export const leave = (frame: number, at: number, dur = 10) => interpolate(frame, [at, at + dur], [0, 1], {...clamp, easing: Easing.bezier(0.23, 1, 0.32, 1)});
-export const rush = (frame: number, at: number, dur = 14) => interpolate(frame, [at, at + dur], [0, 1], {...clamp, easing: Easing.bezier(0.55, 0, 0.75, 0.06)});
+
+// Raw curves for velocity-matched cuts: p is 0..1 progress. powIn(p, 5) / powOut(p, 5) are the two halves of one
+// ease-in-out, so the speed at the seam matches on both sides.
+export const prog = (frame: number, at: number, dur: number) => Math.max(0, Math.min(1, (frame - at) / dur));
+export const powIn = (p: number, n: number) => p ** n;
+export const powOut = (p: number, n: number) => 1 - (1 - p) ** n;
+export const expoOut = (p: number) => (p >= 1 ? 1 : 1 - 2 ** (-10 * p));
 export const between = (frame: number, a: number, b: number, from: number, to: number) => interpolate(frame, [a, b], [from, to], {...clamp, easing: Easing.bezier(0.65, 0, 0.35, 1)});
 
 // Exact text width in the browser that renders the frame (fonts are loaded before render).

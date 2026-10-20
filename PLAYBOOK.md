@@ -89,6 +89,9 @@ in the lows means a new section). If it shifts, loop the opening 8 bars instead 
 (onset autocorrelation; the beds land near 120 bpm, 8 bars about 16 s) and the first downbeat, then
 `asplit=4`, `atrim=0:<end>` for the first copy, `atrim=<downbeat>:<end>` for the repeats, `acrossfade=d=0.02` between
 them, `afade=t=out` over the last 2 s.
+For a short video, start the bed at its strongest steady stretch, not a quiet intro that drains the first seconds
+(the launch sampler looped one 4-bar stretch from its fuller second half, starting at 18.05 s, 2026-10-19); keep a short fade in and a longer fade out under the
+logo, and redo the check whenever the edit length changes so the music never ends early or leaves silence.
 
 ## Craft lessons (apply to every video)
 

@@ -2,7 +2,7 @@
 // Every `at` is an absolute frame. All motion is a pure function of the frame.
 import React, {useEffect, useState} from 'react';
 import {AbsoluteFill, Img, OffthreadVideo, continueRender, delayRender, staticFile, useCurrentFrame, useVideoConfig} from 'remotion';
-import {LF, LookCtx, between, fontsReady, land, leave, rush, settle, textWidth, useLook, type Look} from './theme';
+import {LF, LookCtx, between, expoOut, fontsReady, land, leave, powIn, powOut, prog, settle, textWidth, useLook, type Look} from './theme';
 
 const c01 = (v: number) => Math.max(0, Math.min(1, v));
 // An icon is a real emoji ("💬", the default: Lawrence 2026-10-19, drawn icons "look a little cheap"), an image path
@@ -162,19 +162,51 @@ export const WordSwap: React.FC<{prefix: string; items: {text: string; at: numbe
   );
 };
 
-// Transition: rush into the frame (scale up fast, blur, fade), from a chosen point.
-export const ZoomThrough: React.FC<{at: number; origin?: string; children: React.ReactNode}> = ({at, origin = '50% 50%', children}) => {
-  const frame = useCurrentFrame();
-  const p = rush(frame, at, 14);
-  return <div style={{position: 'absolute', inset: 0, transform: `scale(${1 + 9 * p * p})`, transformOrigin: origin, opacity: 1 - c01((p - 0.5) * 2), filter: p ? `blur(${p * 8}px)` : undefined}}>{children}</div>;
-};
-
-// Show children only in [from, to); blur out over the last frames.
-export const Beat: React.FC<{from: number; to: number; children: React.ReactNode}> = ({from, to, children}) => {
+// A beat: children show only in [from, to). Its edges are cuts (adapted from HeyGen's launch-skill cut catalog):
+//   slide    = one move carried across the seam: out accelerates (p^5) and fades just before the cut, in arrives
+//              already moving (1-(1-p)^5) from the same side. Same distance + duration, so the speed matches. Default
+//              between beats that build one idea.
+//   zoom     = toward the viewer: out grows 1 -> 1.2 with blur, the swap hides at peak blur, in grows 0.75 -> 1.
+//              For a new section.
+//   zoomBack = away from the viewer: out shrinks to 0.8, in arrives oversized (1.25 -> 1). For an arrival or payoff.
+//   fade     = blur out over the last frames (the old default; use at the very end).
+// Make each cut's `to` equal the next beat's `from`, put the same `blur` on both sides of a seam (10 for text,
+// 20 for a full-frame surface), and start the next beat's first line a little before `from` so it is already on
+// screen at the cut: an empty frame at a seam reads as dead air.
+type Cut = 'slide' | 'zoom' | 'zoomBack' | 'fade' | 'none';
+const SLIDE = 230; // px of travel each side of a slide seam
+export const Beat: React.FC<{from: number; to: number; enter?: Cut; exit?: Cut; dir?: 'left' | 'up'; blur?: number; origin?: string; children: React.ReactNode}> = ({from, to, enter = 'none', exit = 'fade', dir = 'left', blur = 10, origin = '50% 50%', children}) => {
   const frame = useCurrentFrame();
   if (frame < from || frame >= to) return null;
-  const o = leave(frame, to - 9, 9);
-  return <div style={{position: 'absolute', inset: 0, opacity: 1 - o, filter: o ? `blur(${o * 12}px)` : undefined}}>{children}</div>;
+  let shift = 0;
+  let scale = 1;
+  let b = 0;
+  let o = 1;
+  if (enter === 'slide') {
+    const q = prog(frame, from, 10);
+    shift += SLIDE * (1 - powOut(q, 5));
+    o *= 0.35 + 0.65 * powOut(prog(frame, from, 5), 2);
+  } else if (enter === 'zoom' || enter === 'zoomBack') {
+    const e = expoOut(prog(frame, from, 15));
+    scale *= enter === 'zoom' ? 0.75 + 0.25 * e : 1.25 - 0.25 * e;
+    b += blur * (1 - e);
+    o *= 0.15 + 0.85 * e;
+  }
+  if (exit === 'slide') {
+    shift -= SLIDE * powIn(prog(frame, to - 10, 10), 5);
+    o *= 1 - powIn(prog(frame, to - 10, 9), 2);
+  } else if (exit === 'zoom' || exit === 'zoomBack') {
+    const z = prog(frame, to - 6, 6);
+    scale *= exit === 'zoom' ? 1 + 0.2 * powIn(z, 4) : 1 - 0.2 * powIn(z, 4);
+    b += blur * powIn(z, 4);
+    o *= 1 - 0.85 * z;
+  } else if (exit === 'fade') {
+    const f = leave(frame, to - 9, 9);
+    b += blur * f;
+    o *= 1 - f;
+  }
+  const move = dir === 'left' ? `translateX(${shift}px)` : `translateY(${shift}px)`;
+  return <div style={{position: 'absolute', inset: 0, opacity: o, filter: b > 0.05 ? `blur(${b}px)` : undefined, transform: `${move} scale(${scale})`, transformOrigin: origin}}>{children}</div>;
 };
 
 // ---------- Numbers ----------

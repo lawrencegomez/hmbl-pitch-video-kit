@@ -11,12 +11,15 @@ shift
 out=review/check
 rm -rf "$out" && mkdir -p "$out/c" "$out/t"
 dur=$(ffprobe -v error -show_entries format=duration -of csv=p=0 "$in")
+# Thumbnails keep the video's own shape (9:16 pitch videos, 16:9 launch videos); the centre line sits at half width.
+IFS=x read -r vw vh < <(ffprobe -v error -select_streams v:0 -show_entries stream=width,height -of csv=s=x:p=0 "$in")
+tw=$(( (480 * vw / vh) / 2 * 2 ))
 
 i=0
 for t in $(awk -v d="$dur" 'BEGIN{for(s=0.5;s<d;s+=2) printf "%.1f\n", s}'); do
   i=$((i+1)); f=$(printf "$out/c/%03d.png" $i)
-  ffmpeg -loglevel error -y -ss "$t" -i "$in" -frames:v 1 -vf scale=270:480 "$f"
-  magick "$f" -stroke '#00C2FF' -strokewidth 2 -draw "line 135,0 135,480" -stroke none -fill red -pointsize 22 -annotate +6+24 "${t}s" "$f"
+  ffmpeg -loglevel error -y -ss "$t" -i "$in" -frames:v 1 -vf scale=$tw:480 "$f"
+  magick "$f" -stroke '#00C2FF' -strokewidth 2 -draw "line $((tw / 2)),0 $((tw / 2)),480" -stroke none -fill red -pointsize 22 -annotate +6+24 "${t}s" "$f"
 done
 magick montage "$out"/c/*.png -tile 8x -geometry +3+3 -background red "$out/centre.png"
 
@@ -24,7 +27,7 @@ if [ $# -gt 0 ]; then
   for t in "$@"; do
     for d in -2 0 2 4 6 8 10 13; do
       s=$(awk -v t="$t" -v d="$d" 'BEGIN{printf "%.3f", t + (d + 0.5) / 30}')
-      ffmpeg -loglevel error -y -ss "$s" -i "$in" -frames:v 1 -vf scale=216:384 "$out/t/${t}_$(printf %02d $((d+2))).png"
+      ffmpeg -loglevel error -y -ss "$s" -i "$in" -frames:v 1 -vf scale=-2:384 "$out/t/${t}_$(printf %02d $((d+2))).png"
     done
     magick montage "$out/t/${t}"_*.png -tile 8x1 -geometry +2+2 -background red "$out/t/row_${t}.png"
   done

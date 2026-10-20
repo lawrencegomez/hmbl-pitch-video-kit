@@ -49,11 +49,61 @@ beats (line + proof) -> proof (numbers, logos, faces) -> where and how much -> l
 **Lengths in practice:** 20 to 30 s (an offer), 50 to 67 s (the main launch), 80 to 90 s (YouTube walkthrough, often
 narrated).
 
+## Story orders (pick one per launch)
+
+Adapted from HeyGen's launch skill, in our words, and matched to the nine. The order is the spine; the shape above
+(promise -> task -> features -> proof -> offer) fits inside any of them. Build around the one promise, never the order
+of their website.
+
+| Order | Use when | Beats | Which of the nine |
+|---|---|---|---|
+| Problem, then fix | the pain is known and sharp | hook -> the pain -> why it hurts -> the product -> it working -> offer | Letra (every case you have retyped, then "Now it's real text") |
+| Imagine the future | a new category or a new way of living | "imagine" -> name it -> the pain gone -> how it works -> the outcome -> offer | Interface (people talking to a ring), Kylon (the band metaphor) |
+| Show it working | the product explains itself on screen | a question -> the product -> one task, start to finish -> a second task -> trust -> offer | Offhand (one task across four agents), Wabi (a trip planned, a bill talked down) |
+| Before and after | it replaces an old way of doing something | before -> a glimpse of after -> the product -> step 1 -> step 2 -> the wow -> offer | Ollie (the morning crisis, averted), Odessia ("Same trip. 40% less.") |
+| Feature, then benefit | many features, or a status product | a category hook -> feature -> what it gives you -> feature -> what it gives you -> climax -> offer | Selfdrive ("It runs your Apple Ads. / And pauses what wastes money."), Photon (number after number) |
+
+With many features, every feature still turns into what the viewer gets; never a stack of raw features.
+
+## Hook types (the first 3 to 5 seconds)
+
+One hook, built to create tension, curiosity or want. Never open on a plain company description.
+- **A category announcement:** "Introducing Photon 2.0", "a new kind of messenger" (Photon, Wabi).
+- **A promise said straight to the viewer:** "This agent will get users for your app while you sleep." (Selfdrive)
+- **A visual spectacle:** Letra's floating collage, Wabi's glossy 3D world.
+- **"Imagine" / a moment from the future:** Interface's everyday voice commands.
+- **A startling number, counting up alone,** before any product is shown.
+- **Naming the pain:** a line the viewer has thought themselves (our example, not from the nine: "Still retyping that
+  parcel number?").
+- **A question,** often typed live with a caret.
+
+## More moves to build when a launch needs them
+
+From HeyGen's launch skill (in our words), beyond what the nine show. None are built yet; add each to `parts.tsx`
+as a shared part the first time a launch uses it, then mark it here.
+
+| Move | Best for | The line it carries |
+|---|---|---|
+| A prompt types itself, is sent, and the result generates | an AI product's intro or a feature | the ask itself is the line |
+| Options cycle in one slot, then the real answer crashes in | a hook or the product intro | "A doc? A database? A wiki? It's all three." |
+| A typed line deletes a word and retypes a better one | a hook | a thought the viewer has had, then reframed |
+| An agent at work: the task starts, rows tick off, a receipt lands | a feature for an agent product | "It checks every file, flags what broke, fixes what it can." |
+| Tools and tabs pile up until they bury the screen | the problem beat | "Slack, email, docs, tickets, and it all lands on you." |
+| Partner logos orbit the product at the centre | proof, integrations | "Works with everything you already use." |
+| Two panels side by side | a pair of features, or before and after | "Design on the left, code on the right." |
+| A number that grows bigger as it counts | proof | one number, said as it lands |
+| The website as a tilted card that scrolls | the intro for a web product | a real full-page screenshot, never a rebuild |
+| Close on a mystery detail, then pull back to the whole workspace | a hook | the answer lands with the pull-back |
+| A small widget changes shape and does its trick | a hook or the offer | "It starts as a search bar. It becomes your workflow." |
+| A wall of feature tiles assembles at once | breadth of features | "look how much it does" |
+| The key word glows as it is said | emphasis anywhere | one word per line at most |
+| The logo assembles with no words | the product intro or the outro | just the name |
+
 ## Signature moves, and which kit part does each
 
 | Move | From | Kit part (`src/launch/parts.tsx`) |
 |---|---|---|
-| Rush through the words into the next beat | Photon (strip `photon-counter-wall`) | `ZoomThrough` |
+| Rush through the words into the next beat | Photon (strip `photon-counter-wall`) | `Beat exit="zoom"` (+ `origin` to push into a point), next beat `enter="zoom"` |
 | Slot-machine stat over a wall of real UI ("10,000+ SMS" over message bubbles) | Photon (strip `photon-counter-wall`) | `SlotCounter` + `MarqueeWall` (+ `Bubble`, `NotifCard`) |
 | Glossy pill button clicked by a cursor ("With just one click") | Photon (second beat) | `PillButton` + `Cursor` |
 | Line ladder: new line lands big, the last one shrinks to a grey caption above | Selfdrive (strip `selfdrive-line-ladder`) | `LineLadder` |

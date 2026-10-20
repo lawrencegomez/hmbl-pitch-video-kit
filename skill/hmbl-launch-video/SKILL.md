@@ -20,8 +20,12 @@ X and Instagram, so it must work with the sound off, in the first two seconds, a
   = a 33 s film using every part). Preview: `npx remotion studio` (a free port, never 3000), ids `launch-sampler` and
   `launch-sampler-dark`.
 - **Shared foundation from the pitch skill** (`~/.claude/skills/hmbl-company-pitch-video/references/`): `research.md`
-  (facts and vibe), `creative-direction.md` (three concepts, scoring), `edit-craft.md` (first-3-seconds test, checks),
-  `review.md` (the review loop). Its house rules for candidate pitch videos (order, captions, Maya, "That's
+  (facts and vibe), `creative-direction.md` (three concepts, scoring), `edit-craft.md` (the first 3 seconds, motion
+  that is smooth and on its cue, cuts that flow, the video direction note, checks; read it every time), `review.md`
+  (the review loop).
+- **Credit:** the story orders, hook types, extra moves and the motion and cut rules are adapted, in our words, from
+  HeyGen's HyperFrames `product-launch-video` skill (2026-10-19). That skill is a different tool: never run it
+  unless Lawrence names it. Its house rules for candidate pitch videos (order, captions, Maya, "That's
   <Company>.") do NOT apply here.
 
 ## Step 0: when he says "launch video", open with what we know
@@ -31,7 +35,8 @@ Before any questions, give him a short read he can react to:
    (line + proof), proof numbers, where and how much, logo + URL.
 2. **Which 2 or 3 references fit this product and why**, with the move to borrow from each ("Selfdrive's line ladder
    for the five features, Photon's counter over a wall of their real messages for the proof").
-3. The choices to make: length (25 / 55 / 85 s), sizes, look, narrator or words only, Higgsfield bookends or not.
+3. The choices to make: the story order and the hook type (both in the library, each with the reference that uses
+   it), length (25 / 55 / 85 s), sizes, look, narrator or words only, Higgsfield bookends or not.
 When he asks about a reference ("how did Photon do the counter?"), answer from the library, name the video and the
 beat, and point to the local strip or timeline image if one exists.
 
@@ -44,6 +49,11 @@ beat, and point to the local strip or timeline image if one exists.
   Every feature gets one line and a real product screen proving it. One real task followed start to finish. One gag.
   The end is an offer (URL, price, platforms, date, free credits). Narrator only for the long YouTube cut, and then
   Maya by default.
+- **Cuts:** every seam is a `Beat` edge (`edit-craft.md` "Cuts that flow"): `zoom` into a new section, `slide`
+  between beats that build one idea, `zoomBack` for the arrival (the logo). Each cut's `to` equals the next `from`, and
+  the next beat's first line starts a few frames before its cut so no frame at a seam is empty.
+- **Vertical for social (9:16):** keep the bottom ~17% and the right edge clear of the Reels / Shorts / TikTok
+  buttons and caption.
 - **Looks** (`LOOKS` in `theme.ts`): `keynote` (white, one blue), `dark` (dark mode, one blue), `editorial` (cream
   paper, navy ink, serif available). Take the accent from the product's brand.
 - **Music:** one steady Sonilo bed (~2.25 credits). Run the PLAYBOOK music check: if it changes section partway,
@@ -70,8 +80,10 @@ beat, and point to the local strip or timeline image if one exists.
 2. **Research** with `research.md`: facts with sources and the brand's vibe. Scrapling first for public pages.
 3. **Step 0 read + three concepts** (`creative-direction.md`), each naming its reference moves from the library.
    Pick one, runner-up in one line.
-4. **Script + storyboard, then STOP for his yes.** Script lines with word counts; one row per beat: seconds, the line,
-   what is on screen, the kit parts used, the reference it borrows from, assets needed and credits. Writing rules:
+4. **Script + storyboard, then STOP for his yes.** The video direction note at the top (`edit-craft.md`). Script
+   lines with word counts; one row per beat: seconds, its job (hook, problem, product, feature, benefit, proof, offer)
+   and the feeling it should leave, the line, what is on screen, the kit parts used, the cut into the next beat, the
+   reference it borrows from, assets needed and credits. If he pasted a script, ask once: keep his words or rewrite. Writing rules:
    no em or en dashes, humanizer (embedded mode), then SlopMonster (score; the cleanse is fine when the copy has no
    personal details). Nothing that costs credits or builds the video before his yes.
 5. **Style frames, STOP again:** build with estimated timings, render 8 to 12 stills (`node tools/stills.mjs <id>
@@ -80,7 +92,8 @@ beat, and point to the local strip or timeline image if one exists.
    `{id, component, durationInFrames, width, height}`, gitignored, registers itself), wrapped in `Stage`, built from
    `parts.tsx`. A move that is "not built yet" in the library gets built as a shared part in `parts.tsx` (no product
    names in shared code).
-7. **Review:** stills board, frame strips through every transition (ffmpeg select, no drawtext on this build),
+7. **Review:** stills board, `tools/check-frames.sh <video> <cut seconds...>` plus frame strips through every cut
+   (ffmpeg select, no drawtext on this build): before and after each cut agree, no empty frame,
    Emil's motion bar (`~/.claude/skills/review-animations/STANDARDS.md`: never scale from 0, exits start fast, linear
    only for constant motion), loudness on the final MP4, sound-off read. Fresh reviewer and GPT for a new launch.
 8. **Deliver:** `out/<id>.mp4` (crf 16), the 1080p phone copy as a file card, a localhost link. Remotion is free for
@@ -97,3 +110,5 @@ beat, and point to the local strip or timeline image if one exists.
 - Two words crossfading in one spot smear; roll them through a clipped window (`WordSwap`).
 - Accent markers span words: `"*like you would.*"`.
 - A typewriter must show its caret on frame 0 (`at={0}`), or the video opens on a blank frame.
+- `land()` is critically damped on purpose (same speed as the old spring, no 7.9% overshoot). Keep it that way;
+  a bounce needs a reason written in the storyboard.

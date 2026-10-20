@@ -3,7 +3,7 @@
 import React from 'react';
 import {Audio, getStaticFiles, staticFile} from 'remotion';
 import {LOOKS, LF, sec, useLook} from './theme';
-import {AppIcon, Beat, Stage, Bubble, ChatThread, Cursor, Glyph, Line, LineLadder, Lockup, MarqueeWall, NotifCard, Phone, PillButton, SlotCounter, StatusTable, Typewriter, WordSwap, ZoomThrough} from './parts';
+import {AppIcon, Beat, Stage, Bubble, ChatThread, Cursor, Glyph, Line, LineLadder, Lockup, MarqueeWall, NotifCard, Phone, PillButton, SlotCounter, StatusTable, Typewriter, WordSwap} from './parts';
 
 export const SAMPLER_FRAMES = sec(33.4);
 // The music bed is a local, gitignored file (generated music stays out of the public repo): plays when present.
@@ -55,20 +55,21 @@ export const LaunchSampler: React.FC<{look?: keyof typeof LOOKS}> = ({look = 'ke
   return (
     <Stage look={LOOKS[look]}>
       {getStaticFiles().some((f) => f.name === BED) && <Audio src={staticFile(BED)} />}
-        {/* 1. Promise: a giant typed line the camera follows */}
-        <Beat from={0} to={100}>
+        {/* 1. Promise: a giant typed line the camera follows. Cuts: zoom into each new section, slide between beats that
+            build one idea, reverse zoom for the arrival (the logo). Each beat's first line starts before its cut. */}
+        <Beat from={0} to={100} exit="zoom">
           <Typewriter text="Meet the inbox that writes back." at={0} cps={18} size={210} top={400} pan fitAt={64} />
         </Beat>
 
         {/* 2. What it does, with a cycling icon slot */}
-        <Beat from={100} to={222}>
-          <Line text="Every {app} message," at={104} per={4} size={112} top={360} icons={{app: channels}} cycleEvery={12} />
+        <Beat from={100} to={222} enter="zoom" exit="slide">
+          <Line text="Every {app} message," at={88} per={4} size={112} top={360} icons={{app: channels}} cycleEvery={12} />
           <Line text="answered in {bolt} *seconds.*" at={124} per={4} size={112} top={500} icons={{bolt: '⚡️'}} />
         </Beat>
 
         {/* 3. One real task on the product */}
-        <Beat from={222} to={400}>
-          <Line text="It answers" at={226} size={104} top={380} align="left" x={190} />
+        <Beat from={222} to={400} enter="slide" exit="slide">
+          <Line text="It answers" at={206} size={104} top={380} align="left" x={190} />
           <Line text="*like you would.*" at={240} size={104} top={500} align="left" x={190} />
           <Phone x={1380} y={70} w={620} at={226}>
             <ChatScreen />
@@ -76,21 +77,19 @@ export const LaunchSampler: React.FC<{look?: keyof typeof LOOKS}> = ({look = 'ke
         </Beat>
 
         {/* 4. Features as a line ladder */}
-        <Beat from={400} to={532}>
-          <LineLadder top={470} size={112} lines={[{text: 'It knows your calendar.', at: 404}, {text: 'It knows your prices.', at: 446}, {text: 'It knows your *tone.*', at: 488}]} />
+        <Beat from={400} to={532} enter="slide" exit="zoom">
+          <LineLadder top={470} size={112} lines={[{text: 'It knows your calendar.', at: 388}, {text: 'It knows your prices.', at: 446}, {text: 'It knows your *tone.*', at: 488}]} />
         </Beat>
 
-        {/* 5. Proof: a number over a wall of real work, then rush into the next beat */}
-        <Beat from={532} to={682}>
-          <ZoomThrough at={664} origin="50% 44%">
-            <MarqueeWall at={532} tops={[64, 180, 806, 878]} rows={[wallTop, wallMid, wallMid.slice().reverse(), wallTop.slice().reverse()]} />
-            <SlotCounter value="12,480" at={548} size={210} top={356} label="replies sent in week one" />
-          </ZoomThrough>
+        {/* 5. Proof: a number over a wall of real work, then zoom through the number into the next beat */}
+        <Beat from={532} to={682} enter="zoom" exit="zoom" origin="50% 44%">
+          <MarqueeWall at={516} tops={[64, 180, 806, 878]} rows={[wallTop, wallMid, wallMid.slice().reverse(), wallTop.slice().reverse()]} />
+          <SlotCounter value="12,480" at={548} size={210} top={356} label="replies sent in week one" />
         </Beat>
 
         {/* 6. When it stops and asks */}
-        <Beat from={682} to={812}>
-          <Line text="And it knows when to *ask you.*" at={686} size={84} top={130} />
+        <Beat from={682} to={812} enter="zoom" exit="slide">
+          <Line text="And it knows when to *ask you.*" at={670} size={84} top={130} />
           <StatusTable
             top={270}
             w={1240}
@@ -107,13 +106,13 @@ export const LaunchSampler: React.FC<{look?: keyof typeof LOOKS}> = ({look = 'ke
         </Beat>
 
         {/* 7. Who it is for */}
-        <Beat from={812} to={904}>
-          <WordSwap prefix="Built for" at={816} top={380} size={116} items={[{text: 'front desks.', at: 826}, {text: 'small shops.', at: 852}, {text: 'busy founders.', at: 878}]} />
+        <Beat from={812} to={904} enter="slide" exit="zoomBack">
+          <WordSwap prefix="Built for" at={800} top={380} size={116} items={[{text: 'front desks.', at: 826}, {text: 'small shops.', at: 852}, {text: 'busy founders.', at: 878}]} />
         </Beat>
 
         {/* 8. The offer: lockup + where to get it */}
-        <Beat from={904} to={SAMPLER_FRAMES + 30}>
-          <Lockup pre="The all-new" name="Example" url="example.com" at={904} size={104} top={410} icon={<AppIcon size={124}><div style={{width: 64, height: 64}}>{Glyph.chat()}</div></AppIcon>} />
+        <Beat from={904} to={SAMPLER_FRAMES + 30} enter="zoomBack" exit="none">
+          <Lockup pre="The all-new" name="Example" url="example.com" at={896} size={104} top={410} icon={<AppIcon size={124}><div style={{width: 64, height: 64}}>{Glyph.chat()}</div></AppIcon>} />
         </Beat>
     </Stage>
   );
