@@ -82,6 +82,14 @@ A segment can have its own tone: a serious, matter-of-fact hook = `--stability 0
 0.38 s between sentences, and move the later cue times by the exact splice offset (one small helper per section, e.g.
 `const tw = (s) => t(s - 0.05)`) instead of re-timing by hand.
 
+**Pick music by measurement, never by library tags (Lawrence, 2026-10-20: "no to all those").** Stock tags like
+"happy" / "uplifting" return acoustic kids' and corporate tracks, crowded in the mids (guitar, piano, ukulele). The
+launch references sit on a deep warm low end: share of energy under 150 Hz is Wabi 74%, Offhand 79%, Odessia 79%,
+Letra 58% (Photon and Selfdrive 37-40% but punchy, 38-39% percussive), against 11-61% for the rejected stock picks.
+Measure every candidate the same way as the references (librosa in `~/.claude/sources/cinetic-venv`: tempo, low/mid
+share, brightness, percussive share) before it goes on a board, and anchor on a track he already approved. Sonilo
+prices by length (36 s = 2.25 credits, 89 s = 5.57): generate 36 s and loop a steady 8-bar stretch from after the intro.
+
 **Music check (before using a bed):** Sonilo beds can switch to a louder, brighter section partway through, which
 Lawrence rejected ("starts off cool but then sounds different"). Prompt for "one steady groove from start to finish,
 same instruments throughout, no build, no drop". Scan the bed in 2 s windows (loudness and brightness; a jump of 6-10 dB
