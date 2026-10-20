@@ -5,6 +5,7 @@ import {Pitch} from './Pitch';
 import {FPS, H, W, fonts} from './theme';
 import type {SpecConfig} from './spec/scenes';
 import {SpecExplainer, specMetadata} from './spec/SpecExplainer';
+import {LaunchSampler, SAMPLER_FRAMES} from './launch/Sampler';
 
 // Every src/companies/<slug>.ts with a default export becomes a video with id <slug>.
 // Files starting with "_" (the example) are skipped. No edits here when adding a company.
@@ -48,6 +49,8 @@ export const RemotionRoot: React.FC = () => (
     {extras.map((e) => (
       <Composition key={e.id} id={e.id} component={e.component} durationInFrames={e.durationInFrames} fps={FPS} width={e.width} height={e.height} />
     ))}
+    <Composition id="launch-sampler" component={LaunchSampler} durationInFrames={SAMPLER_FRAMES} fps={FPS} width={1920} height={1080} defaultProps={{look: 'keynote' as const}} />
+    <Composition id="launch-sampler-dark" component={LaunchSampler} durationInFrames={SAMPLER_FRAMES} fps={FPS} width={1920} height={1080} defaultProps={{look: 'dark' as const}} />
     {specs.map((cfg) => (
       <Composition key={cfg.id} id={cfg.id} component={SpecExplainer} durationInFrames={1} fps={FPS} width={W} height={H} defaultProps={{cfg, tokens: []}} calculateMetadata={specMetadata} />
     ))}

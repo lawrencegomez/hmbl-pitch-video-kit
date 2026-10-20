@@ -139,6 +139,7 @@ if doing; then
   link_skill "$SOURCES/humanizer" humanizer
   link_skill "$SOURCES/slopmonster" slopmonster
   link_skill "$KIT/skill/hmbl-company-pitch-video" hmbl-company-pitch-video
+  link_skill "$KIT/skill/hmbl-launch-video" hmbl-launch-video
 
   step "7. Whisper (word timings for captions; ~1.5 GB, downloads once)"
   (cd "$KIT" && node tools/transcribe.mjs --setup)
@@ -173,7 +174,7 @@ codex --version 2>/dev/null | grep -q "$CODEX_VERSION" && ok "Codex CLI $CODEX_V
 scrapling --version 2>/dev/null | grep -q "$SCRAPLING_VERSION" && ok "Scrapling $SCRAPLING_VERSION" || bad "Scrapling is not $SCRAPLING_VERSION"
 [ -d "$KIT/node_modules/remotion" ] && grep -q '"version": "4.0.535"' "$KIT/node_modules/remotion/package.json" && ok "Remotion 4.0.535" || bad "Remotion packages missing (run ./setup.sh)"
 ls "$HOME/.cache/whisper-cpp/ggml-medium.en.bin" >/dev/null 2>&1 && ok "Whisper medium.en model" || bad "Whisper model missing"
-for s in humanizer slopmonster hmbl-company-pitch-video; do
+for s in humanizer slopmonster hmbl-company-pitch-video hmbl-launch-video; do
   [ -f "$SKILLS/$s/SKILL.md" ] && ok "Skill: $s" || bad "Skill missing: $s"
 done
 # The skill finds this kit by following its link back (SKILL.md, "Kit folder"); a copied folder would break that.

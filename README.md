@@ -76,9 +76,11 @@ force-add them, and don't put company names or facts into the shared files (`src
 | Path | What it is |
 |---|---|
 | `skill/hmbl-company-pitch-video/` | The Claude Code skill: process, research guide, creative-direction guide, review guide |
+| `skill/hmbl-launch-video/` | A second skill for product launch videos (YouTube, X, Instagram): a library of nine reference launches and the launch format |
 | `PLAYBOOK.md` | Commands, settings, costs and lessons learned |
 | `setup.sh` | Installs and checks everything |
 | `src/` | The video template (Remotion). `src/companies/_example.ts` shows the data each video needs |
 | `src/spec/` | The Spec Explainer look: one JSON file per video, reusable parts, two examples, its own README |
+| `src/launch/` | Launch video parts (type moves, phone and chat, counters, UI walls, lockup), three looks and a sample film |
 | `tools/transcribe.mjs` | Word timings for captions, run locally |
 | `STYLE-REGISTRY.example.md` | Template for the local log of past video looks, so new videos don't repeat old ones |
