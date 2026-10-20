@@ -107,13 +107,14 @@ The hook decides whether the candidate watches the other 35 seconds, so it gets 
 
 ## Script
 
-- 85-100 words, house order, plain spoken English a recruiter would say out loud.
+- 90-108 words (the edge slide adds about 15), house order, plain spoken English a recruiter would say out loud.
 - The hook line comes from "The hook" above.
 - Use their own words where they're good (tagline, the job they replace). One specific, memorable fact per beat.
 - Founders: names, the pedigree that matters, and one human detail from their posts if it's true and short. Tell the
   story ("repeat founders who sold their last startup to <buyer>, then came back to YC"), not every win: a line
   about which customers their last startup won was "weird and not needed". A press headline makes good evidence.
-- Difference: say it the way the founders do, in candidate terms.
+- Difference: say it the way the founders do, in candidate terms, and give it its own ~5 s edge slide (SKILL house
+  rules): what it learns or owns that others don't, shown as a mechanism.
 - Traction: revenue as speed in the source's words, customers by name if on their site, funding, team, city.
 - End: "That's <Company>." Nothing after it.
 - No hype words (revolutionary, cutting-edge, game-changing), no "not X, but Y", no triplet padding.

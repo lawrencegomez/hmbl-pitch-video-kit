@@ -1,0 +1,83 @@
+{
+  "id": "spec-example",
+  "code": "EXC-01",
+  "name": "Example Co.",
+  "logo": null,
+  "voice": {
+    "script": "This puck is louder | than your TV. | It looks like a coaster. | It's a speaker, | about the size of a cookie. | Three parts. | A driver on top | fires sound down into a cone, | which spreads it out | in every direction. | The battery underneath | runs twelve hours. | Your phone sends the music | over Bluetooth, | and the puck does the rest. | Watch. [pause 3.5] Does it work | with your phone? | Any phone with Bluetooth. | How heavy? | A hundred and eighty grams. | And the price? | Ninety-nine dollars. | So, would you put one | on your desk?",
+    "words": null,
+    "vo": null,
+    "wps": 3.2
+  },
+  "music": null,
+  "sfxVolume": 0.8,
+  "tail": 3.4,
+  "scenes": [
+    {
+      "type": "hook", "start": 0, "tag": "01 HOOK",
+      "product": null,
+      "headline": {"lines": ["Louder than", "*your TV.*"], "at": ["louder", "your"]}
+    },
+    {
+      "type": "what", "start": "it", "tag": "02 WHAT IT IS",
+      "product": null,
+      "aside": {"text": "a coaster?", "at": "coaster", "strikeAt": "speaker", "reply": {"text": "nope.", "at": "speaker+0.3"}},
+      "headline": {"lines": ["It's a", "*speaker.*"], "at": ["it's", "speaker"]},
+      "callouts": [
+        {"text": "Ø 70 MM", "at": "size", "side": "left", "y": 1130},
+        {"text": "H 28 MM", "at": "cookie", "side": "right", "y": 1130}
+      ]
+    },
+    {
+      "type": "parts", "start": "three", "tag": "03 HOW IT WORKS",
+      "product": null,
+      "headline": {"lines": ["Three", "*parts.*"], "at": ["three", "parts"]},
+      "backdrop": "radar", "backdropAt": "spreads",
+      "parts": [
+        {"label": "DRIVER", "at": "driver", "x": 0, "y": -150, "side": "left"},
+        {"label": "CONE", "at": "cone", "x": 70, "y": 10, "side": "right"},
+        {"label": "BATTERY", "at": "battery", "x": -40, "y": 160, "side": "left"}
+      ]
+    },
+    {
+      "type": "flow", "start": "your#2", "tag": "03 HOW IT WORKS",
+      "headline": {"lines": ["Phone", "*to room.*"], "at": ["your#2", "music"]},
+      "steps": [
+        {"text": "Phone", "at": "phone"},
+        {"text": "Bluetooth", "at": "bluetooth"},
+        {"text": "Puck", "at": "puck#2"},
+        {"text": "Your room", "at": "rest"}
+      ]
+    },
+    {"type": "demo", "start": "watch", "tag": "04 WATCH", "clip": null, "label": "Watch this"},
+    {
+      "type": "answer", "start": "does#2", "tag": "05 QUICK ANSWERS",
+      "headline": {"lines": ["Works with", "*your phone?*"], "at": ["does#2", "your#3"]},
+      "devices": [
+        {"kind": "phone", "ok": true, "at": "any"},
+        {"kind": "tablet", "ok": true, "at": "any+0.2"},
+        {"kind": "laptop", "ok": true, "at": "any+0.4"},
+        {"kind": "watch", "ok": false, "at": "bluetooth#2-0.2"}
+      ],
+      "source": {"source": "example.com/specs", "quote": "Pairs with any phone, tablet or laptop over Bluetooth.", "at": "bluetooth#2+0.3"}
+    },
+    {
+      "type": "answer", "start": "how", "tag": "05 QUICK ANSWERS",
+      "headline": {"lines": ["How", "*heavy?*"], "at": ["how", "heavy"]},
+      "scale": {"to": 180, "unit": "G", "at": "hundred"},
+      "source": {"source": "example.com/specs", "quote": "Weight: 180 g.", "at": "grams"}
+    },
+    {
+      "type": "answer", "start": "and#3", "tag": "05 QUICK ANSWERS",
+      "headline": {"lines": ["And the", "*price?*"], "at": ["and#3", "price"]},
+      "scale": {"to": 99, "prefix": "$", "at": "ninety-nine"},
+      "source": {"source": "example.com", "quote": "$99 at launch.", "at": "dollars"}
+    },
+    {
+      "type": "end", "start": "so", "tag": "06 YOUR TURN",
+      "headline": {"lines": ["Would you", "put one on", "*your desk?*"], "at": ["would", "put", "desk"]},
+      "aside": {"text": "be honest.", "at": "desk+0.5"},
+      "sting": {"at": "desk+1.3", "tagline": "Pocket speaker · EXC-01"}
+    }
+  ]
+}

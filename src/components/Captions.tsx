@@ -6,7 +6,7 @@ type Token = {text: string; startMs: number; endMs: number};
 type Word = {text: string; start: number; end: number};
 
 // whisper.cpp tokens -> words (a leading space starts a new word), with spelling fixes applied.
-const toWords = (tokens: Token[], fixes: Record<string, string>): Word[] => {
+export const toWords = (tokens: Token[], fixes: Record<string, string>): Word[] => {
   const out: Word[] = [];
   for (const t of tokens) {
     if (t.text.startsWith(' ') || out.length === 0) out.push({text: t.text.trim(), start: t.startMs, end: t.endMs});

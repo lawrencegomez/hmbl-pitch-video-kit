@@ -1,10 +1,10 @@
 #!/usr/bin/env bash
 # Blocks any commit that would put company data on GitHub (this repo is public).
-# Blocked: files under companies/ (except the shared, public-domain companies/_textures/), src/companies/ (except _example.ts), out/, review/, and any added line that
+# Blocked: files under companies/ (except the shared, public-domain companies/_textures/ and companies/_sfx/), src/companies/ (except _example.ts), out/, review/, and any added line that
 # contains a company name or slug this machine knows about (STYLE-REGISTRY.md rows + companies/<slug> folders).
 KIT="$(git rev-parse --show-toplevel)"
 fail=0
-bad_paths="$(git diff --cached --name-only --diff-filter=AM | /usr/bin/grep -E '^(companies/|out/|review/|STYLE-REGISTRY\.md$)' | /usr/bin/grep -vE '^companies/(\.gitkeep$|_textures/)')"
+bad_paths="$(git diff --cached --name-only --diff-filter=AM | /usr/bin/grep -E '^(companies/|out/|review/|STYLE-REGISTRY\.md$)' | /usr/bin/grep -vE '^companies/(\.gitkeep$|_textures/|_sfx/)')"
 bad_paths="$bad_paths$(git diff --cached --name-only --diff-filter=AM | /usr/bin/grep -E '^src/companies/' | /usr/bin/grep -v '^src/companies/_example\.ts$')"
 if [ -n "$bad_paths" ]; then echo "⛔ Company files staged (they must stay local):"; echo "$bad_paths"; fail=1; fi
 

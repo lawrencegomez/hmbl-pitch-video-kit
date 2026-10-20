@@ -1,0 +1,71 @@
+{
+  "id": "spec-example-pitch",
+  "code": "EXC-HQ",
+  "name": "Example Co.",
+  "logo": null,
+  "voice": {
+    "script": "Example Co. pays invoices | in one day. | It reads every invoice | and pays the supplier the same day. | Two founders. | Alex ran payments | at a large bank. | Sam built the reader. | What makes it different: | it checks every line, | then pays. | Its edge: | every invoice it reads | makes the next one faster. | Forty customers, | a team of twelve. | They're based | in Austin, Texas. | That's Example Co.",
+    "words": null,
+    "vo": null,
+    "wps": 3.2
+  },
+  "music": null,
+  "tail": 3.0,
+  "scenes": [
+    {
+      "type": "hook", "start": 0, "tag": "01 HOOK",
+      "product": null,
+      "headline": {"lines": ["Invoices paid", "*in one day.*"], "at": ["example", "one"]}
+    },
+    {
+      "type": "what", "start": "it", "tag": "02 WHAT THEY BUILD",
+      "product": null,
+      "headline": {"lines": ["Reads every", "*invoice.*"], "at": ["reads", "invoice"]},
+      "callouts": [
+        {"text": "READ", "at": "reads", "side": "left", "y": 1130},
+        {"text": "PAID", "at": "pays#2", "side": "right", "y": 1130}
+      ]
+    },
+    {
+      "type": "founders", "start": "two", "tag": "03 FOUNDERS",
+      "headline": {"lines": ["Two", "*founders.*"], "at": ["two", "founders"]},
+      "people": [
+        {"name": "Alex", "role": "CEO", "note": "ran payments at a bank", "photo": null, "at": "alex"},
+        {"name": "Sam", "role": "CTO", "note": "built the reader", "photo": null, "at": "sam"}
+      ]
+    },
+    {
+      "type": "flow", "start": "what", "tag": "04 WHY IT'S DIFFERENT",
+      "headline": {"lines": ["Every", "*line.*"], "at": ["what", "every#2"]},
+      "steps": [
+        {"text": "Invoice in", "at": "different"},
+        {"text": "Every line checked", "at": "checks"},
+        {"text": "Supplier paid", "at": "then"}
+      ]
+    },
+    {
+      "type": "hub", "start": "its", "tag": "04 THEIR EDGE",
+      "headline": {"lines": ["Every invoice", "*makes it faster.*"], "at": ["its", "makes#2"]},
+      "nodes": {"count": 30, "label": "invoices from every customer", "at": "every#3"},
+      "hub": {"text": "What it learned", "at": "reads#2"},
+      "outputs": [{"text": "Faster next time", "at": "faster"}],
+      "note": {"text": "Name the tools customers switch from", "at": "next"}
+    },
+    {
+      "type": "answer", "start": "forty", "tag": "05 TRACTION",
+      "headline": {"lines": ["Customers"], "at": "forty"},
+      "scale": {"to": 40, "at": "forty"},
+      "source": {"source": "example.com/about", "quote": "40 customers and a team of 12.", "at": "twelve"}
+    },
+    {
+      "type": "answer", "start": "they're", "tag": "05 TRACTION",
+      "headline": {"lines": ["Based in", "*Austin.*"], "at": ["based", "austin"]},
+      "globe": {"lat": 30.27, "lon": -97.74, "label": "AUSTIN, TX", "at": "austin"}
+    },
+    {
+      "type": "end", "start": "that's", "tag": "06 CLOSE",
+      "headline": {"lines": ["That's", "*Example Co.*"], "at": ["that's", "example#2"]},
+      "sting": {"at": "co#2+0.9", "tagline": "Invoices paid in a day"}
+    }
+  ]
+}

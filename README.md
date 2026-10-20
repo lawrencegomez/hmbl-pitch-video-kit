@@ -79,5 +79,6 @@ force-add them, and don't put company names or facts into the shared files (`src
 | `PLAYBOOK.md` | Commands, settings, costs and lessons learned |
 | `setup.sh` | Installs and checks everything |
 | `src/` | The video template (Remotion). `src/companies/_example.ts` shows the data each video needs |
+| `src/spec/` | The Spec Explainer look: one JSON file per video, reusable parts, two examples, its own README |
 | `tools/transcribe.mjs` | Word timings for captions, run locally |
 | `STYLE-REGISTRY.example.md` | Template for the local log of past video looks, so new videos don't repeat old ones |

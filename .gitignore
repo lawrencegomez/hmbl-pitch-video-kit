@@ -3,6 +3,8 @@ companies/*
 !companies/.gitkeep
 # Shared Vox textures (public domain, no company data): companies/_textures/CREDITS.md
 !companies/_textures/
+# Shared sound effects for the Spec Explainer look (CC0, no company data): companies/_sfx/CREDITS.md
+!companies/_sfx/
 src/companies/*
 !src/companies/_example.ts
 STYLE-REGISTRY.md

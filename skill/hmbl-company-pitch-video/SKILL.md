@@ -28,6 +28,12 @@ company, never a specific role.
   a timeline ruler when the story has dates, stop-motion growth. Load the `vox-style-video` skill for the techniques, then follow PLAYBOOK "Bright Vox: the standard look"
   (what is on, what is off, the Vox element menu) and build from `src/voxa/kit.tsx`. Full newspaper Vox (Mode A) or
   a plain style only when he says so. The house rules below still apply.
+- **Spec Explainer, the second look** (Lawrence, 2026-10-19): flat technical drawings modeled on Techy or Not's product
+  shorts (off-white page, black ink, one orange, a HUD across the top, a soft UI sound on every entrance), built from
+  one JSON config. Use it when Lawrence asks for it, or offer it for a product-heavy client. How to make one:
+  `src/spec/README.md`. As a candidate pitch video it keeps the house order below (its `founders` scene type covers
+  the founders) and ends on "That's <Company>." with no comment question. Its sound effects are the one exception to
+  "No sound effects". A product spot with no real cut-out stays a labeled slot: ask for the asset, never render one.
 
 ## The one idea that matters
 
@@ -40,7 +46,12 @@ not the look. Reusing any of it needs a reason rooted in the new company.
 ## House rules (fixed; settled by HMBL, do not re-litigate)
 
 - **Order:** hook -> what they build -> founders -> why it's different -> traction -> close. 30-40 s total; up to
-  ~42 s is fine when every second carries motion (Lawrence, 2026-10-16).
+  ~42 s is fine when every second carries motion (Lawrence, 2026-10-16). Why it's different includes the edge slide.
+- **The edge slide** (every video, about 5 s; Lawrence 2026-10-19): one clear slide on what separates them from the
+  companies a candidate would compare them to. Use the moat in the founders' own words (kickoff call, launch post,
+  site) and show it as a mechanism a candidate can follow (a diagram of what feeds it and what comes out), never an
+  adjective. In a crowded market, name the familiar alternatives on screen when a source says customers come from
+  them. If no source gives a moat, tell the recruiter and leave the slide out rather than invent one.
 - **Five takeaways** a candidate must get with sound off: what it does, who founded it and why they matter, what
   makes it different, traction (customers / revenue speed / funding / team size), where they are.
 - **Hook:** motion graphics, never a stock photo. A different hook type and visual idea per company.
@@ -52,11 +63,13 @@ not the look. Reusing any of it needs a reason rooted in the new company.
 - **Voice:** Maya (Higgsfield `elevenlabs_v4`, id in PLAYBOOK), sped up 1.1x; Arthur only if Lawrence asks for another
   voice, never Brooks. A bold-claim hook can be read serious
   and matter of fact (its own take, spliced in; PLAYBOOK "Voice"), then the upbeat read from the next scene. If this machine has its own ElevenLabs key
-  (`node tools/voice.mjs --list` works), use `tools/voice.mjs` with the default voice saved there instead; ask once which voice if none is saved. No sound effects. Music bed from
+  (`node tools/voice.mjs --list` works), use `tools/voice.mjs` with the default voice saved there instead; ask once which voice if none is saved. No sound effects (except the Spec Explainer look). Music bed from
   Higgsfield Sonilo: one steady groove the whole way (no build, no drop). Check the bed for section changes before
   using it and loop its opening bars if it shifts (PLAYBOOK "Music").
 - **Facts:** only sourced facts. Leave out anything the phone script marks "to confirm" unless the recruiter clears
-  it, and say so. Revenue is shown as **speed**, in the source's own words (e.g. "$0 in January to $1M by March").
+  it, and say so. Revenue is shown as **speed**, in the source's own words (e.g. "$0 in January to $1M by March"), plus where it
+  is heading when the recruiter clears a goal and date. Funding names the investors the source names; team size goes
+  with the office city.
 - **People:** real photos only (LinkedIn, company site, photos the recruiter supplies). Never AI-generate a real
   person's face.
 - **Layout:** content centred on the true middle of the 1080 frame (x 540), inside x 60-1020. These videos go straight to candidates, not onto TikTok, so there is no right-hand button rail to dodge (Lawrence, 2026-10-15). Scenes drawn for the old 60-940 box are shifted by `NUDGE_X` in `src/theme.ts`.
@@ -119,6 +132,7 @@ Then write `companies/<slug>/storyboard.md` and show it to the recruiter in the 
 - **The world and the empty slot** (Herk mix): what the camera travels through and in what order (left to right
   toward today), the chapter tag for each section, and what the hook plants as an empty outline that the close fills.
 - **Concept** in 3-4 lines (look, motif, signature moment) and the runner-up in one line.
+- **Spec Explainer videos:** name the scene types and parts from `src/spec/README.md` in place of the Vox element menu.
 - **Credits** for the whole video.
 
 **Nothing that costs credits or builds the video happens before the recruiter approves** (Lawrence's rule,
@@ -147,7 +161,8 @@ trace, product screens from their own site. Commands in PLAYBOOK.
 
 ### 6. Build (20-40 min)
 Copy `src/companies/_example.ts` to `src/companies/<slug>.ts` (it becomes video id `<slug>` automatically) and
-fill it. **Theme and scenes come from the concept:** set the company's palette and fonts, write a new Hook scene
+fill it. For the Spec Explainer look, copy `src/spec/examples/spec-example-pitch.spec.json` to
+`src/companies/<slug>.spec.json` instead and follow `src/spec/README.md`. **Theme and scenes come from the concept:** set the company's palette and fonts, write a new Hook scene
 for the concept, and restyle or rewrite any scene whose look would repeat the registry. Shared parts that stay:
 `Captions`, `Scene`, `Hand` (drawn strokes), theme helpers, safe-zone values. Keep `src/scenes/` free of company
 names and facts, since that folder is shared code.

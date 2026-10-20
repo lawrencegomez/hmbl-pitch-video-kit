@@ -58,6 +58,21 @@ with what to do about each. No company names here: this file is shared with ever
   source's words. A to-scale bar chart where the camera zooms out to reveal a dashed goal bar worked.
 - **Liked as is:** a tile grid for "40+ customers", cash stacking for the raise.
 
+- **Say where it is heading, who backed it, and where they sit (2026-10-19):** "passed a million by March, on the
+  way to ten million by the end of 2026" (a dashed goal bar with its date); "over five million from <investor> and
+  <investor>"; "a team of five, in their San Francisco office".
+
+## Their edge (2026-10-19)
+- Every pitch video gets a ~5 s slide on what separates the company from the ones a candidate would compare it to,
+  explained clearly: "explain what they are, what they do in a very clear way like we do, and then also be able to
+  explain what's different about them if there's a very competitive space."
+
+## Spec Explainer look (2026-10-19)
+- "A very clean layout for explainer videos. I think it's a good option to show." Offer it next to Bright Vox.
+- **Show cutting as motion.** A radar diagram with numbered labels for "keep what wins, cut the rest" did not land.
+  What he wants: look at the key things (circle each number), keep the winners, strike and throw away the rest
+  (the `cut` scene). The Herk version's scissors on a board of plays also worked.
+
 ## Spacing (2026-10-18, his standing rule)
 - **Everything added to a screen gets clear room from its neighbours, always.** "This part of the first slide is a bit
   crunched. Make sure the spacing of things that get added to a screen are properly spaced out always." A big number,

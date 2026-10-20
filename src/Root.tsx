@@ -3,6 +3,8 @@ import {AbsoluteFill, Composition} from 'remotion';
 import type {Company} from './types';
 import {Pitch} from './Pitch';
 import {FPS, H, W, fonts} from './theme';
+import type {SpecConfig} from './spec/scenes';
+import {SpecExplainer, specMetadata} from './spec/SpecExplainer';
 
 // Every src/companies/<slug>.ts with a default export becomes a video with id <slug>.
 // Files starting with "_" (the example) are skipped. No edits here when adding a company.
@@ -14,6 +16,11 @@ const companies: Company[] = ctx.keys().map((k: string) => ctx(k).default).filte
 const extraCtx = (require as any).context('./companies', false, /\.tsx$/);
 type Extra = {id: string; component: React.FC; durationInFrames: number; width: number; height: number};
 const extras: Extra[] = extraCtx.keys().map((k: string) => extraCtx(k).default).filter(Boolean);
+// Spec Explainer videos: the shared examples plus any local src/companies/<slug>.spec.json (id = the config's "id").
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+const specCtxs = [(require as any).context('./spec/examples', false, /\.spec\.json$/), (require as any).context('./companies', false, /\.spec\.json$/)];
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+const specs: SpecConfig[] = specCtxs.flatMap((c: any) => c.keys().map((k: string) => c(k).default ?? c(k)));
 
 // Setup check: renders one frame with the real fonts and no assets (`npm run smoke`).
 const Smoke: React.FC = () => (
@@ -40,6 +47,9 @@ export const RemotionRoot: React.FC = () => (
     ))}
     {extras.map((e) => (
       <Composition key={e.id} id={e.id} component={e.component} durationInFrames={e.durationInFrames} fps={FPS} width={e.width} height={e.height} />
+    ))}
+    {specs.map((cfg) => (
+      <Composition key={cfg.id} id={cfg.id} component={SpecExplainer} durationInFrames={1} fps={FPS} width={W} height={H} defaultProps={{cfg, tokens: []}} calculateMetadata={specMetadata} />
     ))}
   </>
 );

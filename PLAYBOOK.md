@@ -12,7 +12,7 @@ Before any node / npx / higgsfield / codex command: `source bin/env.sh` (from th
 | Hook | 0-4 s | One line that starts the video (hook type per company) | Text on screen from frame 0, motion graphics, never a stock photo |
 | What they build | 4-11 s | What it does in plain words | Logo reveal, their OWN product screens or demo videos, features ticked as named |
 | Founders | 11-19 s | Names, schools, prior companies or exits | Real photos, role tags, school badges, exit card |
-| Why it's different | 19-26 s | The difference, the way the founders put it | A diagram or comparison drawn in code |
+| Why it's different | 19-26 s | The difference, the way the founders put it, plus the edge slide (~5 s, the moat) | A diagram drawn in code: what feeds the moat and what comes out; familiar alternatives named when sourced |
 | Traction | 26-35 s | Customers, revenue speed, funding, team size, city | Count-up, customer logos, revenue-speed chart, stat cards |
 | Close | last 3-4 s | "That's <Company>." and nothing after | Hero clip (Seedance) + logo only. No URL, no call to action |
 
@@ -46,6 +46,8 @@ Before any node / npx / higgsfield / codex command: `source bin/env.sh` (from th
    - **Stills:** `gpt_image_2_5 --aspect_ratio 9:16 --quality high --resolution 2k`, about 2.75 credits each.
    - **Hero clip:** `seedance_2_5 --mode omni_reference --start-image <UPLOAD_ID> --aspect_ratio 9:16 --duration 5 --resolution 720p --generate_audio false`,
      35 credits (1080p is 80). Takes about 10 minutes: start it first, in the background.
+   - ⚠️ **Run `higgsfield` with `< /dev/null` when it runs in the background.** Without it the CLI waits on input and
+     never submits the job (it does not appear in `higgsfield generate list`). Then `higgsfield generate wait <id> --json`.
    - ⚠️ **Uploads:** passing a big local PNG or an MP3 fails with an S3 "SignatureDoesNotMatch" error. Convert to a
      ~1 MB JPEG (`magick in.png -resize 1080x -quality 90 start.jpg`), `higgsfield upload create start.jpg --json`,
      and pass the returned id.
@@ -299,6 +301,30 @@ reference images first. The parts live in `src/voxa/kit.tsx` (no company data); 
   tile. Cross-fade z16 in as the scale passes ~2 and z18 past ~6; draw the place's outline from Overpass
   (`way["name"="..."](bbox); out geom;`) inside the z18 layer, yellow multiply fill + red outline; soften the rest
   with a `backdrop-filter` blur under a radial mask (rule 10). Reach the place by the city name and hold ~1 s.
+
+## Spec Explainer: the second look (Lawrence, 2026-10-19)
+
+Flat technical drawings from one JSON config. Everything about making one is in `src/spec/README.md`; this is the
+short list of things that bite.
+
+- Word cues hit the FIRST time a word is said. In the example, "does" is first said in "the puck does the rest", so
+  the answers scene needs `does#2`. Run the stills before trusting a config; a cue that resolves too early shows up as
+  a scene in the wrong place, and one out of order stops the render with a message.
+- After transcription a cue must match the transcript's spelling ("$99" where the script says "ninety-nine").
+- The shared sound effects are in `companies/_sfx/` (Kenney Interface Sounds, CC0, plus a whoosh made with ffmpeg).
+  With `companies/_textures/` they are the only shared files under `companies/`; never put company files next to them.
+- `tools/stills.mjs` works for Spec ids too; the example's key frames are listed in the README.
+- Its music ducks itself: full under the demo, `music.duck` under the voice. Keep the duck near 0.08 (the pitch kit's
+  0.10 ceiling under a voice).
+- The demo needs real silence in the voiceover: record one take, find the end of the line before the demo, and insert
+  the silence there with ffmpeg (`atrim` both halves + `anullsrc` between). Whisper then smears the next few words
+  across the silence (it put a name 3 s early), so transcribe the part after the silence on its own, shift its times
+  by the cut point, and give its first token a leading space, or the captions glue it onto the word before.
+- A software product's "cut-out" is their own UI: take the last frame of a site clip, flood-fill the flat background
+  to transparent from the corners (`-fuzz 12% -fill none -draw "color 2,2 floodfill"`), then crop to the largest
+  solid region (`-connected-components`), since stray corner marks stop a plain `-trim`. A wide screen in the hook
+  takes `productSize` and gets a dashed frame instead of the ring. If the UI is too small to read where it sits, put
+  the real logo there instead.
 
 ## Cost per video
 About 45 Higgsfield credits: voice under 1, music 2.25, one or two stills 3-6, one Seedance clip 35.
